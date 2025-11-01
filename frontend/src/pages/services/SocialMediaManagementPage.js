@@ -207,8 +207,7 @@ const SocialMediaManagementPage = () => {
                 <ul style={{ color: '#bdbdbd', fontSize: '0.85rem', lineHeight: 1.5, margin: 0, paddingLeft: '16px' }}>
                   <li style={{ marginBottom: '6px', fontWeight: '500' }}>15 High-Quality Image Posts</li>
                   <li style={{ marginBottom: '6px', fontWeight: '500' }}>Alternate Day Posting Schedule</li>
-                  <li style={{ marginBottom: '6px', fontWeight: '500' }}>Professional Captions & Hashtags</li>
-                  <li style={{ marginBottom: '8px', fontWeight: '500' }}>Community Engagement</li>
+                  <li style={{ marginBottom: '8px', fontWeight: '500' }}>Professional Captions & Hashtags</li>
                 </ul>
                 <div style={{ fontSize: '0.8rem', color: '#888', fontStyle: 'italic', marginTop: '8px' }}>Perfect for startups & small businesses</div>
               </div>
@@ -301,8 +300,8 @@ const SocialMediaManagementPage = () => {
                 <h3 style={{ color: '#a259f7', fontSize: '1.1rem', fontWeight: '700', margin: '0 0 12px 0' }}>Intermediate</h3>
                 <ul style={{ color: '#bdbdbd', fontSize: '0.85rem', lineHeight: 1.5, margin: 0, paddingLeft: '16px' }}>
                   <li style={{ marginBottom: '6px', fontWeight: '500' }}>20 Image Posts + 2 Video Posts</li>
-                  <li style={{ marginBottom: '6px', fontWeight: '500' }}>Weekly Video Content (Saturdays)</li>
-                  <li style={{ marginBottom: '6px', fontWeight: '500' }}>Advanced Engagement Strategies</li>
+                  <li style={{ marginBottom: '6px', fontWeight: '500' }}>Weekly Video Content (Alternate Saturdays)</li>
+                  <li style={{ marginBottom: '6px', fontWeight: '500' }}>Community Engagement</li>
                   <li style={{ marginBottom: '8px', fontWeight: '500' }}>Trend-Based Content Creation</li>
                 </ul>
                 <div style={{ fontSize: '0.8rem', color: '#888', fontStyle: 'italic', marginTop: '8px' }}>Ideal for growing businesses</div>
@@ -327,7 +326,7 @@ const SocialMediaManagementPage = () => {
                   outline: 'none',
                   width: '100%'
                 }}
-                onClick={() => addToCart({ id: 'smm-intermediate', name: 'SMM Intermediate Plan', price: 8000, description: 'Social media management with 20 image posts + 2 video posts (video posts every Saturday)' })}
+                onClick={() => addToCart({ id: 'smm-intermediate', name: 'SMM Intermediate Plan', price: 8000, description: 'Social media management with 20 image posts + 2 video posts (video posts alternate Saturdays)' })}
                 disabled={isIntermediateInCart}
               >
                 <ShoppingCart style={{ width: 18, height: 18 }} /> {isIntermediateInCart ? 'Added to Cart' : 'Add Intermediate Plan'}
@@ -382,6 +381,7 @@ const SocialMediaManagementPage = () => {
                 <ul style={{ color: '#bdbdbd', fontSize: '0.85rem', lineHeight: 1.5, margin: 0, paddingLeft: '16px' }}>
                   <li style={{ marginBottom: '6px', fontWeight: '500' }}>25 Image Posts + 4 Video Posts</li>
                   <li style={{ marginBottom: '6px', fontWeight: '500' }}>Daily Content Strategy</li>
+                  <li style={{ marginBottom: '6px', fontWeight: '500' }}>Advanced Engagement Strategies</li>
                   <li style={{ marginBottom: '6px', fontWeight: '500' }}>Story Management & Highlights</li>
                   <li style={{ marginBottom: '8px', fontWeight: '500' }}>Analytics & Performance Reports</li>
                 </ul>

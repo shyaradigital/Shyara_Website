@@ -1,7 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, ArrowLeft, ArrowRight } from 'lucide-react';
 import FancyText from '../components/FancyText';
 import AnimatedHeading from '../components/AnimatedHeading';
+
+// Lazy Image Component with Intersection Observer
+const LazyImage = ({ src, alt, style, onLoad, onError, ...props }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '50px' }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => {
+      if (imgRef.current) {
+        observer.disconnect();
+      }
+    };
+  }, []);
+
+  return (
+    <img
+      ref={imgRef}
+      src={isInView ? src : undefined}
+      alt={alt}
+      style={{
+        ...style,
+        opacity: isLoaded ? 1 : 0.7,
+        transition: 'opacity 0.3s ease-in-out',
+      }}
+      loading="lazy"
+      onLoad={(e) => {
+        setIsLoaded(true);
+        if (onLoad) onLoad(e);
+      }}
+      onError={onError}
+      {...props}
+    />
+  );
+};
+
+// Lazy Video Component with Intersection Observer
+const LazyVideo = ({ src, style, onLoadedData, ...props }) => {
+  const [isInView, setIsInView] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '50px' }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.disconnect();
+      }
+    };
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={isInView ? src : undefined}
+      style={style}
+      onLoadedData={onLoadedData}
+      {...props}
+    />
+  );
+};
 
 const portfolioServices = [
   {
@@ -242,9 +329,8 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
             background: '#111'
           }}>
             {service.samples[currentImageIndex].img.endsWith('.mp4') ? (
-              <video
+              <LazyVideo
                 src={service.samples[currentImageIndex].img}
-                alt={service.samples[currentImageIndex].title}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -258,7 +344,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                 playsInline
               />
             ) : (
-              <img
+              <LazyImage
                 src={service.samples[currentImageIndex].img}
                 alt={service.samples[currentImageIndex].title}
                 style={{
@@ -267,7 +353,6 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                   objectFit: 'contain',
                   objectPosition: 'center'
                 }}
-                loading="lazy"
                 onError={(e) => {
                   console.warn(`Failed to load image: ${service.samples[currentImageIndex].img}`);
                   e.target.style.display = 'none';
@@ -382,9 +467,8 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                 }}
               >
                 {isVideo ? (
-                  <video
+                  <LazyVideo
                     src={sample.img}
-                    alt={sample.title}
                     style={{
                       width: '100%',
                       height: '100%',
@@ -394,7 +478,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                     playsInline
                   />
                 ) : (
-                  <img
+                  <LazyImage
                     src={sample.img}
                     alt={sample.title}
                     style={{
@@ -402,7 +486,6 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                       height: '100%',
                       objectFit: 'contain'
                     }}
-                    loading="lazy"
                     onError={(e) => {
                       console.warn(`Failed to load thumbnail: ${sample.img}`);
                       e.target.style.display = 'none';
@@ -490,7 +573,7 @@ const ServiceCard = ({ service, onOpenModal }) => {
         position: 'relative' 
       }}>
         {isVideo ? (
-          <video
+          <LazyVideo
             src={thumbnail.img}
             style={{ 
               width: '100%', 
@@ -505,10 +588,9 @@ const ServiceCard = ({ service, onOpenModal }) => {
             loop
             playsInline
             onLoadedData={() => setImageLoaded(true)}
-            loading="lazy"
           />
         ) : (
-          <img
+          <LazyImage
             src={thumbnail.img}
             alt={service.service}
             style={{ 
@@ -522,7 +604,6 @@ const ServiceCard = ({ service, onOpenModal }) => {
               display: 'block',
               opacity: imageLoaded ? 1 : 0.7
             }}
-            loading="lazy"
             onLoad={() => setImageLoaded(true)}
             onError={(e) => {
               console.warn(`Failed to load image: ${thumbnail.img}`);

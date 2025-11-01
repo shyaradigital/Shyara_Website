@@ -95,7 +95,7 @@ const WebsiteDevelopmentPage = () => {
       <div className="service-page-content" style={{ maxWidth: 900, width: '100%', margin: '-5rem auto 0', padding: '0 1.5rem', background: 'none', border: 'none', borderRadius: 0, boxShadow: 'none', position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 18 }}>
           <Globe style={{ width: 38, height: 38, color: '#a259f7' }} />
-          <h1 className="service-page-title" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#a259f7', margin: 0 }}><FancyText text="Web Development" /></h1>
+          <h1 className="service-page-title" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#a259f7', margin: 0 }}><FancyText text="Website Development" /></h1>
         </div>
         <p className="service-page-description" style={{ color: '#bdbdbd', fontSize: '1.08rem', marginBottom: 24, fontWeight: 400, lineHeight: 1.6 }}>
           Fast, responsive, and SEO-friendly websites for portfolios, businesses, and e-commerce. Custom designs with complete development support.
@@ -160,8 +160,6 @@ const WebsiteDevelopmentPage = () => {
           </h3>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
             {[
-              'Free domain name for 1 year',
-              'Free SSL certificate for security',
               'Free hosting setup and configuration',
               'Free basic SEO setup',
               'Free training on how to use your website',

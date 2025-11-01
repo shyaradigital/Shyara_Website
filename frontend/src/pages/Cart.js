@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, PlusCircle, Minus, Plus, Trash2, ArrowLeft } from 'lucide-react';
+import { User, PlusCircle, Minus, Plus, Trash2, ArrowLeft, X } from 'lucide-react';
 import { CartContext } from '../context/CartContext';
 
 const BRAND_LOGO = (
@@ -17,6 +17,7 @@ const Cart = () => {
   const { cart, removeFromCart, updateQuantity, showCelebration } = useContext(CartContext);
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
+  const [showDiscountPopup, setShowDiscountPopup] = useState(false);
   
   // Detect mobile device
   useEffect(() => {
@@ -28,6 +29,20 @@ const Cart = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Show discount popup when cart opens (only once per session)
+  useEffect(() => {
+    if (cart.length > 0) {
+      const hasSeenPopup = sessionStorage.getItem('cartDiscountPopupSeen');
+      if (!hasSeenPopup) {
+        const timer = setTimeout(() => {
+          setShowDiscountPopup(true);
+          sessionStorage.setItem('cartDiscountPopupSeen', 'true');
+        }, 300);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [cart.length]);
 
   // Show celebration modal when cart has items (only once)
   useEffect(() => {
@@ -70,6 +85,132 @@ const Cart = () => {
 
   return (
     <div style={{ minHeight: '100vh', color: '#e7e7e7', padding: '0', fontFamily: 'inherit', background: 'transparent' }}>
+      {/* Discount Popup */}
+      {showDiscountPopup && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0,0,0,0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10000,
+            padding: '1rem',
+            backdropFilter: 'blur(8px)',
+          }}
+          onClick={() => setShowDiscountPopup(false)}
+        >
+          <div
+            style={{
+              background: 'linear-gradient(135deg, rgba(162,89,247,0.15) 0%, rgba(30,30,40,0.95) 100%)',
+              border: '2px solid #a259f7',
+              borderRadius: 20,
+              padding: '2rem',
+              maxWidth: 500,
+              width: '100%',
+              boxShadow: '0 10px 40px rgba(162,89,247,0.4)',
+              position: 'relative',
+              textAlign: 'center',
+              animation: 'fadeInScale 0.3s ease-out',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <style>
+              {`
+                @keyframes fadeInScale {
+                  from {
+                    opacity: 0;
+                    transform: scale(0.9);
+                  }
+                  to {
+                    opacity: 1;
+                    transform: scale(1);
+                  }
+                }
+              `}
+            </style>
+            <button
+              onClick={() => setShowDiscountPopup(false)}
+              style={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                background: 'none',
+                border: 'none',
+                color: '#a7a7a7',
+                cursor: 'pointer',
+                padding: 8,
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(162,89,247,0.2)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+            >
+              <X size={24} />
+            </button>
+            
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎁</div>
+            <h2 style={{ 
+              color: '#a259f7', 
+              fontSize: '1.8rem', 
+              fontWeight: 700, 
+              marginBottom: '1rem',
+              lineHeight: 1.2
+            }}>
+              Extra 5% Off!
+            </h2>
+            <p style={{ 
+              color: '#e7e7e7', 
+              fontSize: '1.1rem', 
+              lineHeight: 1.6,
+              marginBottom: '1.5rem'
+            }}>
+              Before paying, send the screenshot of your cart at{' '}
+              <a 
+                href="https://wa.me/919584661610" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ 
+                  color: '#4CAF50', 
+                  fontWeight: 700, 
+                  textDecoration: 'underline',
+                  wordBreak: 'break-word'
+                }}
+              >
+                9584661610
+              </a>
+              {' '}to get extra 5% off!
+            </p>
+            <button
+              onClick={() => setShowDiscountPopup(false)}
+              style={{
+                background: 'linear-gradient(90deg, #a259f7, #7f42a7)',
+                color: '#fff',
+                fontWeight: 700,
+                fontSize: '1rem',
+                border: 'none',
+                borderRadius: 12,
+                padding: '0.9rem 2rem',
+                cursor: 'pointer',
+                transition: 'transform 0.2s',
+                boxShadow: '0 4px 16px rgba(162,89,247,0.4)',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
+      
       {/* Back Button */}
       <button
         className="cart-back-button"

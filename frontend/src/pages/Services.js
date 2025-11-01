@@ -31,7 +31,7 @@ const services = [
   },
   {
     icon: <Globe className="w-8 h-8 text-primary" />,
-    title: 'Web Development',
+    title: 'Website Development',
     desc: 'Fast, responsive websites for portfolios, businesses, and e-commerce.',
     price: 'Custom Quote',
     route: '/services/website-development',
