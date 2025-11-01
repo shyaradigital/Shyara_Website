@@ -29,22 +29,36 @@ console.log('Serving static files from:', staticPath);
 console.log('Build path exists:', fs.existsSync(buildPath));
 console.log('Public path exists:', fs.existsSync(publicPath));
 
-// Serve static files
+// Get the index.html path
+const indexPath = path.join(staticPath, 'index.html');
+console.log('Index.html path:', indexPath);
+console.log('Index.html exists:', fs.existsSync(indexPath));
+
+// Serve static files (JS, CSS, images, etc.)
+// But don't automatically serve index.html for directories
 app.use(express.static(staticPath, {
-  index: false, // Don't serve index.html automatically for directories
+  index: false,
   etag: true,
-  lastModified: true
+  lastModified: true,
+  setHeaders: (res, filePath) => {
+    // Log when serving static files
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Serving static file:', filePath);
+    }
+  }
 }));
 
-// Fallback to index.html for any unknown routes (SPA routing)
-// This must be last to catch all routes that aren't API or static files
+// SPA fallback: serve index.html for all GET requests that:
+// 1. Are not API routes
+// 2. Are not actual static files (those are handled above)
 app.get('*', (req, res, next) => {
   // Skip API routes
   if (req.path.startsWith('/api')) {
     return next();
   }
   
-  const indexPath = path.join(staticPath, 'index.html');
+  // Log the request
+  console.log('SPA route requested:', req.path);
   
   // Check if index.html exists
   if (!fs.existsSync(indexPath)) {
@@ -52,10 +66,15 @@ app.get('*', (req, res, next) => {
     return res.status(404).send('index.html not found. Please run: cd frontend && npm run build');
   }
   
-  res.sendFile(indexPath, (err) => {
+  // Send index.html - React Router will handle the routing
+  res.sendFile(path.resolve(indexPath), (err) => {
     if (err) {
       console.error('Error sending index.html:', err);
-      res.status(500).send('Error loading page');
+      if (!res.headersSent) {
+        res.status(500).send('Error loading page');
+      }
+    } else {
+      console.log('Successfully served index.html for route:', req.path);
     }
   });
 });
@@ -63,4 +82,5 @@ app.get('*', (req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Static files served from: ${staticPath}`);
+  console.log(`Make sure frontend is built: cd frontend && npm run build`);
 }); 
