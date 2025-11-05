@@ -67,19 +67,45 @@ cd backend && npm start
 - If your repo root is the project root, leave blank
 - If needed, set to: `.` (root)
 
-## Verify Deployment Settings
+## Verify Deployment Settings - CRITICAL!
 
-1. **Check Build Command**:
-   - Should be empty (for Docker) OR
-   - `cd backend && npm install && cd ../frontend && npm install && npm run build && cd ../backend && npm start`
+**The logs show the frontend is building but the backend server is NOT starting!**
 
-2. **Check Start Command**:
-   - If using Docker: Leave empty (uses Dockerfile CMD)
-   - If not using Docker: `cd backend && npm start`
+### Fix Your Render Service Configuration:
 
-3. **Check Environment Variables**:
+1. **Go to Render Dashboard** → Your Service → Settings
+
+2. **Check Service Type**:
+   - Must be: **"Web Service"** (NOT "Static Site")
+   - If it's "Static Site", create a new "Web Service" and delete the old one
+
+3. **Build Command** (IMPORTANT):
+   ```
+   cd frontend && npm install && npm run build
+   ```
+   This builds the frontend before starting the backend.
+
+4. **Start Command** (CRITICAL - This is missing!):
+   ```
+   cd backend && npm start
+   ```
+   This must be set, otherwise Render won't start your Express server!
+
+5. **Root Directory**:
+   - Leave empty (default: repository root)
+
+6. **Environment Variables**:
    - `NODE_ENV=production`
-   - `PORT` will be set automatically by Render
+   - `PORT` - Render sets this automatically, but your server.js should use `process.env.PORT || 3000`
+
+### The Problem:
+Your logs show:
+- ✅ Frontend dependencies installed
+- ✅ Backend dependencies installed  
+- ✅ Frontend built successfully
+- ❌ **Server never started!**
+
+This means the **Start Command** is missing or incorrect in your Render settings!
 
 ## Troubleshooting
 

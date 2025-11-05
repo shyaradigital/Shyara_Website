@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './style.css';
 import ResponsiveHome from './components/ResponsiveHome';
 import ResponsiveAbout from './components/ResponsiveAbout';

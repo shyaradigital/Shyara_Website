@@ -45,7 +45,10 @@ app.use(express.static(staticPath, {
     if (process.env.NODE_ENV !== 'production') {
       console.log('Serving static file:', filePath);
     }
-  }
+  },
+  // Don't fall through to next middleware if file doesn't exist
+  // This allows our catch-all route to handle it
+  fallthrough: true
 }));
 
 // SPA fallback: serve index.html for all GET requests that:
@@ -54,6 +57,13 @@ app.use(express.static(staticPath, {
 app.get('*', (req, res, next) => {
   // Skip API routes
   if (req.path.startsWith('/api')) {
+    return next();
+  }
+  
+  // Skip if it's a static file request (has extension)
+  // This prevents serving index.html for actual file requests
+  const hasExtension = /\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|map|txt|webmanifest)$/i.test(req.path);
+  if (hasExtension) {
     return next();
   }
   
