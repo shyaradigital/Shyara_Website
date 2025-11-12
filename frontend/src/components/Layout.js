@@ -102,7 +102,7 @@ const Layout = ({ children }) => {
                 )}
               </Link>
             )}
-            <Link to="/client-login" className="btn-signin"><LogIn style={{ width: 20, height: 20, marginRight: 4 }} />Sign In</Link>
+            <a href="https://dashboard.shyara.co.in" className="btn-signin"><LogIn style={{ width: 20, height: 20, marginRight: 4 }} />Sign In</a>
           </div>
         </header>
         <main className="site-main">{children}</main>
