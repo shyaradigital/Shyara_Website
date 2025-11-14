@@ -951,8 +951,8 @@ const Portfolio = () => {
             zIndex: 50,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            padding: '2rem',
+            justifyContent: 'flex-start',
+            padding: '4rem 1.5rem 1.5rem',
             backdropFilter: 'blur(8px)',
             minHeight: 'calc(100vh - 5rem)'
           }}>
