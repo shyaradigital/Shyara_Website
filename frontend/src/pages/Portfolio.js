@@ -3,10 +3,61 @@ import { X, ArrowLeft, ArrowRight } from 'lucide-react';
 import FancyText from '../components/FancyText';
 import AnimatedHeading from '../components/AnimatedHeading';
 
+const IMAGE_EXTENSION_REGEX = /\.(png|jpe?g)$/i;
+const PICS_PREFIX = '/pics/';
+
+const resolveMediaSources = (originalUrl) => {
+  const normalized = (originalUrl || '').replace(/\\/g, '/');
+  const picsIndex = normalized.indexOf(PICS_PREFIX);
+
+  if (picsIndex === -1) {
+    return {
+      optimized: normalized,
+      fallback: normalized,
+      mediaType: IMAGE_EXTENSION_REGEX.test(normalized) ? 'image' : 'video',
+    };
+  }
+
+  const relativePath = normalized.slice(picsIndex + PICS_PREFIX.length);
+  const fallback = `${process.env.PUBLIC_URL}${PICS_PREFIX}${relativePath}`;
+
+  if (IMAGE_EXTENSION_REGEX.test(relativePath)) {
+    return {
+      optimized: `${process.env.PUBLIC_URL}/pics-optimized/${relativePath}`.replace(
+        IMAGE_EXTENSION_REGEX,
+        '.webp',
+      ),
+      fallback,
+      mediaType: 'image',
+    };
+  }
+
+  return {
+    optimized: `${process.env.PUBLIC_URL}/pics-optimized/${relativePath}`,
+    fallback,
+    mediaType: 'video',
+  };
+};
+
+const attachOptimizedMedia = (services) =>
+  services.map((service) => ({
+    ...service,
+    samples: service.samples.map((sample) => {
+      const sources = resolveMediaSources(sample.img);
+      return {
+        ...sample,
+        img: sources.optimized,
+        fallbackImg: sources.fallback,
+        mediaType: sources.mediaType,
+      };
+    }),
+  }));
+
 // Lazy Image Component with Intersection Observer
-const LazyImage = ({ src, alt, style, onLoad, onError, ...props }) => {
+const LazyImage = ({ src, fallbackSrc, alt, style, onLoad, onError, ...props }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState(null);
   const imgRef = useRef(null);
 
   useEffect(() => {
@@ -31,10 +82,29 @@ const LazyImage = ({ src, alt, style, onLoad, onError, ...props }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isInView) {
+      setCurrentSrc(src);
+    }
+  }, [isInView, src]);
+
+  const handleLoad = (event) => {
+    setIsLoaded(true);
+    if (onLoad) onLoad(event);
+  };
+
+  const handleError = (event) => {
+    if (fallbackSrc && currentSrc !== fallbackSrc) {
+      setCurrentSrc(fallbackSrc);
+      return;
+    }
+    if (onError) onError(event);
+  };
+
   return (
     <img
       ref={imgRef}
-      src={isInView ? src : undefined}
+      src={isInView ? currentSrc : undefined}
       alt={alt}
       style={{
         ...style,
@@ -42,19 +112,17 @@ const LazyImage = ({ src, alt, style, onLoad, onError, ...props }) => {
         transition: 'opacity 0.3s ease-in-out',
       }}
       loading="lazy"
-      onLoad={(e) => {
-        setIsLoaded(true);
-        if (onLoad) onLoad(e);
-      }}
-      onError={onError}
+      onLoad={handleLoad}
+      onError={handleError}
       {...props}
     />
   );
 };
 
 // Lazy Video Component with Intersection Observer
-const LazyVideo = ({ src, style, onLoadedData, ...props }) => {
+const LazyVideo = ({ src, fallbackSrc, style, onLoadedData, onError, ...props }) => {
   const [isInView, setIsInView] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState(null);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -79,18 +147,34 @@ const LazyVideo = ({ src, style, onLoadedData, ...props }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isInView) {
+      setCurrentSrc(src);
+    }
+  }, [isInView, src]);
+
+  const handleError = (event) => {
+    if (fallbackSrc && currentSrc !== fallbackSrc) {
+      setCurrentSrc(fallbackSrc);
+      return;
+    }
+    if (onError) onError(event);
+  };
+
   return (
     <video
       ref={videoRef}
-      src={isInView ? src : undefined}
+      src={isInView ? currentSrc : undefined}
       style={style}
+      preload="metadata"
       onLoadedData={onLoadedData}
+      onError={handleError}
       {...props}
     />
   );
 };
 
-const portfolioServices = [
+const rawPortfolioServices = [
   {
     service: 'Social Media Management',
     description: 'Creative content, engaging posts, and strategic social media campaigns',
@@ -194,10 +278,14 @@ const portfolioServices = [
   }
 ];
 
+const portfolioServices = attachOptimizedMedia(rawPortfolioServices);
+
 const PortfolioModal = ({ isOpen, onClose, service }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (!isOpen || !service) return null;
+
+  const currentSample = service.samples[currentImageIndex];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % service.samples.length);
@@ -328,9 +416,10 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
             position: 'relative',
             background: '#111'
           }}>
-            {service.samples[currentImageIndex].img.endsWith('.mp4') ? (
+            {currentSample.mediaType === 'video' ? (
               <LazyVideo
-                src={service.samples[currentImageIndex].img}
+                src={currentSample.img}
+                fallbackSrc={currentSample.fallbackImg}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -345,17 +434,14 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
               />
             ) : (
               <LazyImage
-                src={service.samples[currentImageIndex].img}
-                alt={service.samples[currentImageIndex].title}
+                src={currentSample.img}
+                fallbackSrc={currentSample.fallbackImg}
+                alt={currentSample.title}
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'contain',
                   objectPosition: 'center'
-                }}
-                onError={(e) => {
-                  console.warn(`Failed to load image: ${service.samples[currentImageIndex].img}`);
-                  e.target.style.display = 'none';
                 }}
               />
             )}
@@ -431,10 +517,10 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
           textAlign: 'center'
         }}>
           <h3 style={{ color: '#e7e7e7', fontSize: '1.3rem', fontWeight: 700, marginBottom: 8, textAlign: 'center' }}>
-            {service.samples[currentImageIndex].title}
+            {currentSample.title}
           </h3>
           <p style={{ color: '#bdbdbd', fontSize: '1rem', lineHeight: 1.6, textAlign: 'center', margin: 0 }}>
-            {service.samples[currentImageIndex].description}
+            {currentSample.description}
           </p>
         </div>
 
@@ -449,7 +535,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
           borderTop: '1px solid rgba(162,89,247,0.1)'
         }}>
           {service.samples.map((sample, index) => {
-            const isVideo = sample.img.endsWith('.mp4');
+            const isVideo = sample.mediaType === 'video';
             return (
               <button
                 key={index}
@@ -469,6 +555,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                 {isVideo ? (
                   <LazyVideo
                     src={sample.img}
+                    fallbackSrc={sample.fallbackImg}
                     style={{
                       width: '100%',
                       height: '100%',
@@ -480,6 +567,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                 ) : (
                   <LazyImage
                     src={sample.img}
+                    fallbackSrc={sample.fallbackImg}
                     alt={sample.title}
                     style={{
                       width: '100%',
@@ -534,7 +622,7 @@ const ServiceCard = ({ service, onOpenModal }) => {
 
   // Get the first sample as thumbnail
   const thumbnail = service.samples[0];
-  const isVideo = thumbnail.img.endsWith('.mp4');
+  const isVideo = thumbnail.mediaType === 'video';
 
   return (
     <div
@@ -575,6 +663,7 @@ const ServiceCard = ({ service, onOpenModal }) => {
         {isVideo ? (
           <LazyVideo
             src={thumbnail.img}
+            fallbackSrc={thumbnail.fallbackImg}
             style={{ 
               width: '100%', 
               height: '100%', 
@@ -592,6 +681,7 @@ const ServiceCard = ({ service, onOpenModal }) => {
         ) : (
           <LazyImage
             src={thumbnail.img}
+            fallbackSrc={thumbnail.fallbackImg}
             alt={service.service}
             style={{ 
               width: '100%', 
@@ -605,10 +695,6 @@ const ServiceCard = ({ service, onOpenModal }) => {
               opacity: imageLoaded ? 1 : 0.7
             }}
             onLoad={() => setImageLoaded(true)}
-            onError={(e) => {
-              console.warn(`Failed to load image: ${thumbnail.img}`);
-              e.target.style.display = 'none';
-            }}
           />
         )}
         
