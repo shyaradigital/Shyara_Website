@@ -942,19 +942,20 @@ const Portfolio = () => {
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1rem', position: 'relative', minHeight: '100vh' }}>
         {showLoader && (
           <div style={{
-            position: 'absolute',
+            position: 'fixed',
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
             background: 'rgba(5,5,12,0.92)',
-            zIndex: 50,
+            zIndex: 999,
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            padding: '4rem 1.5rem 1.5rem',
-            backdropFilter: 'blur(8px)',
-            minHeight: 'calc(100vh - 5rem)'
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            paddingTop: '5rem',
+            paddingLeft: '1.5rem',
+            paddingRight: '1.5rem',
+            backdropFilter: 'blur(8px)'
           }}>
             <div style={{
               background: 'rgba(20,20,30,0.9)',
