@@ -1,10 +1,44 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { X, ArrowLeft, ArrowRight } from 'lucide-react';
 import FancyText from '../components/FancyText';
 import AnimatedHeading from '../components/AnimatedHeading';
 
 const IMAGE_EXTENSION_REGEX = /\.(png|jpe?g)$/i;
 const PICS_PREFIX = '/pics/';
+const PREFETCH_INITIAL_COUNT = 12;
+const MIN_LOADER_DURATION = 1200; // ms
+
+const prefetchSingleMedia = (sample, signal) => {
+  if (signal?.aborted || typeof window === 'undefined') {
+    return Promise.resolve();
+  }
+
+  if (sample.mediaType === 'image') {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.src = sample.img;
+      img.onload = img.onerror = () => resolve();
+    });
+  }
+
+  return fetch(sample.img, {
+    mode: 'no-cors',
+    cache: 'force-cache',
+    signal
+  }).catch(() => {}).then(() => undefined);
+};
+
+const prefetchMediaAssets = async (samples, { signal, onProgress } = {}) => {
+  let completed = 0;
+  for (const sample of samples) {
+    if (signal?.aborted) break;
+    await prefetchSingleMedia(sample, signal);
+    completed += 1;
+    onProgress?.(completed);
+  }
+};
 
 const resolveMediaSources = (originalUrl) => {
   const normalized = (originalUrl || '').replace(/\\/g, '/');
@@ -754,6 +788,80 @@ const ServiceCard = ({ service, onOpenModal }) => {
 const Portfolio = () => {
   const [selectedService, setSelectedService] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showLoader, setShowLoader] = useState(true);
+  const [prefetchProgress, setPrefetchProgress] = useState(0);
+
+  const allSamples = useMemo(
+    () => portfolioServices.flatMap((service) => service.samples),
+    []
+  );
+  const initialPrefetchSamples = useMemo(
+    () => allSamples.slice(0, PREFETCH_INITIAL_COUNT),
+    [allSamples]
+  );
+
+  useEffect(() => {
+    if (!initialPrefetchSamples.length) {
+      setShowLoader(false);
+      return undefined;
+    }
+
+    let isMounted = true;
+    const controller = new AbortController();
+    const startTime = performance.now();
+
+    prefetchMediaAssets(initialPrefetchSamples, {
+      signal: controller.signal,
+      onProgress: (count) => {
+        if (isMounted) {
+          setPrefetchProgress(count);
+        }
+      }
+    }).finally(() => {
+      const elapsed = performance.now() - startTime;
+      const wait = Math.max(MIN_LOADER_DURATION - elapsed, 0);
+      setTimeout(() => {
+        if (isMounted) {
+          setShowLoader(false);
+        }
+      }, wait);
+    });
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [initialPrefetchSamples]);
+
+  useEffect(() => {
+    if (showLoader || allSamples.length <= PREFETCH_INITIAL_COUNT) return undefined;
+
+    const remainingSamples = allSamples.slice(PREFETCH_INITIAL_COUNT);
+    let cancelled = false;
+    let idleId;
+
+    const runPrefetch = () => {
+      if (cancelled) return;
+      prefetchMediaAssets(remainingSamples);
+    };
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(runPrefetch, { timeout: 2000 });
+    } else {
+      idleId = setTimeout(runPrefetch, 600);
+    }
+
+    return () => {
+      cancelled = true;
+      if (typeof idleId === 'number') {
+        if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+          window.cancelIdleCallback(idleId);
+        } else {
+          clearTimeout(idleId);
+        }
+      }
+    };
+  }, [showLoader, allSamples]);
 
   const handleOpenModal = (service) => {
     setSelectedService(service);
@@ -764,6 +872,13 @@ const Portfolio = () => {
     setIsModalOpen(false);
     setSelectedService(null);
   };
+
+  const loaderProgress = initialPrefetchSamples.length
+    ? Math.min(
+        Math.round((prefetchProgress / initialPrefetchSamples.length) * 100),
+        100
+      )
+    : 100;
 
   return (
   <div style={{ minHeight: '100vh', color: 'var(--color-text-primary)', padding: '0 0 3rem 0', marginTop:'-5rem', fontFamily: 'inherit' }}>
@@ -824,7 +939,62 @@ const Portfolio = () => {
       `}
     </style>
     
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1rem' }}>
+    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1rem', position: 'relative' }}>
+        {showLoader && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            minHeight: '100%',
+            background: 'rgba(5,5,12,0.92)',
+            zIndex: 50,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '2rem',
+            backdropFilter: 'blur(8px)'
+          }}>
+            <div style={{
+              background: 'rgba(20,20,30,0.9)',
+              border: '1px solid rgba(162,89,247,0.25)',
+              borderRadius: 24,
+              padding: '2rem',
+              width: '100%',
+              maxWidth: 420,
+              textAlign: 'center',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.45)'
+            }}>
+              <p style={{ color: '#a259f7', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                Preparing Portfolio
+              </p>
+              <h3 style={{ margin: 0, color: '#fff', fontSize: '1.6rem', fontWeight: 700 }}>
+                Loading showcase…
+              </h3>
+              <p style={{ color: '#a7a7a7', margin: '0.75rem 0 1.5rem' }}>
+                High-resolution images & reels are warming up in the background.
+              </p>
+              <div style={{
+                width: '100%',
+                height: 8,
+                background: 'rgba(255,255,255,0.08)',
+                borderRadius: 999,
+                overflow: 'hidden',
+                marginBottom: '0.75rem'
+              }}>
+                <div style={{
+                  width: `${loaderProgress}%`,
+                  height: '100%',
+                  background: 'linear-gradient(90deg,#7f42a7,#a259f7)',
+                  transition: 'width 0.3s ease'
+                }} />
+              </div>
+              <span style={{ color: '#e7e7e7', fontSize: '0.9rem', letterSpacing: '0.02em' }}>
+                {loaderProgress}%
+              </span>
+            </div>
+          </div>
+        )}
         <AnimatedHeading text="Our Portfolio" />
         <p style={{ fontSize: '1.15rem', color: '#a7a7a7', textAlign: 'center', marginBottom: '3rem', maxWidth: 700, marginLeft: 'auto', marginRight: 'auto' }}>
           Explore our work across all services. Click on any service to view sample projects and designs.
