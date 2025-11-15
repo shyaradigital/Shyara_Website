@@ -241,11 +241,13 @@ const rawPortfolioServices = [
     service: 'Website Development',
     description: 'Modern, responsive websites that convert visitors into customers',
     samples: [
-      { img: process.env.PUBLIC_URL + '/pics/web1.png', title: 'Portfolio Website', description: 'Responsive site with booking and payment features' },
-      { img: process.env.PUBLIC_URL + '/pics/web2.png', title: 'Tech Startup Site', description: 'Modern website for tech startup' },
-      { img: process.env.PUBLIC_URL + '/pics/web3.png', title: 'E-commerce Platform', description: 'Full-featured online store' },
-      { img: process.env.PUBLIC_URL + '/pics/web4.png', title: 'Corporate Website', description: 'Professional corporate website design' },
-      { img: process.env.PUBLIC_URL + '/pics/web5.png', title: 'Business Platform', description: 'Comprehensive business solution website' },
+      { img: process.env.PUBLIC_URL + '/pics/web1.png', title: 'Portfolio Website', description: 'Responsive site with booking and payment features', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Banquet_Sample_1.html' },
+      { img: process.env.PUBLIC_URL + '/pics/web2.png', title: 'Tech Startup Site', description: 'Modern website for tech startup', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Banquet_Sample_2.html' },
+      { img: process.env.PUBLIC_URL + '/pics/web3.png', title: 'E-commerce Platform', description: 'Full-featured online store', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Banquete_Website.html' },
+      { img: process.env.PUBLIC_URL + '/pics/web4.png', title: 'Corporate Website', description: 'Professional corporate website design', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Restaurant_Sample_1.html' },
+      { img: process.env.PUBLIC_URL + '/pics/web5.png', title: 'Business Platform', description: 'Comprehensive business solution website', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Restaurant_Sample_2.html' },
+      { img: process.env.PUBLIC_URL + '/pics/porto.png', title: 'Premium Restaurant', description: 'Elegant fine-dining website experience', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_premium_restaurant_sample_1.html' },
+      { img: process.env.PUBLIC_URL + '/pics/linkedin.png', title: 'Burger Cafe Concept', description: 'Playful landing page for quick-service cafe', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_BurgerCafe.html' },
     ],
     results: '40% more bookings, improved lead generation and conversion rates'
   },
@@ -316,18 +318,28 @@ const portfolioServices = attachOptimizedMedia(rawPortfolioServices);
 
 const PortfolioModal = ({ isOpen, onClose, service }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showMockup, setShowMockup] = useState(false);
 
-  if (!isOpen || !service) return null;
-
-  const currentSample = service.samples[currentImageIndex];
+  const samples = service?.samples ?? [];
+  const sampleCount = samples.length || 1;
+  const currentSample = samples[currentImageIndex] ?? samples[0];
+  const hasContent = Boolean(isOpen && service && currentSample);
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % service.samples.length);
+    setCurrentImageIndex((prev) => (prev + 1) % sampleCount);
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + service.samples.length) % service.samples.length);
+    setCurrentImageIndex((prev) => (prev - 1 + sampleCount) % sampleCount);
   };
+
+  useEffect(() => {
+    setShowMockup(false);
+  }, [service, currentImageIndex]);
+
+  if (!hasContent) {
+    return null;
+  }
 
   const handleBackdropClick = (e) => {
     // Close modal only if clicking on the backdrop, not the modal content
@@ -556,6 +568,39 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
           <p style={{ color: '#bdbdbd', fontSize: '1rem', lineHeight: 1.6, textAlign: 'center', margin: 0 }}>
             {currentSample.description}
           </p>
+          {currentSample.mockup && (
+            <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+              <button
+                onClick={() => setShowMockup(true)}
+                style={{
+                  background: 'linear-gradient(90deg,#7f42a7,#a259f7)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 999,
+                  padding: '0.65rem 1.5rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  boxShadow: '0 6px 18px rgba(162,89,247,0.35)'
+                }}
+              >
+                Interactive Preview
+              </button>
+              <button
+                onClick={() => window.open(currentSample.mockup, '_blank', 'noopener,noreferrer')}
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  color: '#e7e7e7',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: 999,
+                  padding: '0.65rem 1.5rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Open in New Tab
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Thumbnail navigation */}
@@ -646,6 +691,65 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
           })}
         </div>
       </div>
+      {currentSample.mockup && showMockup && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.85)',
+          zIndex: 20000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '2rem'
+        }}>
+          <div style={{
+            background: '#05050b',
+            borderRadius: 16,
+            border: '1px solid rgba(162,89,247,0.3)',
+            width: '100%',
+            maxWidth: '1100px',
+            height: '90vh',
+            position: 'relative',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <button
+              onClick={() => setShowMockup(false)}
+              style={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
+                background: 'rgba(255,255,255,0.08)',
+                border: 'none',
+                borderRadius: 999,
+                color: '#fff',
+                padding: '0.4rem 0.9rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                zIndex: 10
+              }}
+            >
+              Close
+            </button>
+            <iframe
+              title={currentSample.title}
+              src={currentSample.mockup}
+              style={{
+                flex: 1,
+                border: 'none',
+                borderRadius: 'inherit',
+                marginTop: '2.25rem',
+                background: '#fff'
+              }}
+              sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-popups"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURELIA INDIAN SUPPER CLUB | Contemporary Indian Degustation</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="AURELIA INDIAN SUPPER CLUB - Progressive Indian fine dining with degustation experiences at Bandra-Kurla Complex, Mumbai">
+    <meta property="og:title" content="AURELIA INDIAN SUPPER CLUB">
+    <meta property="og:description" content="Contemporary Indian Degustation Experiences in Mumbai">
+    <meta property="og:type" content="website">
+    <meta property="twitter:card" content="summary_large_image">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "AURELIA INDIAN SUPPER CLUB",
+        "description": "Ultra-premium modern Indian fine-dining with degustation experiences",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Level 38, Aurelia Tower, BKC",
+            "addressLocality": "Mumbai",
+            "postalCode": "400051",
+            "addressCountry": "IN"
+        },
+        "telephone": "+919584661610",
+        "email": "support@shyara.co.in",
+        "servesCuisine": ["Indian", "Contemporary Indian", "Degustation"],
+        "openingHours": [
+            "Mo-Th 12:30-15:30,19:00-23:00",
+            "Fr-Su 12:30-16:00,19:00-23:30"
+        ]
+    }
+    </script>
+    
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --charcoal: #0C0C0C;
+            --charcoal-light: #111111;
+            --gold: #C9A56E;
+            --gold-light: #DAB982;
+            --gold-glow: rgba(201, 165, 110, 0.15);
+            --ivory: #F4EFE6;
+            --ivory-light: #F7F3EC;
+            --ivory-muted: #E8E4DC;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 6rem;
+            --border-radius: 4px;
+            --transition: all 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--charcoal);
+            color: var(--ivory);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-sm);
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: var(--spacing-md);
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        p {
+            margin-bottom: var(--spacing-sm);
+            font-weight: 300;
+            color: var(--ivory-muted);
+        }
+
+        a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--gold-light);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-sm);
+        }
+
+        section {
+            padding: var(--spacing-xl) 0;
+            position: relative;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--gold-glow), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            border-color: var(--gold-light);
+            color: var(--gold-light);
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--charcoal);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            color: var(--charcoal);
+        }
+
+        .btn-secondary {
+            border-color: var(--ivory-muted);
+            color: var(--ivory-muted);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--ivory);
+            color: var(--ivory);
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(12, 12, 12, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(201, 165, 110, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ivory-muted);
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(12, 12, 12, 0.4), rgba(12, 12, 12, 0.7)), 
+                        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 var(--spacing-sm);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            margin-bottom: var(--spacing-md);
+            color: var(--ivory-muted);
+            font-weight: 300;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: var(--spacing-md);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: var(--spacing-sm);
+        }
+
+        .quick-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(201, 165, 110, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .quick-btn:hover {
+            background: var(--gold);
+            color: var(--charcoal);
+        }
+
+        /* Highlights Section */
+        .highlights {
+            background: var(--charcoal-light);
+        }
+
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .highlight-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(201, 165, 110, 0.1);
+            padding: var(--spacing-md);
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .highlight-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--gold);
+        }
+
+        /* Chef Section */
+        .chef-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            align-items: center;
+        }
+
+        .chef-image {
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .chef-content h2 {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Menu Section */
+        .menu-section {
+            background: var(--charcoal-light);
+        }
+
+        .menu-tabs {
+            display: flex;
+            gap: 1px;
+            margin-bottom: var(--spacing-md);
+            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-tab {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: none;
+            color: var(--ivory-muted);
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .menu-tab.active {
+            background: var(--gold);
+            color: var(--charcoal);
+            font-weight: 600;
+        }
+
+        .menu-tab:hover:not(.active) {
+            background: rgba(201, 165, 110, 0.1);
+            color: var(--gold);
+        }
+
+        .menu-content {
+            display: none;
+        }
+
+        .menu-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .menu-items {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .menu-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item-name {
+            font-weight: 500;
+            color: var(--ivory);
+        }
+
+        .menu-item-price {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .menu-item-desc {
+            font-size: 0.9rem;
+            color: var(--ivory-muted);
+        }
+
+        .menu-download {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+        }
+
+        /* Gallery Section */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Reservation Section */
+        .reservation-section {
+            background: var(--charcoal-light);
+        }
+
+        .reservation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+        }
+
+        .reservation-form {
+            display: grid;
+            gap: var(--spacing-sm);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            margin-bottom: 0.5rem;
+            color: var(--ivory-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--ivory);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px var(--gold-glow);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .direct-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        /* Private Dining Section */
+        .private-dining-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .private-room {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(201, 165, 110, 0.1);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .private-room:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .private-room-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .private-room-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .private-room:hover .private-room-image img {
+            transform: scale(1.05);
+        }
+
+        .private-room-content {
+            padding: var(--spacing-md);
+        }
+
+        .private-room-capacity {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            background: var(--charcoal-light);
+        }
+
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--gold);
+            padding: var(--spacing-md);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .testimonial-author {
+            font-weight: 500;
+            color: var(--gold);
+        }
+
+        /* Location Section */
+        .location-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+        }
+
+        .map-container {
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hours-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .hours-table tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .hours-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .hours-table td {
+            padding: 0.75rem 0;
+        }
+
+        .hours-table td:first-child {
+            font-weight: 500;
+            color: var(--ivory);
+        }
+
+        .hours-table td:last-child {
+            text-align: right;
+            color: var(--ivory-muted);
+        }
+
+        .parking-notice {
+            margin-top: var(--spacing-md);
+            padding: 1rem;
+            background: rgba(201, 165, 110, 0.1);
+            border-left: 3px solid var(--gold);
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            text-align: center;
+            padding: var(--spacing-lg) 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: var(--spacing-md) auto;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: none;
+            color: var(--ivory);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: var(--spacing-md);
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--ivory-muted);
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            color: var(--charcoal);
+        }
+
+        /* Footer */
+        .footer {
+            padding: var(--spacing-lg) 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer p {
+            color: var(--ivory-muted);
+            font-size: 0.9rem;
+        }
+
+        .shyara-rights {
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(12, 12, 12, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .lightbox-close, .lightbox-prev, .lightbox-next {
+            position: absolute;
+            background: rgba(12, 12, 12, 0.7);
+            border: none;
+            color: var(--ivory);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover {
+            background: var(--gold);
+            color: var(--charcoal);
+        }
+
+        .lightbox-close {
+            top: 0;
+            right: 0;
+        }
+
+        .lightbox-prev {
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .lightbox-next {
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(12, 12, 12, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--charcoal-light);
+            border: 1px solid var(--gold);
+            padding: var(--spacing-lg);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--ivory);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .chef-section, .reservation-container, .location-container {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-tabs {
+                flex-direction: column;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-input {
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                border-bottom: none;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container nav-container">
+            <div class="logo">AURELIA</div>
+            <div class="nav-links">
+                <a href="#hero" class="nav-link">Home</a>
+                <a href="#highlights" class="nav-link">Experiences</a>
+                <a href="#chef" class="nav-link">Our Story</a>
+                <a href="#menu" class="nav-link">Menus</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#reservations" class="nav-link">Reservations</a>
+                <a href="#private-dining" class="nav-link">Private Events</a>
+                <a href="#location" class="nav-link">Location</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>AURELIA</h1>
+            <p class="hero-subtitle">Contemporary Indian Degustation Experiences</p>
+            <div class="hero-cta">
+                <a href="#reservations" class="btn btn-primary">Reserve a Table</a>
+                <a href="#menu" class="btn btn-secondary">View Tasting Menu</a>
+            </div>
+            <div class="quick-actions">
+                <a href="tel:+919584661610" class="quick-btn" aria-label="Call Aurelia">
+                    📞
+                </a>
+                <a href="https://wa.me/919584661610?text=Hello%20Aurelia%2C%20I%20would%20like%20to%20reserve%20a%20table" class="quick-btn" aria-label="WhatsApp Aurelia">
+                    💬
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlights Section -->
+    <section id="highlights" class="highlights">
+        <div class="container">
+            <h2>Curated Experiences</h2>
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <div class="highlight-icon">🌿</div>
+                    <h3>Seasonal Spice Degustation</h3>
+                    <p>A journey through India's spice seasons with seven courses that evolve with the harvest.</p>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">👨‍🍳</div>
+                    <h3>Chef's Table Experience</h3>
+                    <p>An exclusive counter seating with direct interaction with our culinary team and bespoke creations.</p>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">🗺️</div>
+                    <h3>Regional Culinary Narratives</h3>
+                    <p>From Kashmir to Kerala, explore India's diverse culinary landscapes through progressive interpretations.</p>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">🍷</div>
+                    <h3>Wine & Pairing Atelier</h3>
+                    <p>Curated wine pairings and sommelier-led experiences complementing our spice-forward cuisine.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chef Narrative -->
+    <section id="chef" class="chef-section">
+        <div class="container">
+            <div class="chef-image">
+                <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Chef at work in Aurelia kitchen" loading="lazy">
+            </div>
+            <div class="chef-content">
+                <h2>Our Culinary Philosophy</h2>
+                <p>At Aurelia, we believe in the transformative power of spices—not merely as flavor enhancers but as storytellers of India's rich culinary heritage. Our approach is rooted in reverence for tradition while embracing progressive techniques.</p>
+                <p>We source single-origin spices directly from artisanal growers across India, celebrating the unique terroir of each region. Our charcoal slow-fire cooking and traditional tandoor methods are reimagined through contemporary culinary artistry.</p>
+                <p>Each dish is a narrative—a delicate balance of smoke, spice, and texture that honors the past while writing the future of Indian fine dining.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="menu-section">
+        <div class="container">
+            <h2>Our Menus</h2>
+            <div class="menu-tabs">
+                <button class="menu-tab active" data-tab="degustation">Degustation Menu</button>
+                <button class="menu-tab" data-tab="carte">À La Carte</button>
+                <button class="menu-tab" data-tab="vegetarian">Vegetarian Journey</button>
+                <button class="menu-tab" data-tab="desserts">Desserts</button>
+                <button class="menu-tab" data-tab="pairings">Pairings</button>
+            </div>
+
+            <!-- Degustation Menu -->
+            <div class="menu-content active" id="degustation">
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Amuse-Bouche: Spiced Pani Puri</h4>
+                            <span class="menu-item-price"></span>
+                        </div>
+                        <p class="menu-item-desc">Deconstructed pani puri with tamarind foam, mint sphere, and jaljeera air</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Scallop Moilee</h4>
+                            <span class="menu-item-price"></span>
+                        </div>
+                        <p class="menu-item-desc">Seared scallops in a delicate Kerala coconut moilee, pickled kumquat, curry leaf oil</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Duck Chettinad</h4>
+                            <span class="menu-item-price"></span>
+                        </div>
+                        <p class="menu-item-desc">Confit duck leg with Chettinad spice crust, roasted pear chutney, black pepper reduction</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Wild Mushroom Biryani</h4>
+                            <span class="menu-item-price"></span>
+                        </div>
+                        <p class="menu-item-desc">Aged basmati rice with foraged mushrooms, saffron, rose petals, gold leaf</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Mithai Trio</h4>
+                            <span class="menu-item-price"></span>
+                        </div>
+                        <p class="menu-item-desc">Contemporary interpretations of rasgulla, jalebi, and kulfi with cardamom soil</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- À La Carte Menu -->
+            <div class="menu-content" id="carte">
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Tandoori Octopus</h4>
+                            <span class="menu-item-price">₹2200</span>
+                        </div>
+                        <p class="menu-item-desc">Grilled octopus with kolhapuri masala, smoked eggplant puree, micro greens</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Lobster Malai Curry</h4>
+                            <span class="menu-item-price">₹3200</span>
+                        </div>
+                        <p class="menu-item-desc">Butter-poached lobster in delicate malai curry, steamed rice, lime zest</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Wagyu Beef Cheek Nihari</h4>
+                            <span class="menu-item-price">₹2800</span>
+                        </div>
+                        <p class="menu-item-desc">Slow-braised wagyu in traditional nihari spices, bone marrow toast</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Truffle Naan</h4>
+                            <span class="menu-item-price">₹600</span>
+                        </div>
+                        <p class="menu-item-desc">Artisanal naan stuffed with black truffle, served with cultured butter</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vegetarian Menu -->
+            <div class="menu-content" id="vegetarian">
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Heirloom Tomato Chaat</h4>
+                            <span class="menu-item-price">₹1200</span>
+                        </div>
+                        <p class="menu-item-desc">Rainbow tomatoes with tamarind gel, crispy okra, sev, yogurt foam</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Morel Mushroom Kofta</h4>
+                            <span class="menu-item-price">₹1800</span>
+                        </div>
+                        <p class="menu-item-desc">Morel and paneer dumplings in cashew makhani, saffron rice</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Jackfruit Galouti</h4>
+                            <span class="menu-item-price">₹1600</span>
+                        </div>
+                        <p class="menu-item-desc">Spiced jackfruit patties with roomali roti, pickled onions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desserts Menu -->
+            <div class="menu-content" id="desserts">
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Saffron Panna Cotta</h4>
+                            <span class="menu-item-price">₹900</span>
+                        </div>
+                        <p class="menu-item-desc">Cardamom-infused panna cotta with rose petal brittle, pistachio crumb</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Chocolate Samosa</h4>
+                            <span class="menu-item-price">₹850</span>
+                        </div>
+                        <p class="menu-item-desc">Dark chocolate and orange filling, saffron anglaise, candied nuts</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Mango & Coconut Textures</h4>
+                            <span class="menu-item-price">₹950</span>
+                        </div>
+                        <p class="menu-item-desc">Alphonso mango variations with coconut sorbet, jaggery caramel</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pairings Menu -->
+            <div class="menu-content" id="pairings">
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Wine Pairing</h4>
+                            <span class="menu-item-price">₹3500</span>
+                        </div>
+                        <p class="menu-item-desc">Five curated wines complementing the degustation menu</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Non-Alcoholic Journey</h4>
+                            <span class="menu-item-price">₹1800</span>
+                        </div>
+                        <p class="menu-item-desc">Artisanal shrubs, house-made sodas, and spice-infused elixirs</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 class="menu-item-name">Cocktail Pairing</h4>
+                            <span class="menu-item-price">₹2800</span>
+                        </div>
+                        <p class="menu-item-desc">Signature cocktails crafted to enhance each course</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-download">
+                <a href="#" class="btn btn-secondary">Download Menu (PDF)</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2>Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Elegant dining setting at Aurelia" loading="lazy">
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Artisanal Indian cuisine plating" loading="lazy">
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1971&q=80">
+                    <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Spices and ingredients at Aurelia kitchen" loading="lazy">
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80">
+                    <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Wine cellar and pairings at Aurelia" loading="lazy">
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1559329007-40df8a9345d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80">
+                    <img src="https://images.unsplash.com/photo-1559329007-40df8a9345d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Chef preparing dishes in Aurelia kitchen" loading="lazy">
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80">
+                    <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Private dining room ambiance" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section id="reservations" class="reservation-section">
+        <div class="container">
+            <h2>Reservations</h2>
+            <div class="reservation-container">
+                <div class="reservation-form">
+                    <div class="form-group">
+                        <label class="form-label" for="res-date">Date</label>
+                        <input type="date" id="res-date" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="res-time">Time</label>
+                        <select id="res-time" class="form-select" required>
+                            <option value="">Select Time</option>
+                            <option value="12:30">12:30 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="13:30">1:30 PM</option>
+                            <option value="19:00">7:00 PM</option>
+                            <option value="19:30">7:30 PM</option>
+                            <option value="20:00">8:00 PM</option>
+                            <option value="20:30">8:30 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="res-party">Party Size</label>
+                        <select id="res-party" class="form-select" required>
+                            <option value="">Select Guests</option>
+                            <option value="1">1 Person</option>
+                            <option value="2">2 People</option>
+                            <option value="3">3 People</option>
+                            <option value="4">4 People</option>
+                            <option value="5">5 People</option>
+                            <option value="6">6 People</option>
+                            <option value="7">7 People</option>
+                            <option value="8">8 People</option>
+                            <option value="9+">9+ People (Private Dining)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="res-name">Full Name</label>
+                        <input type="text" id="res-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="res-email">Email</label>
+                        <input type="email" id="res-email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="res-phone">Phone</label>
+                        <input type="tel" id="res-phone" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="res-notes">Special Requests</label>
+                        <textarea id="res-notes" class="form-textarea"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="res-submit">Request Reservation</button>
+                    
+                    <div class="direct-actions">
+                        <a href="tel:+919584661610" class="btn btn-secondary">Call Us</a>
+                        <a href="https://wa.me/919584661610?text=Hello%20Aurelia%2C%20I%20would%20like%20to%20reserve%20a%20table" class="btn btn-secondary">WhatsApp</a>
+                        <a href="mailto:support@shyara.co.in?subject=Aurelia%20Reservation%20Request" class="btn btn-secondary">Email</a>
+                    </div>
+                </div>
+                <div>
+                    <h3>Reservation Notes</h3>
+                    <p>We recommend reserving at least two weeks in advance for weekend dining. For same-day reservations, please call directly.</p>
+                    <p>Dress code: Smart elegant. Jackets preferred for gentlemen.</p>
+                    <p>For parties of 9 or more, please consider our private dining options.</p>
+                    <p>All reservations are confirmed via email or SMS with 24 hours notice.</p>
+                    
+                    <h3 style="margin-top: var(--spacing-md);">Hours</h3>
+                    <p>Mon–Thu: 12:30–15:30, 19:00–23:00</p>
+                    <p>Fri–Sun: 12:30–16:00, 19:00–23:30</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Private Dining Section -->
+    <section id="private-dining" class="private-dining">
+        <div class="container">
+            <h2>Private Dining & Events</h2>
+            <div class="private-dining-grid">
+                <div class="private-room">
+                    <div class="private-room-image">
+                        <img src="https://images.unsplash.com/photo-1556909114-4d0d853e5e25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Spice Room private dining" loading="lazy">
+                    </div>
+                    <div class="private-room-content">
+                        <h3>The Spice Room</h3>
+                        <p class="private-room-capacity">Up to 12 guests</p>
+                        <p>An intimate space with views of the open kitchen, perfect for chef-led experiences and spice tastings.</p>
+                    </div>
+                </div>
+                <div class="private-room">
+                    <div class="private-room-image">
+                        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2098&q=80" alt="Wine Cellar private dining" loading="lazy">
+                    </div>
+                    <div class="private-room-content">
+                        <h3>The Wine Cellar</h3>
+                        <p class="private-room-capacity">Up to 20 guests</p>
+                        <p>Surrounded by our curated wine collection, this room offers sommelier-led pairings and tastings.</p>
+                    </div>
+                </div>
+                <div class="private-room">
+                    <div class="private-room-image">
+                        <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80" alt="Skyline Terrace private dining" loading="lazy">
+                    </div>
+                    <div class="private-room-content">
+                        <h3>Skyline Terrace</h3>
+                        <p class="private-room-capacity">Up to 40 guests</p>
+                        <p>Our largest private space with panoramic views of Mumbai, ideal for corporate events and celebrations.</p>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: var(--spacing-lg);">
+                <button class="btn btn-primary" id="private-event-btn">Enquire for a Private Event</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials-section">
+        <div class="container">
+            <h2>Testimonials</h2>
+            <div class="testimonials">
+                <div class="testimonial">
+                    <p class="testimonial-text">"Aurelia redefines Indian fine dining. The spice degustation was a revelation—each course told a story of India's culinary heritage while pushing boundaries."</p>
+                    <p class="testimonial-author">— Food & Wine Magazine</p>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"The most sophisticated Indian dining experience I've encountered globally. The attention to detail from spice sourcing to plating is extraordinary."</p>
+                    <p class="testimonial-author">— Rohan M., Regular Guest</p>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"Our private event in the Spice Room was flawless. The team created a bespoke menu that celebrated regional diversity with modern artistry."</p>
+                    <p class="testimonial-author">— Corporate Client</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section id="location" class="location">
+        <div class="container">
+            <h2>Location & Hours</h2>
+            <div class="location-container">
+                <div>
+                    <h3>Find Us</h3>
+                    <p>Level 38, Aurelia Tower, BKC, Mumbai 400051</p>
+                    
+                    <div class="map-container">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3772.176773068499!2d72.86874301599543!3d19.070232287093902!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c91a4cbabc5f%3A0x2fa0ec58d4c85ff!2sBandra%20Kurla%20Complex!5e0!3m2!1sen!2sin!4v1700567890123"
+                            width="100%"
+                            height="100%"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Aurelia Tower Location">
+                        </iframe>
+                    </div>
+                    
+                    <div class="parking-notice">
+                        <p>Valet parking available. Complimentary for diners.</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Hours</h3>
+                    <table class="hours-table">
+                        <tr>
+                            <td>Monday – Thursday</td>
+                            <td>12:30 – 15:30, 19:00 – 23:00</td>
+                        </tr>
+                        <tr>
+                            <td>Friday – Sunday</td>
+                            <td>12:30 – 16:00, 19:00 – 23:30</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 style="margin-top: var(--spacing-md);">Contact</h3>
+                    <p>Phone: +91 95846 61610</p>
+                    <p>Email: support@shyara.co.in</p>
+                    
+                    <div style="margin-top: var(--spacing-md);">
+                        <a href="https://maps.google.com/?q=Level+38,+Aurelia+Tower,+BKC,+Mumbai+400051" class="btn btn-primary">Get Directions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter & Social -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>Stay Connected</h2>
+            <p>Join our newsletter for seasonal menu updates and exclusive events</p>
+            <form class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+            
+            <div class="social-links">
+                <a href="#" class="social-link" aria-label="Instagram">
+                    📷
+                </a>
+                <!-- Add more social links as needed -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>AURELIA INDIAN SUPPER CLUB</p>
+            <p>Level 38, Aurelia Tower, BKC, Mumbai 400051</p>
+            <p>+91 95846 61610 | support@shyara.co.in</p>
+            
+            <div class="shyara-rights">
+                <p>Designed & Curated for demonstration by Shyara Digital. © Shyara Digital. All Rights Reserved. For professional branding and website development: <a href="https://shyara.co.in">https://shyara.co.in</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">×</button>
+        <button class="lightbox-prev" id="lightbox-prev">‹</button>
+        <button class="lightbox-next" id="lightbox-next">›</button>
+        <div class="lightbox-content">
+            <img class="lightbox-img" id="lightbox-img" src="" alt="">
+        </div>
+    </div>
+
+    <!-- Private Event Modal -->
+    <div class="modal" id="private-event-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="private-event-close">×</button>
+            <h2>Private Event Enquiry</h2>
+            <p>Please provide your details and our events team will contact you within 24 hours.</p>
+            <form id="private-event-form">
+                <div class="form-group">
+                    <label class="form-label" for="event-name">Name</label>
+                    <input type="text" id="event-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="event-email">Email</label>
+                    <input type="email" id="event-email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="event-phone">Phone</label>
+                    <input type="tel" id="event-phone" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="event-date">Preferred Date</label>
+                    <input type="date" id="event-date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="event-guests">Number of Guests</label>
+                    <input type="number" id="event-guests" class="form-input" min="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="event-notes">Event Details</label>
+                    <textarea id="event-notes" class="form-textarea"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Enquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reservation Confirmation Modal -->
+    <div class="modal" id="reservation-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="reservation-close">×</button>
+            <h2>Reservation Request Received</h2>
+            <p>Thank you for your reservation request at Aurelia. We will confirm your booking via email or phone within 24 hours.</p>
+            <p>For immediate assistance, please call us at +91 95846 61610.</p>
+            <button class="btn btn-primary" id="reservation-modal-close">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Menu Tabs
+        document.querySelectorAll('.menu-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.menu-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Gallery Lightbox
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
+        
+        let currentImageIndex = 0;
+        
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                currentImageIndex = index;
+                lightboxImg.src = item.getAttribute('data-src');
+                lightbox.classList.add('active');
+            });
+        });
+        
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+        
+        lightboxPrev.addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+            lightboxImg.src = galleryItems[currentImageIndex].getAttribute('data-src');
+        });
+        
+        lightboxNext.addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+            lightboxImg.src = galleryItems[currentImageIndex].getAttribute('data-src');
+        });
+        
+        // Close lightbox when clicking outside the image
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        // Private Event Modal
+        const privateEventBtn = document.getElementById('private-event-btn');
+        const privateEventModal = document.getElementById('private-event-modal');
+        const privateEventClose = document.getElementById('private-event-close');
+        
+        privateEventBtn.addEventListener('click', () => {
+            privateEventModal.classList.add('active');
+        });
+        
+        privateEventClose.addEventListener('click', () => {
+            privateEventModal.classList.remove('active');
+        });
+
+        // Reservation Form
+        const reservationForm = document.querySelector('.reservation-form');
+        const reservationModal = document.getElementById('reservation-modal');
+        const reservationClose = document.getElementById('reservation-close');
+        const reservationModalClose = document.getElementById('reservation-modal-close');
+        
+        reservationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            reservationModal.classList.add('active');
+        });
+        
+        reservationClose.addEventListener('click', () => {
+            reservationModal.classList.remove('active');
+        });
+        
+        reservationModalClose.addEventListener('click', () => {
+            reservationModal.classList.remove('active');
+        });
+
+        // Private Event Form
+        const privateEventForm = document.getElementById('private-event-form');
+        
+        privateEventForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            privateEventModal.classList.remove('active');
+            // In a real implementation, you would send the form data to a server here
+        });
+
+        // Mobile Menu
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    navLinks.style.display = 'none';
+                }
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Nav background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(12, 12, 12, 0.95)';
+                nav.style.backdropFilter = 'blur(10px)';
+            } else {
+                nav.style.background = 'rgba(12, 12, 12, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>

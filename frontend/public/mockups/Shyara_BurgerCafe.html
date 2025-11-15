@@ -1,0 +1,1142 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Atelier Ember is a premium burger atelier offering chef-driven tasting menus, seasonal cocktails, and immersive dining experiences.">
+    <title>Atelier Ember | Bespoke Burger Atelier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
+    <style>
+        :root {
+            --bg: #040404;
+            --surface: rgba(11, 11, 11, 0.9);
+            --surface-alt: #111;
+            --text: #f8f5f0;
+            --muted: #9d9d9d;
+            --accent: #f5c46b;
+            --accent-soft: rgba(245, 196, 107, 0.15);
+            --border: rgba(255, 255, 255, 0.08);
+            --max-width: 1200px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, rgba(245, 196, 107, 0.08), transparent 45%), var(--bg);
+            color: var(--text);
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.85) 60%);
+        }
+        main {
+            width: min(var(--max-width), 94vw);
+            margin: 0 auto;
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-heading .eyebrow {
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .section-heading h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin: 0.5rem 0 1rem;
+        }
+
+        .section-heading p {
+            max-width: 620px;
+            margin: 0 auto;
+            color: var(--muted);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--accent);
+            color: #111;
+            padding: 0.9rem 1.9rem;
+            border-radius: 999px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 12px 30px rgba(245, 196, 107, 0.2);
+        }
+
+        .btn.secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            box-shadow: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .ghost-link {
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem clamp(1.5rem, 4vw, 4rem);
+            background: rgba(4, 4, 4, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease, padding 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            border-color: var(--border);
+            padding: 0.8rem clamp(1.5rem, 4vw, 4rem);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-mark {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: grid;
+            place-items: center;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+        }
+
+        .logo strong {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            display: block;
+        }
+
+        .logo small {
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.65rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            position: relative;
+        }
+
+        .nav-toggle span,
+        .nav-toggle::after {
+            position: absolute;
+            left: 50%;
+            width: 18px;
+            height: 1.5px;
+            background: var(--text);
+            transform: translateX(-50%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-toggle span {
+            top: 16px;
+        }
+
+        .nav-toggle::after {
+            content: "";
+            top: 24px;
+        }
+
+        .nav-toggle.open span {
+            transform: translate(-50%, 4px) rotate(45deg);
+        }
+
+        .nav-toggle.open::after {
+            transform: translate(-50%, -4px) rotate(-45deg);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            padding: 8rem 0 5rem;
+            background: linear-gradient(140deg, rgba(4, 4, 4, 0.9) 10%, rgba(4, 4, 4, 0.4)),
+                url('https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=1600&q=80') center/cover fixed;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(4, 4, 4, 1) 10%, rgba(4, 4, 4, 0.4));
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: min(760px, 100%);
+        }
+
+        .hero-content .eyebrow {
+            color: var(--accent);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.8rem, 6vw, 4.8rem);
+            line-height: 1.1;
+            margin: 1rem 0;
+        }
+
+        .hero-description {
+            color: var(--muted);
+            max-width: 600px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0 2.5rem;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .hero-stat {
+            padding: 1rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-stat span {
+            display: block;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            font-size: 0.65rem;
+            color: var(--muted);
+        }
+
+        .hero-stat strong {
+            font-size: 1.8rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .floating-award {
+            position: absolute;
+            top: 10%;
+            right: 8%;
+            z-index: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(14px);
+            text-align: center;
+        }
+
+        .floating-award span {
+            display: block;
+            letter-spacing: 0.3em;
+            font-size: 0.6rem;
+            color: var(--muted);
+        }
+
+        .floating-award strong {
+            font-size: 1.2rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .story-details {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .story-details p {
+            color: var(--muted);
+        }
+
+        .story-points {
+            list-style: none;
+            margin: 2rem 0 0;
+            padding: 0;
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .story-points li {
+            display: flex;
+            gap: 0.8rem;
+            align-items: baseline;
+        }
+
+        .story-points li span {
+            color: var(--accent);
+        }
+
+        .story-card {
+            position: relative;
+            border-radius: 2rem;
+            overflow: hidden;
+            min-height: 320px;
+        }
+
+        .story-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .story-card::after {
+            content: "Chef curated nightly";
+            position: absolute;
+            inset: auto 1.5rem 1.5rem 1.5rem;
+            padding: 0.9rem 1.2rem;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .menu-card {
+            padding: 1.8rem;
+            border-radius: 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-soft);
+        }
+
+        .menu-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+        }
+
+        .menu-card p {
+            color: var(--muted);
+            flex-grow: 1;
+        }
+
+        .menu-card .price {
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            color: var(--accent);
+        }
+
+        .signature {
+            padding-top: 0;
+        }
+
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .experience-card {
+            border-radius: 1.8rem;
+            position: relative;
+            overflow: hidden;
+            height: 360px;
+            display: flex;
+            align-items: flex-end;
+            padding: 2rem;
+            background: #111;
+        }
+
+        .experience-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.85));
+        }
+
+        .experience-card > div {
+            position: relative;
+            z-index: 1;
+        }
+
+        .experience-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .experience-card p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .experience-card.one {
+            background: url('https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=900&q=80') center/cover;
+        }
+
+        .experience-card.two {
+            background: url('https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=900&q=80') center/cover;
+        }
+
+        .experience-card.three {
+            background: url('https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=900&q=80') center/cover;
+        }
+
+        .craft-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .craft-point {
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .craft-point span {
+            display: block;
+            letter-spacing: 0.25em;
+            font-size: 0.7rem;
+            color: var(--muted);
+        }
+
+        .craft-point h3 {
+            font-size: 1.4rem;
+            font-family: 'Playfair Display', serif;
+            margin: 0.6rem 0;
+        }
+
+        .testimonials {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2rem;
+            padding: 4rem 3rem;
+            border: 1px solid var(--border);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .testimonial-card {
+            padding: 1.8rem;
+            border-radius: 1.5rem;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid var(--border);
+        }
+
+        .testimonial-card .stars {
+            color: var(--accent);
+            letter-spacing: 0.2em;
+            font-size: 0.8rem;
+        }
+
+        .testimonial-card h4 {
+            margin: 0.8rem 0 0.4rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .testimonial-card p {
+            color: var(--muted);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.7rem;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(0.98);
+        }
+
+        .reservation {
+            padding-bottom: 6rem;
+        }
+
+        .reservation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            background: var(--surface);
+        }
+
+        .reservation-info p {
+            color: var(--muted);
+        }
+
+        .reservation-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .reservation-form input,
+        .reservation-form select,
+        .reservation-form textarea {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            border-radius: 0.8rem;
+            border: 1px solid var(--border);
+            background: var(--surface-alt);
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .reservation-status {
+            font-size: 0.85rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .map-frame {
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            min-height: 320px;
+        }
+
+        .map-frame iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .location-details {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .location-card {
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            background: var(--surface);
+        }
+
+        .location-card span {
+            display: block;
+            letter-spacing: 0.25em;
+            font-size: 0.65rem;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .location-card h3 {
+            margin: 0.5rem 0 0.3rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+        }
+
+        .location-card p {
+            margin: 0.2rem 0;
+            color: var(--muted);
+        }
+
+        .location-card strong {
+            display: block;
+            margin-top: 0.8rem;
+            letter-spacing: 0.1em;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        .contact-strip {
+            margin-top: 4rem;
+            border: 1px solid var(--border);
+            border-radius: 1.8rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-pill {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            letter-spacing: 0.3em;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .contact-pill strong {
+            letter-spacing: 0.08em;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        footer {
+            padding: 3rem 1.5rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--accent);
+        }
+
+        .floating-chat {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #25d366;
+            color: #fff;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35);
+            z-index: 120;
+        }
+
+        @media (max-width: 960px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                right: 5%;
+                flex-direction: column;
+                background: rgba(10, 10, 10, 0.98);
+                border: 1px solid var(--border);
+                border-radius: 1rem;
+                padding: 1.5rem;
+                min-width: 240px;
+                transform: scale(0.95);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.25s ease, transform 0.25s ease;
+            }
+
+            .nav-links.open {
+                opacity: 1;
+                transform: scale(1);
+                pointer-events: auto;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .hero {
+                padding: 7rem 0 4rem;
+                text-align: center;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .floating-award {
+                display: none;
+            }
+
+            .story-grid,
+            .menu-grid,
+            .experience-grid,
+            .craft-grid,
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonials {
+                padding: 3rem 1.5rem;
+            }
+
+            .contact-strip {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="navbar" id="navbar">
+            <a class="logo" href="#home">
+                <span class="logo-mark">AE</span>
+                <div>
+                    <strong>Atelier Ember</strong>
+                    <small>Bespoke Burger Atelier</small>
+                </div>
+            </a>
+            <button class="nav-toggle" aria-label="Open navigation">
+                <span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#story">Our Story</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#experiences">Experiences</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a class="btn secondary" href="#reservations">Reserve</a></li>
+            </ul>
+        </header>
+
+        <main>
+            <section class="hero" id="home">
+                <div class="floating-award">
+                    <span>2025</span>
+                    <strong>Chef's Table<br>Top 10</strong>
+                </div>
+                <div class="hero-content">
+                    <p class="eyebrow">Mumbai | Dubai | Coming Soon: Singapore</p>
+                    <h1>Burgers reinvented with the rigor of haute cuisine.</h1>
+                    <p class="hero-description">
+                        Welcome to Atelier Ember, where in-house dry-aged patties, saffron-smoked aioli, and foraged toppings meet a symphony of curated cocktails. Every seating is limited, every plate is plated to perfection.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#reservations">
+                            <i class="fa-solid fa-calendar"></i>
+                            Reserve Table
+                        </a>
+                        <a class="btn secondary" href="#menu">
+                            <i class="fa-solid fa-utensils"></i>
+                            View Tasting Menu
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span>Chef collaborations</span>
+                            <strong>18</strong>
+                        </div>
+                        <div class="hero-stat">
+                            <span>Dry-aged program</span>
+                            <strong>45 days</strong>
+                        </div>
+                        <div class="hero-stat">
+                            <span>Guest capacity</span>
+                            <strong>42 seats</strong>
+                        </div>
+                        <div class="hero-stat">
+                            <span>Michelin alumni</span>
+                            <strong>6 chefs</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="story" id="story">
+                <div class="section-heading">
+                    <p class="eyebrow">The Atelier</p>
+                    <h2>Fire-kissed craft, plated for couture palates.</h2>
+                    <p>Atelier Ember was born inside a test kitchen and quickly earned cult status for its slow browned brioche, single-origin cheeses, and design forward venues.</p>
+                </div>
+                <div class="story-grid">
+                    <div class="story-details">
+                        <p>We approach burgers the way couturiers approach garments: every stitch matters. Expect hand-painted sauces, mezzanine lighting, playlists curated by vinyl sommeliers, and service choreography timed to each course.</p>
+                        <ul class="story-points">
+                            <li><span>01</span>Chef tasting flights with vegetarian pairings.</li>
+                            <li><span>02</span>Hi-fi bar featuring barrel-finished cocktails.</li>
+                            <li><span>03</span>Immersive private dining suites with projection mapping.</li>
+                        </ul>
+                    </div>
+                    <div class="story-card">
+                        <img src="https://images.unsplash.com/photo-1481833761820-0509d3217039?auto=format&fit=crop&w=1200&q=80" alt="Chef plating a burger with tweezers">
+                    </div>
+                </div>
+            </section>
+
+            <section class="menu" id="menu">
+                <div class="section-heading">
+                    <p class="eyebrow">Tasting Menu</p>
+                    <h2>Signature compositions</h2>
+                    <p>A tight edit of four hero courses that remix India's heirloom flavors with atelier-level plating.</p>
+                </div>
+                <div class="menu-grid">
+                    <article class="menu-card">
+                        <div>
+                            <h3>Nizami Kohinoor</h3>
+                            <p>Awadhi galouti patty, saffron sheermal brioche, laccha onion relish, kewra-smoked ghee.</p>
+                        </div>
+                        <span class="price">₹3,200 ++ tasting</span>
+                    </article>
+                    <article class="menu-card">
+                        <div>
+                            <h3>Verdure Malabar</h3>
+                            <p>Coal-roasted jackfruit, coconut ash bun, pistachio gunpowder, tempered curry leaf chips.</p>
+                        </div>
+                        <span class="price">₹2,650 ++ tasting</span>
+                    </article>
+                    <article class="menu-card">
+                        <div>
+                            <h3>Coastal Pepper Rush</h3>
+                            <p>48-hour tellicherry pepper short rib, coconut vinegar lacquer, bone marrow poriyal crisp.</p>
+                        </div>
+                        <span class="price">₹3,450 ++ tasting</span>
+                    </article>
+                    <article class="menu-card">
+                        <div>
+                            <h3>Gulkand Finale</h3>
+                            <p>Burnt jaggery semifreddo, gulkand gel, filter coffee crumble, saffron chai pearls.</p>
+                        </div>
+                        <span class="price">₹1,150 ++ tasting</span>
+                    </article>
+                </div>
+            </section>
+            <section class="signature" id="experiences">
+                <div class="section-heading">
+                    <p class="eyebrow">House Concepts</p>
+                    <h2>Experiences, not courses.</h2>
+                    <p>Rotating residencies, chef's table rituals, and late night listening parties curated with the same precision as our plating.</p>
+                </div>
+                <div class="experience-grid">
+                    <div class="experience-card one">
+                        <div>
+                            <h3>Residency Evenings</h3>
+                            <p>Monthly collaborations with Michelin alumni, spanning eight courses and vinyl pairings.</p>
+                        </div>
+                    </div>
+                    <div class="experience-card two">
+                        <div>
+                            <h3>Chef's Counter</h3>
+                            <p>Six seats. Live fire. Real-time narration of each plating move by Chef Aria Vaid.</p>
+                        </div>
+                    </div>
+                    <div class="experience-card three">
+                        <div>
+                            <h3>After Hours Atelier</h3>
+                            <p>Midnight-only burgers paired with experimental cocktails and analog synth sets.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="craft">
+                <div class="craft-grid">
+                    <div class="craft-point">
+                        <span>Cellar</span>
+                        <h3>Private beverage program</h3>
+                        <p>Low ABV infusions, zero-proof ferments, and small-lot champagnes chilled in Himalayan salt.</p>
+                    </div>
+                    <div class="craft-point">
+                        <span>Materiality</span>
+                        <h3>Immersive interiors</h3>
+                        <p>Italian marble bars, hand-brushed brass, and seating wrapped in cruelty-free cactus leather.</p>
+                    </div>
+                    <div class="craft-point">
+                        <span>Aesthetics</span>
+                        <h3>Bespoke plating</h3>
+                        <p>Custom porcelain from Kyoto, matte cutlery, and layered smoke cloches for dramatic reveals.</p>
+                    </div>
+                </div>
+            </section>
+            <section class="testimonials" id="reviews">
+                <div class="section-heading">
+                    <p class="eyebrow">Testimonials</p>
+                    <h2>What the inner circle is saying.</h2>
+                </div>
+                <div class="testimonial-grid">
+                    <article class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <h4>Devika Rao</h4>
+                        <p>"The Chef's Counter felt like performance art. Every element was narrated, torched, and plated in front of us."</p>
+                    </article>
+                    <article class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <h4>James Keller</h4>
+                        <p>"Finally, a burger house that treats vegetarians as equals. Verdure Luxe is a revelation."</p>
+                    </article>
+                    <article class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <h4>Sana Merchant</h4>
+                        <p>"Their beverage team designed a non-alcoholic pairing that rivaled any wine flight I have tried."</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="gallery" id="gallery">
+                <div class="section-heading">
+                    <p class="eyebrow">Gallery</p>
+                    <h2>Textures & plating moments</h2>
+                </div>
+                <div class="gallery-grid">
+                    <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Burger close up" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&w=800&q=80" alt="Cocktail pour" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1499028344343-cd173ffc68a9?auto=format&fit=crop&w=800&q=80" alt="French fries in copper cup" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1481391032119-d89fee407e44?auto=format&fit=crop&w=800&q=80" alt="Restaurant interior" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="Dessert with sauce" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=800&q=80" alt="Chef torching food" loading="lazy">
+                </div>
+            </section>
+            <section class="reservation" id="reservations">
+                <div class="section-heading">
+                    <p class="eyebrow">Reserve</p>
+                    <h2>Forty-two seats. Endless waitlists.</h2>
+                    <p>Secure your seating for our upcoming chef collaborations or private dining rooms.</p>
+                </div>
+                <div class="reservation-grid">
+                    <div class="reservation-info">
+                        <h3>Concierge desk</h3>
+                        <p>We confirm within 90 minutes and tailor dietary experiences ahead of your visit.</p>
+                        <div class="contact-pill">
+                            <i class="fa-solid fa-phone"></i>
+                            <div>
+                                <span>Call</span><br>
+                                <strong>+91 95846 61610</strong>
+                            </div>
+                        </div>
+                        <div class="contact-pill">
+                            <i class="fa-solid fa-envelope"></i>
+                            <div>
+                                <span>Email</span><br>
+                                <strong>concierge@atelierember.com</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="reservation-form">
+                        <input type="text" name="name" placeholder="Full name" required>
+                        <input type="email" name="email" placeholder="Email address" required>
+                        <input type="tel" name="phone" placeholder="Phone number" required>
+                        <select name="party" required>
+                            <option value="">Party size</option>
+                            <option>2 guests</option>
+                            <option>4 guests</option>
+                            <option>6 guests</option>
+                            <option>Private suite (8+)</option>
+                        </select>
+                        <input type="date" name="date" required>
+                        <textarea name="notes" rows="3" placeholder="Celebration details or dietary notes"></textarea>
+                        <button class="btn" type="submit">Request reservation</button>
+                        <span class="reservation-status">Instant confirmations for members</span>
+                    </form>
+                </div>
+            </section>
+
+            <section class="location" id="location">
+                <div class="section-heading">
+                    <p class="eyebrow">Flagship</p>
+                    <h2>Find Atelier Ember</h2>
+                </div>
+                <div class="map-frame">
+                    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=72.84124%2C19.06195%2C72.85582%2C19.07575&amp;layer=mapnik&amp;marker=19.06885%2C72.84853" loading="lazy" title="Atelier Ember Mumbai flagship" referrerpolicy="no-referrer"></iframe>
+                </div>
+                <div class="location-details">
+                    <div class="location-card">
+                        <span>Flagship</span>
+                        <h3>Mumbai Atelier</h3>
+                        <p>Level 18, Maker Maxity, BKC</p>
+                        <p>Mumbai 400051</p>
+                        <strong>+91 22 4800 6161</strong>
+                    </div>
+                    <div class="location-card">
+                        <span>Studio</span>
+                        <h3>Dubai Design District</h3>
+                        <p>Building 8, Unit 204</p>
+                        <p>Dubai, UAE</p>
+                        <strong>+971 4 555 7310</strong>
+                    </div>
+                    <div class="location-card">
+                        <span>Opening Soon</span>
+                        <h3>Singapore Lab</h3>
+                        <p>Capitol Piazza, 15 Stamford Rd</p>
+                        <p>Reservations waitlist active</p>
+                        <strong>singapore@atelierember.com</strong>
+                    </div>
+                </div>
+                <div class="contact-strip">
+                    <div class="contact-pill">
+                        <span>Hours</span>
+                        <strong>Wed - Mon | 6 PM - 1 AM</strong>
+                    </div>
+                    <div class="contact-pill">
+                        <span>Private dining</span>
+                        <strong>studio@atelierember.com</strong>
+                    </div>
+                    <a class="btn" href="mailto:studio@atelierember.com">
+                        <i class="fa-solid fa-pen-nib"></i>
+                        Design Inquiry
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; <span id="year"></span> Atelier Ember. Crafted as a premium restaurant sample experience.</p>
+            <p>Concept & web experience by <a href="https://shyara.co.in" target="_blank" rel="noopener">Shyara Digital</a>.</p>
+        </footer>
+    </div>
+
+    <a class="floating-chat" href="https://wa.me/919584661610" target="_blank" rel="noopener">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        const navbar = document.getElementById('navbar');
+        const yearHolder = document.getElementById('year');
+        const reservationForm = document.querySelector('.reservation-form');
+        const reservationStatus = document.querySelector('.reservation-status');
+
+        if (yearHolder) {
+            yearHolder.textContent = new Date().getFullYear();
+        }
+
+        if (navToggle && navLinks) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('open');
+                    navToggle.classList.remove('open');
+                });
+            });
+        }
+
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 24) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        }
+
+        if (reservationForm && reservationStatus) {
+            reservationForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                reservationStatus.textContent = 'Request received. Concierge will confirm shortly.';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AURELIA INDIAN SUPPER CLUB | Modern Indian Degustation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AURELIA INDIAN SUPPER CLUB delivers ultra-premium Indian degustation journeys in Bandra-Kurla Complex, Mumbai. Reserve the chef’s table, curated pairings, and private dining suites.">
+  <meta property="og:title" content="AURELIA INDIAN SUPPER CLUB">
+  <meta property="og:description" content="Ultra-premium Indian degustation journeys in Mumbai’s BKC.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aurelia-supper-club.example.com">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&w=1600&q=80">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AURELIA INDIAN SUPPER CLUB">
+  <meta name="twitter:description" content="Contemporary Indian degustation experiences with curated pairings and private suites.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&w=1600&q=80">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d0d0f;
+      --bg-alt: #141417;
+      --gold: #d3b37a;
+      --gold-light: #e8cfa0;
+      --ivory: #f7f3ec;
+      --sand: #d8cbb6;
+      --muted: #9a8f7e;
+      --accent: #b88a4b;
+      --radius: 18px;
+      --transition: 200ms ease;
+      --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.45);
+      font-synthesis: none;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--ivory);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      backdrop-filter: blur(14px);
+      background: rgba(12, 12, 12, 0.85);
+      border-bottom: 1px solid rgba(211, 179, 122, 0.18);
+    }
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      letter-spacing: 0.32em;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--sand);
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border-radius: 999px;
+      transition: color var(--transition), background var(--transition), transform var(--transition);
+    }
+    nav a:hover,
+    nav a:focus {
+      color: var(--bg);
+      background: linear-gradient(120deg, var(--gold), var(--gold-light));
+      transform: translateY(-1px);
+    }
+    nav a.active {
+      color: var(--bg);
+      background: linear-gradient(120deg, var(--gold), #f2d9a3);
+    }
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
+      filter: brightness(45%) saturate(120%);
+      z-index: -2;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(225, 190, 125, 0.25), transparent 60%), radial-gradient(circle at bottom left, rgba(13, 13, 16, 0.5), transparent 60%);
+      z-index: -1;
+    }
+    .hero-content {
+      max-width: 720px;
+      animation: floatUp 900ms ease forwards;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    @keyframes floatUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .hero-title {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      letter-spacing: 0.6em;
+      font-size: clamp(2.6rem, 5vw, 4rem);
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 18px;
+    }
+    .hero-subtitle {
+      font-size: 1.05rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--sand);
+      margin-bottom: 24px;
+    }
+    .hero-description {
+      font-size: 1.1rem;
+      color: var(--ivory);
+      margin-bottom: 36px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+    }
+    button,
+    .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      padding: 14px 28px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--bg);
+      box-shadow: 0 10px 35px rgba(210, 178, 121, 0.35);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      background: rgba(12, 12, 12, 0.6);
+      color: var(--ivory);
+      border: 1px solid rgba(209, 185, 132, 0.6);
+    }
+    .btn-outline:hover {
+      background: rgba(209, 185, 132, 0.18);
+      transform: translateY(-2px);
+    }
+    .quick-actions {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .quick-actions a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--ivory);
+      font-size: 0.82rem;
+      padding: 10px 18px;
+      background: rgba(14, 14, 14, 0.75);
+      border: 1px solid rgba(209, 185, 132, 0.3);
+      border-radius: 999px;
+      transition: border var(--transition), background var(--transition);
+    }
+    .quick-actions a:hover {
+      border-color: var(--gold-light);
+      background: rgba(209, 185, 132, 0.12);
+    }
+    main {
+      padding-top: 90px;
+    }
+    section {
+      padding: 110px 24px;
+      position: relative;
+    }
+    section:nth-of-type(even) {
+      background: linear-gradient(180deg, rgba(20, 20, 23, 0.95), rgba(13, 13, 15, 0.95));
+    }
+    .section-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .section-heading {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin-bottom: 24px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+    .section-subheading {
+      max-width: 620px;
+      margin-bottom: 48px;
+      color: var(--sand);
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+    }
+    .highlights {
+      display: grid;
+      gap: 26px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .highlight-card {
+      padding: 28px;
+      border-radius: var(--radius);
+      background: linear-gradient(150deg, rgba(238, 215, 163, 0.1), rgba(22, 22, 24, 0.95));
+      border: 1px solid rgba(209, 185, 132, 0.15);
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition), border var(--transition), box-shadow var(--transition);
+    }
+    .highlight-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(209, 185, 132, 0.35);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+    }
+    .highlight-card h3 {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      color: var(--gold-light);
+    }
+    .highlight-card p {
+      color: var(--sand);
+      font-size: 0.95rem;
+    }
+    .chef-grid {
+      display: grid;
+      gap: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: center;
+    }
+    .chef-image {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+    .chef-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(110%);
+    }
+    .chef-content h3 {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      color: var(--gold);
+    }
+    .chef-content p {
+      color: var(--sand);
+      margin-bottom: 18px;
+      font-size: 1rem;
+    }
+    .chef-signature {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      letter-spacing: 0.28em;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .menu-tabs {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .menu-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .menu-tab {
+      padding: 14px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(209, 185, 132, 0.25);
+      background: rgba(17, 17, 18, 0.6);
+      color: var(--sand);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      transition: background var(--transition), color var(--transition), border var(--transition);
+      white-space: nowrap;
+    }
+    .menu-tab.active {
+      background: linear-gradient(130deg, var(--gold), var(--gold-light));
+      color: var(--bg);
+      border-color: transparent;
+    }
+    .menu-panel {
+      display: none;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .menu-panel.active {
+      display: grid;
+    }
+    .menu-item {
+      padding: 24px;
+      border-radius: var(--radius);
+      background: rgba(19, 19, 21, 0.75);
+      border: 1px solid rgba(209, 185, 132, 0.15);
+      transition: border var(--transition), transform var(--transition);
+    }
+    .menu-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(209, 185, 132, 0.4);
+    }
+    .menu-item h4 {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+    .menu-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .menu-item p {
+      color: var(--sand);
+      font-size: 0.93rem;
+    }
+    .menu-download {
+      margin-top: 36px;
+      text-align: center;
+    }
+    .gallery-grid {
+      column-count: 3;
+      column-gap: 18px;
+    }
+    .gallery-card {
+      position: relative;
+      margin-bottom: 18px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      break-inside: avoid;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .gallery-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-soft);
+    }
+    .gallery-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: brightness(88%) saturate(115%);
+      transition: transform var(--transition);
+    }
+    .gallery-card:hover img {
+      transform: scale(1.05);
+    }
+    .reservation-grid {
+      display: grid;
+      gap: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      align-items: start;
+    }
+    form {
+      display: grid;
+      gap: 18px;
+    }
+    label {
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(17, 17, 19, 0.85);
+      border: 1px solid rgba(209, 185, 132, 0.2);
+      border-radius: 12px;
+      color: var(--ivory);
+      font-size: 0.95rem;
+      transition: border var(--transition), box-shadow var(--transition);
+    }
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--gold-light);
+      box-shadow: 0 0 0 2px rgba(209, 185, 132, 0.2);
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .reservation-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .reservation-actions a {
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(209, 185, 132, 0.3);
+      color: var(--sand);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      transition: background var(--transition), color var(--transition);
+    }
+    .reservation-actions a:hover {
+      background: rgba(209, 185, 132, 0.16);
+      color: var(--ivory);
+    }
+    .private-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .private-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(17, 17, 19, 0.85);
+      border: 1px solid rgba(209, 185, 132, 0.2);
+      display: flex;
+      flex-direction: column;
+      min-height: 360px;
+    }
+    .private-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      filter: brightness(92%) saturate(110%);
+    }
+    .private-card-content {
+      padding: 22px;
+      flex-grow: 1;
+    }
+    .private-card-content h4 {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .private-card-content p {
+      color: var(--sand);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+    .testimonials {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .testimonial-card {
+      padding: 26px;
+      border-radius: var(--radius);
+      background: rgba(17, 17, 19, 0.95);
+      border: 1px solid rgba(209, 185, 132, 0.18);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .testimonial-card p {
+      color: var(--sand);
+      font-size: 0.95rem;
+      font-style: italic;
+    }
+    .testimonial-card span {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .map {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(209, 185, 132, 0.2);
+      box-shadow: var(--shadow-soft);
+      aspect-ratio: 16 / 10;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .hours-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      margin-top: 28px;
+    }
+    .hours-card {
+      background: rgba(17, 17, 19, 0.85);
+      border-radius: var(--radius);
+      padding: 22px;
+      border: 1px solid rgba(209, 185, 132, 0.2);
+    }
+    .hours-card h4 {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .hours-card ul {
+      list-style: none;
+      color: var(--sand);
+      font-size: 0.93rem;
+      display: grid;
+      gap: 8px;
+    }
+    .newsletter {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: center;
+      background: linear-gradient(130deg, rgba(209, 185, 132, 0.12), rgba(20, 20, 21, 0.9));
+      padding: 36px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(209, 185, 132, 0.28);
+    }
+    .newsletter form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .newsletter input[type="email"] {
+      flex: 1 1 220px;
+      background: rgba(13, 13, 15, 0.7);
+    }
+    .social-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .social-links a {
+      text-decoration: none;
+      color: var(--sand);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(209, 185, 132, 0.25);
+      transition: background var(--transition), color var(--transition);
+    }
+    .social-links a:hover {
+      background: rgba(209, 185, 132, 0.15);
+      color: var(--ivory);
+    }
+    footer {
+      padding: 60px 24px 32px;
+      background: #09090a;
+      border-top: 1px solid rgba(209, 185, 132, 0.22);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .footer-brand {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-size: 1.1rem;
+    }
+    .footer-meta {
+      color: var(--muted);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+    }
+    .footer-bottom {
+      margin-top: 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+    .footer-bottom a {
+      color: var(--gold-light);
+      text-decoration: none;
+    }
+    .lightbox,
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 9, 10, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      z-index: 1000;
+    }
+    .lightbox.active,
+    .modal.active {
+      display: flex;
+    }
+    .lightbox-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      background: #050506;
+    }
+    .lightbox img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    .lightbox-close,
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      background: rgba(0, 0, 0, 0.65);
+      color: var(--ivory);
+      border: none;
+      font-size: 1.1rem;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 18px;
+    }
+    .lightbox-nav button {
+      background: rgba(12, 12, 12, 0.6);
+      color: var(--ivory);
+      border: 1px solid rgba(209, 185, 132, 0.3);
+      border-radius: 999px;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .lightbox-nav button:hover {
+      background: rgba(209, 185, 132, 0.18);
+    }
+    .modal-box {
+      background: linear-gradient(150deg, rgba(21, 21, 23, 0.98), rgba(15, 15, 17, 0.96));
+      padding: 32px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(209, 185, 132, 0.25);
+      max-width: 520px;
+      width: 100%;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+    .modal-box h3 {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+    }
+    .modal-box p {
+      color: var(--sand);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+    .modal-actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    @media (max-width: 900px) {
+      .gallery-grid {
+        column-count: 2;
+      }
+    }
+    @media (max-width: 680px) {
+      header {
+        border-bottom-color: rgba(209, 185, 132, 0.12);
+      }
+      .nav-container {
+        flex-direction: column;
+      }
+      nav ul {
+        justify-content: center;
+      }
+      .hero-title {
+        letter-spacing: 0.4em;
+      }
+      section {
+        padding: 90px 18px;
+      }
+      .gallery-grid {
+        column-count: 1;
+      }
+      .newsletter {
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <div class="logo">AURELIA INDIAN SUPPER CLUB</div>
+      <nav>
+        <ul>
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#highlights" class="nav-link">Philosophy</a></li>
+          <li><a href="#chef" class="nav-link">Chef</a></li>
+          <li><a href="#menus" class="nav-link">Menus</a></li>
+          <li><a href="#gallery" class="nav-link">Gallery</a></li>
+          <li><a href="#reservations" class="nav-link">Reserve</a></li>
+          <li><a href="#private" class="nav-link">Private</a></li>
+          <li><a href="#location" class="nav-link">Location</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">AURELIA</h1>
+        <p class="hero-subtitle">Contemporary Indian Degustation Experiences</p>
+        <p class="hero-description">
+          Ascend to Level 38 at Aurelia Tower for a sensorial expedition across the spice routes of India—curated, plated, and staged by Chef Aman Verma in a candlelit skyline haven.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-scroll-to="#reservations">Reserve a Table</button>
+          <button class="btn btn-outline" data-scroll-to="#menus">View Tasting Menu</button>
+        </div>
+        <div class="quick-actions">
+          <a href="tel:+919584661610">Call +91 95846 61610</a>
+          <a href="https://wa.me/919584661610?text=Hello%20Aurelia%2C%20I%20would%20like%20to%20reserve%20a%20table" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="mailto:support@shyara.co.in?subject=Aurelia%20Reservation%20Request">Email Concierge</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="highlights">
+      <div class="section-inner">
+        <h2 class="section-heading">The Aurelia Doctrine</h2>
+        <p class="section-subheading">We honor the silent luxuriance of Indian hospitality—whisper-soft service, meticulously aged masalas, and compositions that glow against hand-fired stoneware.</p>
+        <div class="highlights">
+          <article class="highlight-card">
+            <h3>Seasonal Spice Degustation</h3>
+            <p>An eight-course progression tracing single-origin aromatics from Kashmir saffron to Kodagu pepper, paired with slow-infused consommés.</p>
+          </article>
+          <article class="highlight-card">
+            <h3>Chef’s Table Experience</h3>
+            <p>Intimate eight-seat marble counter with live charcoal finishing, caviar-topped pani puris, and unveiled culinary dialogues.</p>
+          </article>
+          <article class="highlight-card">
+            <h3>Regional Culinary Narratives</h3>
+            <p>Rotating micro-menus celebrating heirloom recipes reimagined with sous-vide, fermentation, and stone-ground techniques.</p>
+          </article>
+          <article class="highlight-card">
+            <h3>Wine & Pairing Atelier</h3>
+            <p>Curated cellar of Grand Cru selections, indigenous meads, and bespoke botanical pairings by our resident sommeliers.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="chef">
+      <div class="section-inner chef-grid">
+        <div class="chef-image">
+          <img src="https://images.unsplash.com/photo-1481833761820-0509d3217039?auto=format&fit=crop&w=1200&q=80" alt="Chef Aman Verma at Aurelia Indian Supper Club" loading="lazy" decoding="async">
+        </div>
+        <div class="chef-content">
+          <h2 class="section-heading">Chef Aman Verma</h2>
+          <p>Raised between the saffron fields of Pampore and the spice auctions of Fort Kochi, Chef Aman is devoted to India’s terroir. He sources from artisans cultivating small-batch fenugreek, dry-ages tandoor-roasted meats over black stone, and ferments jaggery to coax out hidden sweetness.</p>
+          <p>At Aurelia, every plate is a story: langoustines smoked over sandalwood, fermented jackfruit glazed with tamarind molasses, kulcha mille-feuille layered with goat butter. The kitchen breathes through clay, charcoal, and patience.</p>
+          <div class="chef-signature">“Culinary poems in saffron light.”</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="menus">
+      <div class="section-inner">
+        <h2 class="section-heading">Culinary Editions</h2>
+        <p class="section-subheading">Our menus evolve with markets, spice harvests, and moonlit inspirations. Explore exemplar courses below.</p>
+
+        <div class="menu-tabs" role="tablist">
+          <button class="menu-tab active" data-menu="degustation" role="tab" aria-selected="true">Degustation Menu</button>
+          <button class="menu-tab" data-menu="alacarte" role="tab" aria-selected="false">À La Carte</button>
+          <button class="menu-tab" data-menu="vegetarian" role="tab" aria-selected="false">Vegetarian Tasting Journey</button>
+          <button class="menu-tab" data-menu="desserts" role="tab" aria-selected="false">Desserts</button>
+          <button class="menu-tab" data-menu="pairings" role="tab" aria-selected="false">Pairings</button>
+        </div>
+
+        <div class="menu-panels">
+          <div class="menu-panel active" id="degustation" role="tabpanel">
+            <article class="menu-item">
+              <h4>Kashmiri Noon Oyster</h4>
+              <span>Amaranth crisp · Pomegranate air</span>
+              <p>Cold-shucked Malpe oysters kissed with Himalayan pink salt brine, tart pomegranate pearls, and shiso snow.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Charcoal Kodo Millet</h4>
+              <span>Black garlic ash · Smoked cashew velouté</span>
+              <p>Millet risotto folded with smoked cashew cream, aged pecorino, and a whisper of Nagaland ghost pepper oil.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Chettinad Quail</h4>
+              <span>Tellicherry jus · Cocoa nib soil</span>
+              <p>Stone-pressed quail lacquered with spiced jaggery, resting on cocoa nib soil, served with tamarind leather.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Malabar Lobster Xacuti</h4>
+              <span>Saffron coconut espuma</span>
+              <p>Butter-poached lobster cloaked in saffron coconut foam with kokum ash and sea grape salpicón.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Cardamom Kulfi Cloud</h4>
+              <span>Liquid nitrogen pistachio dust</span>
+              <p>Table-finished kulfi mousse, frozen to order, layered with rose petal jam and pistachio praline.</p>
+            </article>
+          </div>
+
+          <div class="menu-panel" id="alacarte" role="tabpanel">
+            <article class="menu-item">
+              <h4>Tandoor Scallop Tartare</h4>
+              <span>Charred mango · Finger lime</span>
+              <p>Diced Hokkaido scallops flame-seared and finished with charred mango chutney pearls.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Black Truffle Butter Chicken</h4>
+              <span>Camargue rice crisp</span>
+              <p>Heritage corn-fed chicken simmered in slow-roasted tomato makhani infused with French black truffle.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Raan Wellington</h4>
+              <span>Korma jus · Smoked mustard</span>
+              <p>48-hour braised lamb leg enveloped in saffron paratha pâte feuilletée, served with korma reduction.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Heirloom Tomato Chaat</h4>
+              <span>Amchur gel · dehydrated yogurt</span>
+              <p>Confit and compressed tomatoes with tamarind aeration and chickpea shards.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Sea Buckthorn Rasam</h4>
+              <span>Turmeric butter brioche</span>
+              <p>Clarified rasam poured tableside over sea buckthorn pearls, paired with toasted brioche.</p>
+            </article>
+          </div>
+
+          <div class="menu-panel" id="vegetarian" role="tabpanel">
+            <article class="menu-item">
+              <h4>Lotus Stem Ceviche</h4>
+              <span>Kokum granita · Curry leaf oil</span>
+              <p>Thin-sliced lotus stems marinated in kokum, tempered with smoked curry leaf oil and pearl onions.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Heritage Carrot Galette</h4>
+              <span>Goat cheese espuma · Fennel pollen</span>
+              <p>Clay-baked rainbow carrots layered with smoked goat cheese and fennel pollen dust.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Konkan Jackfruit Roast</h4>
+              <span>Rice crisp tuille · Tamarind glaze</span>
+              <p>Young jackfruit confit in kokum, lacquered in tamarind molasses and served with cashew soil.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Kashmiri Morel Pulao</h4>
+              <span>Walnut khoya · saffron vapour</span>
+              <p>Saffron-smoked basmati folded with morel mushroom duxelles, walnut khoya crumble.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Cacao Nib Jalebi</h4>
+              <span>Almond milk anglaise</span>
+              <p>Delicate jalebi loops fermented overnight, dipped in cacao syrup with warm almond anglaise.</p>
+            </article>
+          </div>
+
+          <div class="menu-panel" id="desserts" role="tabpanel">
+            <article class="menu-item">
+              <h4>Silk Route Sphere</h4>
+              <span>Rosewater snow · Pistachio praline</span>
+              <p>Blown sugar encasing saffron kulfi, cracked tableside to reveal rose snow.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Chai Opera</h4>
+              <span>Masala ganache · Assam streusel</span>
+              <p>Multilayered opera cake with masala chai sponge and Assam caramel glaze.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Alphonso Brûlée</h4>
+              <span>Cloud meringue · Kaffir lime</span>
+              <p>Custard of Alphonso purée caramelised à la minute, topped with kaffir lime zest and snow meringue.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Madurai Jaggery Affogato</h4>
+              <span>Filter coffee · Sesame brittle</span>
+              <p>Hand-churned jaggery gelato drenched in hot Chicory filter brew with sesame praline.</p>
+            </article>
+          </div>
+
+          <div class="menu-panel" id="pairings" role="tabpanel">
+            <article class="menu-item">
+              <h4>Champagne Prelude</h4>
+              <span>Krug Grande Cuvée · lemon verbena</span>
+              <p>A bright opening pour with lemon verbena vapour and Himalayan citrus mist.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Spice Route Flight</h4>
+              <span>Indian mead · Riesling Spätlese</span>
+              <p>Three pours including monsoon barrel-aged mead, German Riesling, and barrel-aged Sula Dindori.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Non-Alcoholic Silhouettes</h4>
+              <span>Kokum shrub · Fermented turmeric</span>
+              <p>Curated zero-proof pairings with fermented turmeric kefir, kokum shrubs, and smoked tea.</p>
+            </article>
+            <article class="menu-item">
+              <h4>Digestif Reverie</h4>
+              <span>Single estate rum · Betel leaf mist</span>
+              <p>Aromatic aged rum service with betel leaf mist, jaggery reduction, and spiced almond brittle.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="menu-download">
+          <a href="#" class="btn btn-outline">Download Menu (PDF)</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <div class="section-inner">
+        <h2 class="section-heading">Sensory Gallery</h2>
+        <p class="section-subheading">Moments captured between fire, spice, and candlelight.</p>
+        <div class="gallery-grid">
+          <figure class="gallery-card" data-gallery="0">
+            <img src="https://images.unsplash.com/photo-1604908177731-4497254d8630?auto=format&fit=crop&w=1200&q=80" alt="Artisanal Indian fine dining dish at Aurelia" loading="lazy" decoding="async">
+          </figure>
+          <figure class="gallery-card" data-gallery="1">
+            <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=1200&q=80" alt="Close-up of Indian spices and saffron" loading="lazy" decoding="async">
+          </figure>
+          <figure class="gallery-card" data-gallery="2">
+            <img src="https://images.unsplash.com/photo-1532634748-96c827b9db8a?auto=format&fit=crop&w=1200&q=80" alt="Luxury dining interior with candlelight ambience" loading="lazy" decoding="async">
+          </figure>
+          <figure class="gallery-card" data-gallery="3">
+            <img src="https://images.unsplash.com/photo-1481833761820-0509d3217039?auto=format&fit=crop&w=1200&q=80" alt="Chef plating a degustation course" loading="lazy" decoding="async">
+          </figure>
+          <figure class="gallery-card" data-gallery="4">
+            <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1200&q=80" alt="Clay tandoor cooking with flames" loading="lazy" decoding="async">
+          </figure>
+          <figure class="gallery-card" data-gallery="5">
+            <img src="https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=1200&q=80" alt="Wine bottles displayed in a cellar" loading="lazy" decoding="async">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="reservations">
+      <div class="section-inner reservation-grid">
+        <div>
+          <h2 class="section-heading">Reserve Your Evening</h2>
+          <p class="section-subheading">Our concierge will confirm within moments for chef’s table, degustation, or private suite reservations.</p>
+          <form id="reservation-form">
+            <div>
+              <label for="reservation-date">Date</label>
+              <input type="date" id="reservation-date" name="reservation-date" required>
+            </div>
+            <div>
+              <label for="reservation-time">Time</label>
+              <input type="time" id="reservation-time" name="reservation-time" required>
+            </div>
+            <div>
+              <label for="party-size">Party Size</label>
+              <select id="party-size" name="party-size" required>
+                <option value="">Select</option>
+                <option>2 guests</option>
+                <option>3 guests</option>
+                <option>4 guests</option>
+                <option>5 guests</option>
+                <option>6 guests</option>
+                <option>Chef’s Table (8 seats)</option>
+                <option>Private Suite (10 seats)</option>
+              </select>
+            </div>
+            <div>
+              <label for="guest-name">Name</label>
+              <input type="text" id="guest-name" name="guest-name" placeholder="Full Name" required>
+            </div>
+            <div>
+              <label for="guest-email">Email</label>
+              <input type="email" id="guest-email" name="guest-email" placeholder="name@example.com" required>
+            </div>
+            <div>
+              <label for="guest-phone">Phone</label>
+              <input type="tel" id="guest-phone" name="guest-phone" placeholder="+91" required>
+            </div>
+            <div>
+              <label for="special-notes">Special Notes</label>
+              <textarea id="special-notes" name="special-notes" placeholder="Allergies, celebrations, tasting preferences"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Reservation</button>
+          </form>
+        </div>
+        <div>
+          <div class="hours-card">
+            <h4>Service Hours</h4>
+            <ul>
+              <li>Mon–Thu: 12:30–15:30 · 19:00–23:00</li>
+              <li>Fri–Sun: 12:30–16:00 · 19:00–23:30</li>
+            </ul>
+          </div>
+          <div class="hours-card">
+            <h4>Concierge Access</h4>
+            <p>Level 38, Aurelia Tower, BKC, Mumbai 400051</p>
+            <p>Complimentary valet & private drop-off lobby.</p>
+          </div>
+          <div class="reservation-actions">
+            <a href="tel:+919584661610">Call Concierge</a>
+            <a href="https://wa.me/919584661610?text=Hello%20Aurelia%2C%20I%20would%20like%20to%20reserve%20a%20table" target="_blank" rel="noopener">WhatsApp</a>
+            <a href="mailto:support@shyara.co.in?subject=Aurelia%20Reservation%20Request">Email</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="private">
+      <div class="section-inner">
+        <h2 class="section-heading">Private Dining & Events</h2>
+        <p class="section-subheading">Curated sanctuaries suspended above Mumbai’s skyline, tailored for celebrations, corporate salons, or intimate gatherings.</p>
+        <div class="private-grid">
+          <article class="private-card">
+            <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=80" alt="Private dining room with panoramic city views" loading="lazy" decoding="async">
+            <div class="private-card-content">
+              <h4>The Silk Salon</h4>
+              <p>Seats 10 · floor-to-ceiling glazing · bespoke tasting playlists.</p>
+              <button class="btn btn-outline" data-modal="events-modal">Enquire for a Private Event</button>
+            </div>
+          </article>
+          <article class="private-card">
+            <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80" alt="Candlelit private dining suite" loading="lazy" decoding="async">
+            <div class="private-card-content">
+              <h4>The Spice Library</h4>
+              <p>Seats 14 · spice archive wall · sommelier-led pairing journeys.</p>
+              <button class="btn btn-outline" data-modal="events-modal">Enquire for a Private Event</button>
+            </div>
+          </article>
+          <article class="private-card">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80" alt="Luxury lounge area for private events" loading="lazy" decoding="async">
+            <div class="private-card-content">
+              <h4>The Charcoal Chamber</h4>
+              <p>Seats 20 · live ember kitchen · custom incense ceremonies.</p>
+              <button class="btn btn-outline" data-modal="events-modal">Enquire for a Private Event</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials">
+      <div class="section-inner">
+        <h2 class="section-heading">Whispers & Accolades</h2>
+        <div class="testimonials">
+          <article class="testimonial-card">
+            <p>“Aurelia orchestrates a tasting that feels like incense—layered, warm, and impossibly refined. The chef’s table is Mumbai’s newest culinary pilgrimage.”</p>
+            <span>VERVE MAGAZINE</span>
+          </article>
+          <article class="testimonial-card">
+            <p>“Each course is a hush of spice poetry. The wine atelier’s pairing with jackfruit confit was transcendent.”</p>
+            <span>ANANYA R., SOMMELIER</span>
+          </article>
+          <article class="testimonial-card">
+            <p>“The Spice Library suite reimagines Indian hospitality for modern raconteurs. Service appears before you can summon it.”</p>
+            <span>NIKHIL S., GUEST CURATOR</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="location">
+      <div class="section-inner">
+        <h2 class="section-heading">Locate the Experience</h2>
+        <p class="section-subheading">Level 38, Aurelia Tower, Bandra-Kurla Complex, Mumbai 400051. Private elevator access from lobby concierge.</p>
+        <div class="map">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3772.176773068499!2d72.86874301599543!3d19.070232287093902!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c91a4cbabc5f%3A0x2fa0ec58d4c85ff!2sBandra%20Kurla%20Complex!5e0!3m2!1sen!2sin!4v1700567890123" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="hours-grid">
+          <div class="hours-card">
+            <h4>Visit & Access</h4>
+            <ul>
+              <li>Valet & chauffeur staging at Ground Lobby.</li>
+              <li>Private lift to Level 38.</li>
+              <li>Dress Code: Elevated evening attire.</li>
+            </ul>
+            <div class="reservation-actions" style="margin-top:16px;">
+              <a href="https://goo.gl/maps/xyz" target="_blank" rel="noopener">Open Directions</a>
+            </div>
+          </div>
+          <div class="hours-card">
+            <h4>Concierge Desk</h4>
+            <ul>
+              <li>Email: support@shyara.co.in</li>
+              <li>Phone: +91 95846 61610</li>
+              <li>Service Hours as listed above.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="social">
+      <div class="section-inner">
+        <div class="newsletter">
+          <div>
+            <h2 class="section-heading" style="font-size:1.8rem;">Stay Illuminated</h2>
+            <p class="section-subheading" style="margin-bottom:0;">Receive invites to regional residencies, masterclasses, and nocturnal tastings.</p>
+            <div class="social-links" style="margin-top:18px;">
+              <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+              <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+          </div>
+          <form id="newsletter-form">
+            <input type="email" name="newsletter-email" placeholder="Email Address" required>
+            <button type="submit" class="btn btn-primary">Join List</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Aurelia Indian Supper Club</div>
+        <p class="footer-meta">Level 38, Aurelia Tower, BKC · Mumbai 400051 · India</p>
+      </div>
+      <div>
+        <p class="footer-meta">support@shyara.co.in</p>
+        <p class="footer-meta">+91 95846 61610</p>
+        <p class="footer-meta">Mon–Thu: 12:30–15:30 · 19:00–23:00</p>
+        <p class="footer-meta">Fri–Sun: 12:30–16:00 · 19:00–23:30</p>
+      </div>
+      <div>
+        <p class="footer-meta">ServingCuisine: Progressive Indian · Degustation · Chef’s Table</p>
+        <p class="footer-meta">Complimentary valet · Advanced reservations recommended.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Designed &amp; Curated for demonstration by Shyara Digital. © Shyara Digital. All Rights Reserved. For professional branding and website development: <a href="https://shyara.co.in" target="_blank" rel="noopener">https://shyara.co.in</a>
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" aria-label="Close gallery">&times;</button>
+      <img src="" alt="Gallery preview" id="lightbox-image">
+      <div class="lightbox-nav">
+        <button id="lightbox-prev" aria-label="Previous image">‹</button>
+        <button id="lightbox-next" aria-label="Next image">›</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="reservation-modal" role="dialog" aria-modal="true" aria-labelledby="reservation-modal-title">
+    <div class="modal-box">
+      <button class="modal-close" aria-label="Close reservation confirmation">&times;</button>
+      <h3 id="reservation-modal-title">Reservation Requested</h3>
+      <p>Our concierge team will reach out shortly to confirm availability, preferences, and bespoke pairings.</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline modal-close">Close</button>
+        <a href="https://wa.me/919584661610?text=Hello%20Aurelia%2C%20I%20would%20like%20to%20reserve%20a%20table" target="_blank" rel="noopener" class="btn btn-primary" style="text-decoration:none;">Message Concierge</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="events-modal" role="dialog" aria-modal="true" aria-labelledby="events-modal-title">
+    <div class="modal-box">
+      <button class="modal-close" aria-label="Close private event enquiry">&times;</button>
+      <h3 id="events-modal-title">Private Event Enquiry</h3>
+      <p>Share your occasion details. Our private dining curator will tailor an unforgettable evening.</p>
+      <form id="events-form">
+        <div>
+          <label for="event-name">Name</label>
+          <input type="text" id="event-name" name="event-name" required>
+        </div>
+        <div>
+          <label for="event-email">Email</label>
+          <input type="email" id="event-email" name="event-email" required>
+        </div>
+        <div>
+          <label for="event-date">Preferred Date</label>
+          <input type="date" id="event-date" name="event-date" required>
+        </div>
+        <div>
+          <label for="event-details">Occasion &amp; Notes</label>
+          <textarea id="event-details" name="event-details" placeholder="Corporate tasting, celebration dinner, bespoke menu..." required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline modal-close">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Enquiry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('main section');
+    const options = { root: null, threshold: 0.3 };
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, options);
+    sections.forEach(section => observer.observe(section));
+
+    document.querySelectorAll('[data-scroll-to]').forEach(button => {
+      button.addEventListener('click', () => {
+        const target = document.querySelector(button.dataset.scrollTo);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    const menuTabs = document.querySelectorAll('.menu-tab');
+    const menuPanels = document.querySelectorAll('.menu-panel');
+    menuTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.menu;
+        menuTabs.forEach(btn => {
+          btn.classList.toggle('active', btn === tab);
+          btn.setAttribute('aria-selected', btn === tab ? 'true' : 'false');
+        });
+        menuPanels.forEach(panel => panel.classList.toggle('active', panel.id === id));
+      });
+    });
+
+    const galleryImages = [
+      "https://images.unsplash.com/photo-1604908177731-4497254d8630?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1532634748-96c827b9db8a?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1481833761820-0509d3217039?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=1600&q=80"
+    ];
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    let currentIndex = 0;
+
+    const showLightbox = index => {
+      currentIndex = index;
+      lightboxImage.src = galleryImages[currentIndex];
+      lightbox.classList.add('active');
+    };
+    const closeLightbox = () => {
+      lightbox.classList.remove('active');
+      lightboxImage.src = '';
+    };
+    const prevLightbox = () => {
+      currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      lightboxImage.src = galleryImages[currentIndex];
+    };
+    const nextLightbox = () => {
+      currentIndex = (currentIndex + 1) % galleryImages.length;
+      lightboxImage.src = galleryImages[currentIndex];
+    };
+
+    document.querySelectorAll('.gallery-card').forEach(card => {
+      card.addEventListener('click', () => showLightbox(parseInt(card.dataset.gallery, 10)));
+    });
+    document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox-prev').addEventListener('click', prevLightbox);
+    document.getElementById('lightbox-next').addEventListener('click', nextLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+    const modals = document.querySelectorAll('.modal');
+    const openModal = id => document.getElementById(id).classList.add('active');
+    const closeModal = modal => modal.classList.remove('active');
+    document.querySelectorAll('[data-modal]').forEach(btn => {
+      btn.addEventListener('click', () => openModal(btn.dataset.modal));
+    });
+    modals.forEach(modal => {
+      modal.addEventListener('click', e => {
+        if (e.target === modal || e.target.classList.contains('modal-close')) closeModal(modal);
+      });
+    });
+
+    document.getElementById('reservation-form').addEventListener('submit', e => {
+      e.preventDefault();
+      e.target.reset();
+      openModal('reservation-modal');
+    });
+
+    document.getElementById('events-form').addEventListener('submit', e => {
+      e.preventDefault();
+      e.target.reset();
+      const modal = document.getElementById('events-modal');
+      modal.querySelector('p').textContent = 'Thank you. Our events curator will contact you within 12 hours.';
+    });
+
+    document.getElementById('newsletter-form').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Thank you for joining our circle. Bespoke updates will follow shortly.');
+      e.target.reset();
+    });
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (lightbox.classList.contains('active')) closeLightbox();
+        modals.forEach(closeModal);
+      }
+    });
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "AURELIA INDIAN SUPPER CLUB",
+    "servesCuisine": ["Progressive Indian", "Degustation", "Chef's Table"],
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Level 38, Aurelia Tower",
+      "addressLocality": "Bandra-Kurla Complex (BKC)",
+      "addressRegion": "Maharashtra",
+      "postalCode": "400051",
+      "addressCountry": "IN"
+    },
+    "telephone": "+91 95846 61610",
+    "email": "support@shyara.co.in",
+    "url": "https://aurelia-supper-club.example.com",
+    "priceRange": "$$$$",
+    "openingHours": [
+      "Mo-Th 12:30-15:30",
+      "Mo-Th 19:00-23:00",
+      "Fr-Su 12:30-16:00",
+      "Fr-Su 19:00-23:30"
+    ],
+    "sameAs": [
+      "https://instagram.com",
+      "https://www.facebook.com",
+      "https://www.linkedin.com"
+    ],
+    "hasMenu": "https://aurelia-supper-club.example.com/menu.pdf",
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 19.0702,
+      "longitude": 72.8687
+    }
+  }
+  </script>
+</body>
+</html>
+
