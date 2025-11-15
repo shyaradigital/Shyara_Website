@@ -453,11 +453,14 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
         <div style={{ position: 'relative', marginBottom: 24 }}>
           <div style={{
             width: '100%',
-            height: 400,
+            maxHeight: 'min(70vh, 520px)',
             borderRadius: 12,
             overflow: 'hidden',
             position: 'relative',
-            background: '#111'
+            background: '#111',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}>
             {currentSample.mediaType === 'video' ? (
               <LazyVideo
@@ -466,6 +469,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                 style={{
                   width: '100%',
                   height: '100%',
+                  maxHeight: 'min(70vh, 520px)',
                   objectFit: 'contain',
                   objectPosition: 'center'
                 }}
@@ -483,6 +487,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                 style={{
                   width: '100%',
                   height: '100%',
+                  maxHeight: 'min(70vh, 520px)',
                   objectFit: 'contain',
                   objectPosition: 'center'
                 }}
