@@ -6,6 +6,27 @@ import { Link, useLocation } from 'react-router-dom';
 import { Sparkles, Target, Users, Award, Zap, TrendingUp } from 'lucide-react';
 import FancyText from '../components/FancyText';
 
+let splineScriptPromise = null;
+
+const loadSplineViewerScript = () => {
+  if (typeof window === 'undefined') return Promise.resolve();
+  if (window.__splineViewerLoaded) return Promise.resolve();
+  if (!splineScriptPromise) {
+    splineScriptPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.src = 'https://unpkg.com/@splinetool/viewer@latest/build/spline-viewer.js';
+      script.onload = () => {
+        window.__splineViewerLoaded = true;
+        resolve();
+      };
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+  return splineScriptPromise;
+};
+
 const Home = () => {
   const [fadeIn, setFadeIn] = React.useState(false);
   const [loadingDone, setLoadingDone] = useState(false);
@@ -27,6 +48,22 @@ const Home = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      return undefined;
+    }
+
+    const load = () => loadSplineViewerScript().catch((err) => console.warn('Spline viewer failed to load', err));
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(load);
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = setTimeout(load, 0);
+    return () => clearTimeout(timeoutId);
+  }, [isMobile]);
 
   // Show loading screen on first load or hard reload
   useEffect(() => {

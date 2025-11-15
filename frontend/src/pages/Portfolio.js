@@ -5,8 +5,8 @@ import AnimatedHeading from '../components/AnimatedHeading';
 
 const IMAGE_EXTENSION_REGEX = /\.(png|jpe?g)$/i;
 const PICS_PREFIX = '/pics/';
-const PREFETCH_INITIAL_COUNT = 12;
-const MIN_LOADER_DURATION = 1200; // ms
+const PREFETCH_INITIAL_COUNT = 6;
+const MIN_LOADER_DURATION = 800; // ms
 
 const prefetchSingleMedia = (sample, signal) => {
   if (signal?.aborted || typeof window === 'undefined') {

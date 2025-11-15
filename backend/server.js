@@ -34,6 +34,18 @@ const indexPath = path.join(staticPath, 'index.html');
 console.log('Index.html path:', indexPath);
 console.log('Index.html exists:', fs.existsSync(indexPath));
 
+const optimizedMediaPath = path.join(staticPath, 'pics-optimized');
+if (fs.existsSync(optimizedMediaPath)) {
+  app.use('/pics-optimized', express.static(optimizedMediaPath, {
+    index: false,
+    maxAge: '30d',
+    immutable: true,
+    setHeaders: (res) => {
+      res.set('Cache-Control', 'public, max-age=2592000, immutable');
+    }
+  }));
+}
+
 // Serve static files (JS, CSS, images, etc.)
 // But don't automatically serve index.html for directories
 app.use(express.static(staticPath, {
