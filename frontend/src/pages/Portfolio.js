@@ -241,13 +241,10 @@ const rawPortfolioServices = [
     service: 'Website Development',
     description: 'Modern, responsive websites that convert visitors into customers',
     samples: [
-      { img: process.env.PUBLIC_URL + '/pics/web1.png', title: 'Portfolio Website', description: 'Responsive site with booking and payment features', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Banquet_Sample_1.html' },
-      { img: process.env.PUBLIC_URL + '/pics/web2.png', title: 'Tech Startup Site', description: 'Modern website for tech startup', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Banquet_Sample_2.html' },
-      { img: process.env.PUBLIC_URL + '/pics/web3.png', title: 'E-commerce Platform', description: 'Full-featured online store', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Banquete_Website.html' },
-      { img: process.env.PUBLIC_URL + '/pics/web4.png', title: 'Corporate Website', description: 'Professional corporate website design', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Restaurant_Sample_1.html' },
-      { img: process.env.PUBLIC_URL + '/pics/web5.png', title: 'Business Platform', description: 'Comprehensive business solution website', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Restaurant_Sample_2.html' },
-      { img: process.env.PUBLIC_URL + '/pics/porto.png', title: 'Premium Restaurant', description: 'Elegant fine-dining website experience', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_premium_restaurant_sample_1.html' },
-      { img: process.env.PUBLIC_URL + '/pics/linkedin.png', title: 'Burger Cafe Concept', description: 'Playful landing page for quick-service cafe', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_BurgerCafe.html' },
+      { img: process.env.PUBLIC_URL + '/mockups/Shyara_premium_restaurant_sample_1.PNG', title: 'Premium Restaurant', description: 'Elegant fine-dining experience with curated menus', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_premium_restaurant_sample_1.html' },
+      { img: process.env.PUBLIC_URL + '/mockups/Shyara_BurgerCafe.PNG', title: 'Burger Cafe Concept', description: 'Playful landing page for a quick-service cafe brand', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_BurgerCafe.html' },
+      { img: process.env.PUBLIC_URL + '/mockups/Shyara_Restaurant_Sample_1.PNG', title: 'Corporate Restaurant', description: 'Upscale dining website with reservation flow', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Restaurant_Sample_1.html' },
+      { img: process.env.PUBLIC_URL + '/mockups/Shyara_Banquete_Website.PNG', title: 'Banquete Experience', description: 'Multi-page banquet showcase with CTA driven sections', mockup: process.env.PUBLIC_URL + '/mockups/Shyara_Banquete_Website.html' },
     ],
     results: '40% more bookings, improved lead generation and conversion rates'
   },
