@@ -701,9 +701,9 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
           background: 'rgba(0,0,0,0.85)',
           zIndex: 20000,
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
-          padding: '2rem'
+          padding: '4rem 2rem 2rem'
         }}>
           <div style={{
             background: '#05050b',
