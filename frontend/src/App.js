@@ -21,6 +21,7 @@ import AddItemsPage from './pages/AddItemsPage';
 import Checkout from './pages/Checkout';
 import Payment from './pages/Payment';
 import { CartProvider } from './context/CartContext';
+import TermsPage from './pages/Terms';
 
 // 404 Component
 const NotFound = () => {
@@ -101,6 +102,7 @@ function App() {
           <Route path="/add-items" element={<Layout><AddItemsPage /></Layout>} />
           <Route path="/checkout" element={<Layout><Checkout /></Layout>} />
           <Route path="/payment" element={<Layout><Payment /></Layout>} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </CartProvider>

@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
 import { CartContext } from '../context/CartContext';
-import TermsAndConditions from './TermsAndConditions';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -11,7 +10,6 @@ const Layout = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [showTerms, setShowTerms] = useState(false);
 
   // Detect mobile device
   useEffect(() => {
@@ -71,6 +69,7 @@ const Layout = ({ children }) => {
               <Link to="/services" className={location.pathname === '/services' ? 'active' : ''}>Services</Link>
               <Link to="/portfolio" className={location.pathname === '/portfolio' ? 'active' : ''}>Portfolio</Link>
               <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>Contact Us</Link>
+              <Link to="/terms" className={location.pathname === '/terms' ? 'active' : ''}>Terms</Link>
             </nav>
           )}
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
@@ -114,6 +113,7 @@ const Layout = ({ children }) => {
             <Link to="/services" className={location.pathname === '/services' ? 'active' : ''}>Services</Link>
             <Link to="/portfolio" className={location.pathname === '/portfolio' ? 'active' : ''}>Portfolio</Link>
             <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>Contact</Link>
+            <Link to="/terms" className={location.pathname === '/terms' ? 'active' : ''}>Terms</Link>
           </nav>
         )}
         
@@ -127,27 +127,9 @@ const Layout = ({ children }) => {
               flexWrap: 'wrap'
             }}>
               <span>© Shyara Digital 2025. All rights reserved.</span>
-              <button
-                onClick={() => setShowTerms(true)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#a7a7a7',
-                  fontSize: '0.9rem',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  transition: 'color 0.2s',
-                  padding: '4px 0'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.color = '#a259f7';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.color = '#a7a7a7';
-                }}
-              >
+              <Link to="/terms" style={{ color: '#a7a7a7', fontSize: '0.9rem', textDecoration: 'underline' }}>
                 Terms & Conditions
-              </button>
+              </Link>
             </div>
             <div className="footer-socials">
               <a href="https://www.instagram.com/shyaradigital?igsh=YXBsNXlkbDUzZnpn" target="_blank" rel="noopener noreferrer" className="footer-icon" aria-label="Instagram">
@@ -165,12 +147,6 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </footer>
-        
-        {/* Terms and Conditions Modal */}
-        <TermsAndConditions 
-          isOpen={showTerms} 
-          onClose={() => setShowTerms(false)} 
-        />
       </div>
     </div>
   );
