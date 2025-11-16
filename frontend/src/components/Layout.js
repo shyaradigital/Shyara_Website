@@ -73,34 +73,31 @@ const Layout = ({ children }) => {
             </nav>
           )}
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-            {/* Hide cart button on home page */}
-            {location.pathname !== '/' && (
-              <Link to="/cart" aria-label="Cart" style={{ position: 'relative', fontSize: 26, color: '#a259f7', textDecoration: 'none', marginRight: 8, display: 'flex', alignItems: 'center', transition: 'color 0.2s' }}>
-                <span role="img" aria-label="Cart">🛒</span>
-                {cart && cart.length > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: -8,
-                    right: -8,
-                    minWidth: 20,
-                    height: 20,
-                    background: '#fff',
-                    color: '#a259f7',
-                    borderRadius: '50%',
-                    fontSize: 13,
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 2px 8px #0003',
-                    border: '2px solid #a259f7',
-                    zIndex: 2,
-                    padding: '0 6px',
-                    letterSpacing: 0.01,
-                  }}>{cart.length}</span>
-                )}
-              </Link>
-            )}
+            <Link to="/cart" aria-label="Cart" style={{ position: 'relative', fontSize: 26, color: '#a259f7', textDecoration: 'none', marginRight: 8, display: 'flex', alignItems: 'center', transition: 'color 0.2s' }}>
+              <span role="img" aria-label="Cart">🛒</span>
+              {cart && cart.length > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: -8,
+                  right: -8,
+                  minWidth: 20,
+                  height: 20,
+                  background: '#fff',
+                  color: '#a259f7',
+                  borderRadius: '50%',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px #0003',
+                  border: '2px solid #a259f7',
+                  zIndex: 2,
+                  padding: '0 6px',
+                  letterSpacing: 0.01,
+                }}>{cart.length}</span>
+              )}
+            </Link>
             <a href="https://dashboard.shyara.co.in" className="btn-signin"><LogIn style={{ width: 20, height: 20, marginRight: 4 }} />Sign In</a>
           </div>
         </header>
