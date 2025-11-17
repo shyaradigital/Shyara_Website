@@ -1,107 +1,68 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const LoadingScreen = ({ onFinish, message, keepLogoBg = true }) => {
-  const screenRef = useRef(null);
-  const textRef = useRef(null);
-  const initializedRef = useRef(false);
-  const [phase, setPhase] = useState('loading'); // 'loading', 'zooming', 'done'
-  const [showBgLogo, setShowBgLogo] = useState(false);
+const LoadingScreen = ({ onFinish }) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
-    // Prevent multiple initializations
-    if (initializedRef.current) return;
+    // Original 3-second delay before starting animation
+    let zoomTimer;
+    let finishTimer;
     
-    const loadingScreen = screenRef.current;
-    const loadingText = textRef.current;
-    if (!loadingScreen || !loadingText) return;
-    
-    initializedRef.current = true;
+    const timer = setTimeout(() => {
+      // Start zoom animation
+      setIsZoomed(true);
+      
+      // After zoom animation completes, hide and call onFinish
+      finishTimer = setTimeout(() => {
+        setIsVisible(false);
+        // Restore navbar before calling onFinish
+        const nav = document.querySelector('header');
+        if (nav) {
+          nav.style.display = '';
+        }
+        if (onFinish) onFinish();
+      }, 2500); // Match the transition duration
+    }, 3000); // Original 3-second delay
 
-    // Hide navbar and ensure full screen coverage
-    const navbar = document.querySelector('header, nav, .navbar');
-    if (navbar) {
-      navbar.style.display = 'none';
-    }
-
-    // Initial state - ensure full screen coverage
-    loadingScreen.style.position = 'fixed';
-    loadingScreen.style.top = '0';
-    loadingScreen.style.left = '0';
-    loadingScreen.style.width = '100vw';
-    loadingScreen.style.height = '100vh';
-    loadingScreen.style.transform = 'scale(1)';
-    loadingScreen.style.opacity = '1';
-    loadingScreen.style.transition = 'none';
-    loadingScreen.style.zIndex = '99999';
-    loadingScreen.style.pointerEvents = 'auto';
-    loadingText.style.animation = 'none';
-    void loadingText.offsetWidth;
-    loadingText.style.animation = 'pulse 1.2s ease-in-out infinite, glow 1.8s ease-in-out infinite';
-
-    let timer1, timer2;
-    if (!message) {
-      // Pulse for 3 seconds, then zoom in
-      console.log('LoadingScreen: Starting 3-second timer');
-      timer1 = setTimeout(() => {
-        console.log('LoadingScreen: 3 seconds elapsed, starting zoom');
-        setPhase('zooming');
-        loadingScreen.style.transition = 'transform 1.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1)';
-        loadingScreen.style.transform = 'scale(7)';
-        loadingScreen.style.opacity = '0.12';
-        loadingText.style.animation = 'none';
-        timer2 = setTimeout(() => {
-          console.log('LoadingScreen: Zoom complete, finishing');
-          setPhase('done');
-          if (keepLogoBg) setShowBgLogo(true);
-          loadingScreen.style.display = 'none';
-          // Show navbar again after loading
-          if (navbar) {
-            navbar.style.display = '';
-          }
-          if (onFinish) onFinish();
-        }, 1100);
-      }, 3000); // Exactly 3 seconds
-    } else {
-      // Custom message: hold for 3 seconds, then fade out smoothly
-      timer1 = setTimeout(() => {
-        setPhase('done');
-        loadingScreen.style.opacity = '0';
-        loadingScreen.style.transition = 'opacity 0.5s';
-        timer2 = setTimeout(() => {
-          loadingScreen.style.display = 'none';
-          // Show navbar again after loading
-          if (navbar) {
-            navbar.style.display = '';
-          }
-          if (onFinish) onFinish();
-        }, 500);
-      }, 3000); // Exactly 3 seconds
-    }
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      initializedRef.current = false; // Reset for potential re-mount
-      // Ensure navbar is shown if component unmounts
-      if (navbar) {
-        navbar.style.display = '';
+      clearTimeout(timer);
+      if (zoomTimer) clearTimeout(zoomTimer);
+      if (finishTimer) clearTimeout(finishTimer);
+      // Ensure navbar is restored on cleanup
+      const nav = document.querySelector('header');
+      if (nav) {
+        nav.style.display = '';
       }
     };
-  }, [onFinish, message, keepLogoBg]);
+  }, [onFinish]);
 
-  // Faint logo background after loading
-  if (phase === 'done' && showBgLogo && keepLogoBg) {
-    return (
-      <div className="logo-bg">
-        <span className="logo-bg-text">SHYARA</span>
-      </div>
-    );
+  // Hide navigation during loading (original behavior)
+  useEffect(() => {
+    if (isVisible) {
+      const nav = document.querySelector('header');
+      if (nav) {
+        nav.style.display = 'none';
+      }
+    }
+    
+    // Cleanup: restore navbar when component unmounts
+    return () => {
+      const nav = document.querySelector('header');
+      if (nav) {
+        nav.style.display = '';
+      }
+    };
+  }, [isVisible]);
+
+  if (!isVisible) {
+    return null;
   }
 
   return (
     <div
       id="loading-screen"
-      className={`loading-screen${phase === 'zooming' ? ' loading-zooming' : ''}`}
-      ref={screenRef}
+      className="loading-screen"
       style={{
         position: 'fixed',
         top: 0,
@@ -112,16 +73,22 @@ const LoadingScreen = ({ onFinish, message, keepLogoBg = true }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 99999
+        zIndex: 99999,
+        opacity: isZoomed ? 0.05 : 1,
+        transform: isZoomed ? 'scale(3)' : 'scale(1)',
+        transition: 'all 2.5s cubic-bezier(0.4, 0, 0.2, 1)',
+        pointerEvents: isVisible ? 'auto' : 'none',
       }}
     >
       <div className="loading-content">
-        <h1 className="loading-text" ref={textRef}>SHYARA</h1>
-        {message && (
-          <div style={{ marginTop: 24, fontSize: '1.25rem', color: '#fff', fontWeight: 500, letterSpacing: '0.02em', textAlign: 'center', textShadow: '0 2px 12px #0008' }}>
-            {message}
-          </div>
-        )}
+        <h1 
+          className="loading-text"
+          style={{
+            animation: 'pulse 1.2s ease-in-out infinite, glow 1.8s ease-in-out infinite'
+          }}
+        >
+          SHYARA
+        </h1>
       </div>
     </div>
   );

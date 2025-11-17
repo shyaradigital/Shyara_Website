@@ -1,87 +1,42 @@
+/* Optimized font declarations - WOFF2 only, only used weights */
+/* Salena font - decorative, loaded with font-display: swap for non-blocking */
+/* Fonts are in public/fonts/ and served at /fonts/ at runtime */
 @font-face {
   font-family: 'Salena';
-  src: url('./components/salena-font/salena-regular.ttf') format('truetype'),
-       url('./components/salena-font/salena-regular.otf') format('opentype');
+  src: url(./fonts/salena-regular.woff2) format('woff2');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-bold.ttf') format('truetype'),
-       url('./components/salena-font/salena-bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-italic.ttf') format('truetype'),
-       url('./components/salena-font/salena-italic.otf') format('opentype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-bolditalic.ttf') format('truetype'),
-       url('./components/salena-font/salena-bolditalic.otf') format('opentype');
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-light.ttf') format('truetype'),
-       url('./components/salena-font/salena-light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-lightitalic.ttf') format('truetype'),
-       url('./components/salena-font/salena-lightitalic.otf') format('opentype');
-  font-weight: 300;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-medium.ttf') format('truetype'),
-       url('./components/salena-font/salena-medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-mediumitalic.ttf') format('truetype'),
-       url('./components/salena-font/salena-mediumitalic.otf') format('opentype');
-  font-weight: 500;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-semibold.ttf') format('truetype'),
-       url('./components/salena-font/salena-semibold.otf') format('opentype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Salena';
-  src: url('./components/salena-font/salena-semibolditalic.ttf') format('truetype'),
-       url('./components/salena-font/salena-semibolditalic.otf') format('opentype');
-  font-weight: 600;
-  font-style: italic;
   font-display: swap;
 }
 
 @font-face {
+  font-family: 'Salena';
+  src: url(./fonts/salena-medium.woff2) format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Salena';
+  src: url(./fonts/salena-semibold.woff2) format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Salena';
+  src: url(./fonts/salena-bold.woff2) format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Davigo font - decorative, loaded with font-display: swap */
+@font-face {
   font-family: 'Davigo';
-  src: url('./components/davigo-font/DavigoDemoRegular-V4Bg0.ttf') format('truetype');
+  src: url(./fonts/davigo-regular.woff2) format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -116,30 +71,7 @@
   will-change: transform, opacity;
 }
 
-/* Hide navbar during loading */
-.loading-screen ~ header,
-.loading-screen ~ nav,
-.loading-screen ~ .navbar,
-.loading-screen ~ .site-header,
-.loading-screen ~ .header,
-.loading-screen ~ .navbar-center {
-  display: none !important;
-}
-
-/* Additional rule to hide navbar when loading screen is present */
-body:has(.loading-screen) header,
-body:has(.loading-screen) nav,
-body:has(.loading-screen) .navbar,
-body:has(.loading-screen) .site-header,
-body:has(.loading-screen) .header,
-body:has(.loading-screen) .navbar-center {
-  display: none !important;
-}
-
-/* Prevent body scrolling during loading */
-body:has(.loading-screen) {
-  overflow: hidden !important;
-}
+/* Navbar visibility is controlled by JavaScript in LoadingScreen component */
 .loading-screen.loading-zooming {
   /* The transform/opacity are set inline by JS for smooth zoom */
 }

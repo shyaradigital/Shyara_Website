@@ -22,6 +22,7 @@ import Checkout from './pages/Checkout';
 import Payment from './pages/Payment';
 import { CartProvider } from './context/CartContext';
 import TermsPage from './pages/Terms';
+import ScrollToTop from './components/ScrollToTop';
 
 // 404 Component
 const NotFound = () => {
@@ -82,6 +83,7 @@ const NotFound = () => {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <CartProvider>
         <Routes>
           <Route path="/" element={<Layout><ResponsiveHome /></Layout>} />

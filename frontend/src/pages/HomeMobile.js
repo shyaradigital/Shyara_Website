@@ -16,28 +16,38 @@ const HomeMobile = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Only show loading screen on first load or hard reload
+  // Check if page is ready - only show loader if React is still mounting
   useEffect(() => {
-    const navType = window.performance && window.performance.getEntriesByType
-      ? window.performance.getEntriesByType('navigation')[0]?.type
-      : undefined;
-    const isReload = navType === 'reload' || navType === 'navigate' || navType === 'navigate';
-    
-    if (!sessionStorage.getItem('shyaraLoaded')) {
-      setShowLoading(true);
-      sessionStorage.setItem('shyaraLoaded', 'true');
-    } else {
+    // Check if document is already ready
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      // Page is already loaded, skip loader
       setShowLoading(false);
       setLoadingDone(true);
+      setFadeIn(true);
+      return;
     }
-  }, [location.key]);
+
+    // Show loader only while page is loading
+    setShowLoading(true);
+    
+    const handleReady = () => {
+      setShowLoading(false);
+      setLoadingDone(true);
+      setFadeIn(true);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', handleReady);
+      return () => document.removeEventListener('DOMContentLoaded', handleReady);
+    } else {
+      handleReady();
+    }
+  }, []);
 
   // Fade in main content after loading is done
   useEffect(() => {
     if (loadingDone) {
-      setTimeout(() => {
-        setFadeIn(true);
-      }, 0);
+      setFadeIn(true);
     }
   }, [loadingDone]);
 
@@ -79,7 +89,7 @@ const HomeMobile = () => {
         id="main-content"
         style={{
           opacity: fadeIn ? 1 : 0,
-          pointerEvents: loadingDone ? 'auto' : 'none',
+          pointerEvents: 'auto', // Always allow interaction - loader is non-blocking
           position: 'relative',
           overflow: 'visible',
           minHeight: '100vh'

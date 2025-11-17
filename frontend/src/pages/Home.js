@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { Link, useLocation } from 'react-router-dom';
 import { Sparkles, Target, Users, Award, Zap, TrendingUp } from 'lucide-react';
 import FancyText from '../components/FancyText';
@@ -37,6 +35,53 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [showScrollArrow, setShowScrollArrow] = useState(true);
   const [robotFadeIn, setRobotFadeIn] = useState(false);
+  const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
+  const [splineScriptLoaded, setSplineScriptLoaded] = useState(false);
+  const heroSectionRef = useRef(null);
+
+  // Custom hook for IntersectionObserver-based animations
+  const useScrollAnimation = (options = {}) => {
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef(null);
+
+    useEffect(() => {
+      const element = ref.current;
+      if (!element) return;
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            // Unobserve after animation triggers to prevent re-triggering
+            observer.unobserve(element);
+          }
+        },
+        {
+          threshold: options.threshold || 0.1,
+          rootMargin: options.rootMargin || '50px',
+        }
+      );
+
+      observer.observe(element);
+
+      return () => {
+        if (element) {
+          observer.unobserve(element);
+        }
+        observer.disconnect();
+      };
+    }, []);
+
+    return [ref, isVisible];
+  };
+
+  // Animation refs for each section
+  const [section1Ref, section1Visible] = useScrollAnimation();
+  const [section2Ref, section2Visible] = useScrollAnimation();
+  const [section3Ref, section3Visible] = useScrollAnimation();
+  const [section4Ref, section4Visible] = useScrollAnimation();
+  const [section5Ref, section5Visible] = useScrollAnimation();
+  const [section6Ref, section6Visible] = useScrollAnimation();
 
   // Check if device is mobile
   useEffect(() => {
@@ -49,106 +94,140 @@ const Home = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // IntersectionObserver to load Spline only when hero section is visible
   useEffect(() => {
     if (isMobile) {
       return undefined;
     }
 
-    const load = () => loadSplineViewerScript().catch((err) => console.warn('Spline viewer failed to load', err));
-
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      const idleId = window.requestIdleCallback(load);
-      return () => window.cancelIdleCallback(idleId);
+    // Only load once
+    if (shouldLoadSpline || splineScriptLoaded) {
+      return undefined;
     }
 
-    const timeoutId = setTimeout(load, 0);
-    return () => clearTimeout(timeoutId);
-  }, [isMobile]);
+    // Wait a tick to ensure refs are set
+    let retryTimeout;
+    let observer;
+    let interactionTimeout;
+    let handleInteraction;
 
-  // Show loading screen on first load or hard reload
+    const setupObserver = () => {
+      const heroSection = heroSectionRef.current || mainContentRef.current;
+      if (!heroSection) {
+        // Retry after a short delay if ref not available
+        retryTimeout = setTimeout(setupObserver, 50);
+        return;
+      }
+
+      // Check if already visible on mount
+      const checkVisibility = () => {
+        const rect = heroSection.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        if (isVisible && !shouldLoadSpline) {
+          setShouldLoadSpline(true);
+          return true;
+        }
+        return false;
+      };
+
+      // Check immediately (in case already visible)
+      if (checkVisibility()) {
+        return;
+      }
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            // When hero section becomes visible, trigger Spline loading
+            if (entry.isIntersecting && !shouldLoadSpline) {
+              setShouldLoadSpline(true);
+            }
+          });
+        },
+        {
+          threshold: 0.1, // Trigger when 10% of hero is visible
+          rootMargin: '50px', // Start loading slightly before it's fully visible
+        }
+      );
+
+      observer.observe(heroSection);
+
+      // Fallback: Load on user interaction (scroll or mouse move) if not visible yet
+      handleInteraction = () => {
+        if (!shouldLoadSpline && !splineScriptLoaded) {
+          clearTimeout(interactionTimeout);
+          interactionTimeout = setTimeout(() => {
+            if (!shouldLoadSpline) {
+              setShouldLoadSpline(true);
+            }
+          }, 500); // Small delay to avoid loading on every scroll
+        }
+      };
+
+      window.addEventListener('scroll', handleInteraction, { passive: true, once: true });
+      window.addEventListener('mousemove', handleInteraction, { passive: true, once: true });
+    };
+
+    setupObserver();
+
+    return () => {
+      if (retryTimeout) clearTimeout(retryTimeout);
+      if (observer) observer.disconnect();
+      if (interactionTimeout) clearTimeout(interactionTimeout);
+      if (handleInteraction) {
+        window.removeEventListener('scroll', handleInteraction);
+        window.removeEventListener('mousemove', handleInteraction);
+      }
+    };
+  }, [isMobile, shouldLoadSpline, splineScriptLoaded]);
+
+  // Load Spline script only when shouldLoadSpline is true
   useEffect(() => {
-    if (!sessionStorage.getItem('shyaraLoaded')) {
-      setShowLoading(true);
-      sessionStorage.setItem('shyaraLoaded', 'true');
-    } else {
-      setShowLoading(false);
-      setLoadingDone(true);
+    if (!shouldLoadSpline || isMobile || splineScriptLoaded) {
+      return undefined;
     }
-  }, [location.key]);
+
+    // Load script with error handling
+    loadSplineViewerScript()
+      .then(() => {
+        setSplineScriptLoaded(true);
+      })
+      .catch((err) => {
+        // Silently fail - don't block page rendering
+        console.warn('Spline viewer failed to load (non-critical):', err);
+        setSplineScriptLoaded(false);
+      });
+  }, [shouldLoadSpline, isMobile, splineScriptLoaded]);
+
+  // Original loading screen behavior - always show for 3 seconds
+  useEffect(() => {
+    // Always show loader on mount
+    setShowLoading(true);
+  }, []);
 
   // Fade in main content after loading is done
   useEffect(() => {
     if (loadingDone) {
-      setTimeout(() => {
-        setFadeIn(true);
-      }, 0); // Appear immediately after loading
+      setFadeIn(true);
     }
   }, [loadingDone]);
 
   // Memoize the onFinish callback to prevent re-renders
   const handleLoadingFinish = useCallback(() => {
     setLoadingDone(true);
+    setShowLoading(false);
   }, []);
 
-  // Initialize robot fade-in when loading is done
+  // Initialize robot fade-in when loading is done AND Spline script is loaded
   useEffect(() => {
-    if (loadingDone && !isMobile) {
-      // Start robot fade-in animation immediately after loading is complete
+    if (loadingDone && !isMobile && splineScriptLoaded) {
+      // Start robot fade-in animation after Spline is ready
       setTimeout(() => {
         setRobotFadeIn(true);
       }, 100); // Small delay to ensure smooth transition
     }
-  }, [loadingDone, isMobile]);
+  }, [loadingDone, isMobile, splineScriptLoaded]);
 
-  // Initialize AOS for individual elements within sections
-  useEffect(() => {
-    if (fadeIn) {
-      AOS.init({ 
-        once: true,
-        duration: 800, // Faster duration since sections render immediately
-        easing: 'ease-out-cubic',
-        offset: 0, // No offset needed since sections handle visibility
-        delay: 0,
-        anchorPlacement: 'top-bottom'
-      });
-      AOS.refresh();
-    }
-  }, [fadeIn]);
-
-  // Intersection Observer for section-based rendering
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1, // Trigger when 10% of the section is visible
-      rootMargin: '0px 0px 0px 0px' // No margin, trigger exactly when section enters viewport
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Show the entire section immediately
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-          
-          // Also trigger any AOS animations within this section
-          const aosElements = entry.target.querySelectorAll('[data-aos]');
-          aosElements.forEach(el => {
-            el.classList.add('aos-animate');
-          });
-        }
-      });
-    }, observerOptions);
-
-    // Target section containers instead of individual elements
-    const sections = document.querySelectorAll('.scroll-section, .scroll-animate');
-    sections.forEach(section => {
-      section.style.opacity = '0';
-      section.style.transform = 'translateY(20px)';
-      section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-      observer.observe(section);
-    });
-
-    return () => observer.disconnect();
-  }, [fadeIn]);
 
   // Handle scroll arrow visibility
   useEffect(() => {
@@ -187,10 +266,13 @@ const Home = () => {
       <div
         id="main-content"
         className={`main-content home-entrance${fadeIn ? ' home-entrance-active' : ''}`}
-        ref={mainContentRef}
+        ref={(node) => {
+          mainContentRef.current = node;
+          heroSectionRef.current = node;
+        }}
         style={{
           opacity: fadeIn ? 1 : 0,
-          pointerEvents: loadingDone ? 'auto' : 'none',
+          pointerEvents: 'auto', // Always allow interaction - loader is non-blocking
         }}
       >
         <img className="image-gradient" src={process.env.PUBLIC_URL + '/gradient.png'} alt="" />
@@ -199,11 +281,6 @@ const Home = () => {
 
           <main>
             <div 
-              data-aos="slide-right"
-              data-aos-easing="ease-out-back"
-              data-aos-delay="500"
-              data-aos-offset="0"
-              data-aos-duration="1900"
               className="content home-content-entrance" 
               style={{
                 opacity: fadeIn ? 1 : 0,
@@ -293,8 +370,8 @@ const Home = () => {
              </p>
            </div>
            
-                      {/* Desktop 3D Robot - Always renders in background */}
-           {!isMobile && (
+                      {/* Desktop 3D Robot - Loads only when hero section is visible */}
+           {!isMobile && splineScriptLoaded && (
              <spline-viewer 
                ref={splineRef}
                className="cbot robot-quick-fade" 
@@ -311,6 +388,22 @@ const Home = () => {
                  transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
                  visibility: loadingDone ? 'visible' : 'hidden' // Hide completely during loading
                }}
+             />
+           )}
+           {/* Fallback placeholder for Spline (shows nothing, but maintains layout) */}
+           {!isMobile && !splineScriptLoaded && (
+             <div
+               style={{
+                 width: '100%',
+                 height: '100%',
+                 minWidth: '1px',
+                 minHeight: '1px',
+                 zIndex: 0,
+                 marginTop: '-15rem',
+                 opacity: 0,
+                 pointerEvents: 'none',
+               }}
+               aria-hidden="true"
              />
            )}
 
@@ -430,36 +523,25 @@ const Home = () => {
         {/* Additional Scrollable Sections with Enhanced Animations */}
         
         {/* Section 1 - Brand Value Proposition */}
-        <section className="scroll-section value-proposition">
+        <section 
+          ref={section1Ref}
+          className="scroll-section value-proposition"
+          style={{
+            opacity: 1, // Always visible - no flicker
+            transform: section1Visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: section1Visible ? 'transform 0.6s ease-out' : 'none',
+          }}
+        >
           <div className="container">
-            <div className="section-content" 
-              data-aos="fade-in" 
-              data-aos-duration="1200"
-              data-aos-easing="ease-out"
-            >
-              <h2 className="section-headline" 
-                data-aos="fade-in" 
-                data-aos-delay="200" 
-                data-aos-duration="1000"
-                data-aos-easing="ease-out"
-              >
+            <div className="section-content">
+              <h2 className="section-headline">
                 Your Brand Deserves More Than Just "Online Presence"
               </h2>
-              <p className="section-description" 
-                data-aos="fade-in" 
-                data-aos-delay="400" 
-                data-aos-duration="1000"
-                data-aos-easing="ease-out"
-              >
+              <p className="section-description">
                 The digital space is crowded and fast-moving—generic templates won't help you stand out.
               </p>
                              <div className="value-points-grid">
-                                 <div className="value-card" 
-                  data-aos="flip-left" 
-                  data-aos-delay="600" 
-                  data-aos-duration="1000"
-                  data-aos-easing="ease-out-back"
-                >
+                                 <div className="value-card">
                   <div className="value-card-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <defs>
@@ -475,10 +557,10 @@ const Home = () => {
                   <p>Content that captures attention and drives engagement</p>
                 </div>
                 <div className="value-card" 
-                  data-aos="flip-left" 
-                  data-aos-delay="800" 
-                  data-aos-duration="1000"
-                  data-aos-easing="ease-out-back"
+ 
+ 
+
+
                 >
                   <div className="value-card-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -494,12 +576,7 @@ const Home = () => {
                   <h3>Converting Campaigns</h3>
                   <p>Campaigns that turn followers into loyal customers</p>
                 </div>
-                <div className="value-card" 
-                  data-aos="flip-left" 
-                  data-aos-delay="1000" 
-                  data-aos-duration="1000"
-                  data-aos-easing="ease-out-back"
-                >
+                <div className="value-card">
                   <div className="value-card-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <defs>
@@ -515,12 +592,7 @@ const Home = () => {
                   <p>Web & app solutions that scale with your business</p>
                 </div>
                </div>
-              <div className="value-promise" 
-                data-aos="zoom-in" 
-                data-aos-delay="1200" 
-                data-aos-duration="1000"
-                data-aos-easing="ease-out-back"
-              >
+              <div className="value-promise">
                 <strong>Shyara gives you the expertise of a digital team with the flexibility of a freelance team, delivering real results without inflated costs.</strong>
               </div>
             </div>
@@ -528,7 +600,16 @@ const Home = () => {
         </section>
 
         {/* Section 2 - Services */}
-        <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
+        <div 
+          ref={section2Ref}
+          className="scroll-animate" 
+          style={{ 
+            marginBottom: '6rem',
+            opacity: 1, // Always visible - no flicker
+            transform: section2Visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: section2Visible ? 'transform 0.6s ease-out' : 'none',
+          }}
+        >
           <h2 style={{ 
             fontSize: '2.2rem', 
             fontWeight: '700', 
@@ -548,10 +629,10 @@ const Home = () => {
             margin: '0 auto'
           }}>
             <div className="service-card" 
-              data-aos="zoom-in-up" 
-              data-aos-delay="300" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -595,10 +676,10 @@ const Home = () => {
             </div>
             
             <div className="service-card" 
-              data-aos="zoom-in-up" 
-              data-aos-delay="400" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -642,10 +723,10 @@ const Home = () => {
             </div>
             
             <div className="service-card" 
-              data-aos="zoom-in-up" 
-              data-aos-delay="500" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -689,10 +770,10 @@ const Home = () => {
             </div>
             
             <div className="service-card" 
-              data-aos="zoom-in-up" 
-              data-aos-delay="600" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -736,10 +817,10 @@ const Home = () => {
             </div>
             
             <div className="service-card" 
-              data-aos="zoom-in-up" 
-              data-aos-delay="700" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -782,10 +863,10 @@ const Home = () => {
             </div>
             
             <div className="service-card" 
-              data-aos="zoom-in-up" 
-              data-aos-delay="800" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -830,7 +911,16 @@ const Home = () => {
         </div>
 
         {/* Section 3 - Why Choose Shyara */}
-        <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
+        <div 
+          ref={section3Ref}
+          className="scroll-animate" 
+          style={{ 
+            marginBottom: '6rem',
+            opacity: 1, // Always visible - no flicker
+            transform: section3Visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: section3Visible ? 'transform 0.6s ease-out' : 'none',
+          }}
+        >
           <h2 style={{ 
             fontSize: '2.2rem', 
             fontWeight: '700', 
@@ -851,10 +941,10 @@ const Home = () => {
             marginBottom: '3rem'
           }}>
             <div className="advantage-card" 
-              data-aos="flip-up" 
-              data-aos-delay="300" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -894,10 +984,10 @@ const Home = () => {
             </div>
             
             <div className="advantage-card" 
-              data-aos="flip-up" 
-              data-aos-delay="500" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -937,10 +1027,10 @@ const Home = () => {
             </div>
             
             <div className="advantage-card" 
-              data-aos="flip-up" 
-              data-aos-delay="700" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -988,10 +1078,10 @@ const Home = () => {
             margin: '0 auto'
           }}>
             <div className="stat-item" 
-              data-aos="bounce-in" 
-              data-aos-delay="1100" 
-              data-aos-duration="800"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 16,
@@ -1026,10 +1116,10 @@ const Home = () => {
             </div>
             
             <div className="stat-item" 
-              data-aos="bounce-in" 
-              data-aos-delay="1300" 
-              data-aos-duration="800"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 16,
@@ -1064,10 +1154,10 @@ const Home = () => {
             </div>
             
             <div className="stat-item" 
-              data-aos="bounce-in" 
-              data-aos-delay="1500" 
-              data-aos-duration="800"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 16,
@@ -1104,7 +1194,16 @@ const Home = () => {
         </div>
 
         {/* Section 4 - Client Testimonials */}
-        <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
+        <div 
+          ref={section4Ref}
+          className="scroll-animate" 
+          style={{ 
+            marginBottom: '6rem',
+            opacity: 1, // Always visible - no flicker
+            transform: section4Visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: section4Visible ? 'transform 0.6s ease-out' : 'none',
+          }}
+        >
           <h2 style={{ 
             fontSize: '2.2rem', 
             fontWeight: '700', 
@@ -1124,10 +1223,10 @@ const Home = () => {
             margin: '0 auto'
           }}>
             <div className="testimonial-card" 
-              data-aos="flip-right" 
-              data-aos-delay="300" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -1169,10 +1268,10 @@ const Home = () => {
             </div>
             
             <div className="testimonial-card" 
-              data-aos="flip-left" 
-              data-aos-delay="500" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'rgba(30,30,30,0.55)',
                 borderRadius: 24,
@@ -1217,7 +1316,16 @@ const Home = () => {
 
 
         {/* Section 5 - Contact */}
-        <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
+        <div 
+          ref={section5Ref}
+          className="scroll-animate" 
+          style={{ 
+            marginBottom: '6rem',
+            opacity: 1, // Always visible - no flicker
+            transform: section5Visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: section5Visible ? 'transform 0.6s ease-out' : 'none',
+          }}
+        >
           <h2 style={{ 
             fontSize: '2.2rem', 
             fontWeight: '700', 
@@ -1231,10 +1339,10 @@ const Home = () => {
           
           <div style={{ textAlign: 'center' }}>
             <Link to="/contact" 
-              data-aos="zoom-in" 
-              data-aos-delay="300" 
-              data-aos-duration="1000"
-              data-aos-easing="ease-out-back"
+ 
+ 
+
+
               style={{
                 background: 'linear-gradient(90deg,#7f42a7,#6600c5 80%)',
                 color: '#fff',
@@ -1289,7 +1397,16 @@ const Home = () => {
         </div>
 
         {/* Section 6 - Final Trust Close */}
-        <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
+        <div 
+          ref={section6Ref}
+          className="scroll-animate" 
+          style={{ 
+            marginBottom: '6rem',
+            opacity: 1, // Always visible - no flicker
+            transform: section6Visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: section6Visible ? 'transform 0.6s ease-out' : 'none',
+          }}
+        >
           <div style={{
             background: 'rgba(30,30,30,0.55)',
             borderRadius: 28,

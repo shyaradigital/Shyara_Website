@@ -11,6 +11,25 @@ const Layout = ({ children }) => {
   const [showMobileNav, setShowMobileNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  // Handle logo click - scroll to top
+  const handleLogoClick = (e) => {
+    // Check if we're currently on home page
+    // With HashRouter: home has pathname === '/' and (hash === '' or hash === '#/')
+    const hash = location.hash || '';
+    const isOnHome = location.pathname === '/' && (hash === '' || hash === '#/');
+    
+    if (isOnHome) {
+      // Already on home - prevent navigation, just scroll
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }
+    // Not on home - let Link navigate normally (ScrollToTop will scroll after navigation)
+  };
+
   // Detect mobile device
   useEffect(() => {
     const checkMobile = () => {
@@ -62,7 +81,7 @@ const Layout = ({ children }) => {
       <div className="layer-blur"></div>
       <div className="container">
         <header className={isSticky ? 'sticky-header' : ''} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 0, minHeight: 80 }}>
-          <Link to="/" className="logo-link"><h1 className="logo">Shyara</h1></Link>
+          <Link to="/" className="logo-link" onClick={handleLogoClick}><h1 className="logo">Shyara</h1></Link>
           {!isMobile && (
             <nav className="navbar-center" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
               <Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>About</Link>
