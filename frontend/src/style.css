@@ -227,6 +227,46 @@ header {
     padding-top: 110px;
 }
 
+/* Mobile menu animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive breakpoint at 1140px */
+@media (max-width: 1139px) {
+  /* Hide desktop navigation on screens < 1140px */
+  .navbar-center {
+    display: none !important;
+  }
+  
+  /* Ensure proper padding for mobile */
+  .site-main {
+    padding-top: 80px !important;
+  }
+}
+
+@media (min-width: 1140px) {
+  /* Show desktop navigation on screens >= 1140px */
+  .navbar-center {
+    display: flex !important;
+  }
+  
+  /* Hide mobile navbar on desktop */
+  .mobile-navbar {
+    display: none !important;
+  }
+  
+  /* Ensure proper padding for desktop */
+  .site-main {
+    padding-top: 110px !important;
+  }
+}
+
 .logo {
     text-align: left;
     z-index: 2147483647;
@@ -752,8 +792,8 @@ nav a {
 } 
 
 /* --- Mobile Optimizations --- */
-/* Updated: Mobile navbar positioning fix */
-@media (max-width: 768px) {
+/* Updated: Mobile navbar positioning fix - Breakpoint at 1140px */
+@media (max-width: 1139px) {
   /* Header and Navigation Mobile Optimizations */
   header, .sticky-header {
     padding: 0.5rem 1rem !important;
@@ -881,8 +921,8 @@ nav a {
   }
 
   .site-main {
-    padding-top: 70px !important;
-    padding-bottom: 90px !important; /* Space for new mobile navbar */
+    padding-top: 80px !important;
+    padding-bottom: 0 !important; /* No bottom navbar anymore */
   }
 
   /* Home Page Mobile Optimizations */

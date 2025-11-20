@@ -145,10 +145,106 @@ const AboutPage = () => {
       position: 'relative', 
       background: 'none' 
     }}>
-      <div style={{ 
+      <style>
+        {`
+          /* About page responsive styles */
+          .about-container {
+            margin-top: -110px !important;
+          }
+          
+          @media (max-width: 640px) {
+            .about-container {
+              padding: 0 1rem !important;
+              margin-top: -110px !important;
+            }
+            .about-section {
+              margin-bottom: 3rem !important;
+            }
+            .about-title {
+              font-size: 1.5rem !important;
+            }
+            .about-subtitle {
+              font-size: 1.1rem !important;
+              margin-bottom: 2rem !important;
+            }
+            .about-card {
+              padding: 1.5rem !important;
+            }
+            .about-card-title {
+              font-size: 1.5rem !important;
+            }
+            .about-card-text {
+              font-size: 0.95rem !important;
+            }
+            .work-steps-grid {
+              grid-template-columns: 1fr !important;
+              gap: 2rem !important;
+            }
+            .team-grid {
+              grid-template-columns: 1fr !important;
+              gap: 1.5rem !important;
+            }
+            .values-grid {
+              grid-template-columns: 1fr !important;
+              gap: 1.5rem !important;
+            }
+            .stats-grid {
+              grid-template-columns: 1fr !important;
+              gap: 1.5rem !important;
+            }
+          }
+          
+          @media (min-width: 641px) and (max-width: 768px) {
+            .about-container {
+              padding: 0 1.25rem !important;
+            }
+            .about-section {
+              margin-bottom: 4rem !important;
+            }
+            .about-title {
+              font-size: 1.75rem !important;
+            }
+            .about-subtitle {
+              font-size: 1.3rem !important;
+            }
+            .work-steps-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 2.5rem !important;
+            }
+            .team-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 1.5rem !important;
+            }
+            .values-grid {
+              grid-template-columns: 1fr !important;
+              gap: 1.5rem !important;
+            }
+            .stats-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 1.5rem !important;
+            }
+          }
+          
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .about-container {
+              padding: 0 1.5rem !important;
+            }
+            .work-steps-grid {
+              gap: 4rem !important;
+            }
+            .team-grid {
+              grid-template-columns: repeat(3, 1fr) !important;
+            }
+            .values-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+            }
+          }
+        `}
+      </style>
+      <div className="about-container" style={{ 
         maxWidth: 1000, 
         width: '100%', 
-        margin: '-5rem auto 0', 
+        margin: '-110px auto 0', 
         padding: '0 1.5rem', 
         background: 'none', 
         border: 'none', 
@@ -158,11 +254,11 @@ const AboutPage = () => {
       }}>
         
         {/* Section 1: Our Story */}
-        <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
+        <div className="scroll-animate about-section" style={{ marginBottom: '6rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <AnimatedHeading text="About Shyara" />
-            <p style={{ 
-              fontSize: '1.8rem', 
+            <p className="about-subtitle" style={{ 
+              fontSize: 'clamp(1.1rem, 2.5vw, 1.8rem)', 
               fontWeight: 500, 
               color: 'var(--color-text-primary)', 
               marginBottom: '3rem', 
@@ -171,16 +267,17 @@ const AboutPage = () => {
               lineHeight: 1.4,
               maxWidth: 800,
               marginLeft: 'auto',
-              marginRight: 'auto'
+              marginRight: 'auto',
+              padding: '0 1rem'
             }}>
               We're a freelance-powered digital collective, here to empower your brand online.
           </p>
         </div>
           
-          <div style={{ 
+          <div className="about-card" style={{ 
             background: 'rgba(30,30,30,0.55)', 
             borderRadius: 28, 
-            padding: '3rem', 
+            padding: 'clamp(1.5rem, 4vw, 3rem)', 
             boxShadow: '0 8px 32px 0 rgba(80,80,120,0.18)', 
             border: '1.5px solid rgba(127,66,167,0.18)', 
             backdropFilter: 'blur(12px)', 
@@ -199,8 +296,8 @@ const AboutPage = () => {
               transform: 'translate(50%, -50%)'
             }} />
             
-            <h2 style={{ 
-              fontSize: '2.2rem', 
+            <h2 className="about-card-title" style={{ 
+              fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', 
               fontWeight: 700, 
               color: 'var(--color-primary)', 
               marginBottom: '2rem', 
@@ -210,8 +307,8 @@ const AboutPage = () => {
               <FancyText text="Our Story" />
             </h2>
             
-            <div style={{ 
-              fontSize: '1.1rem', 
+            <div className="about-card-text" style={{ 
+              fontSize: 'clamp(0.95rem, 1.5vw, 1.1rem)', 
               lineHeight: 1.8, 
               color: 'var(--color-text-secondary)',
               textAlign: 'center',
@@ -258,18 +355,18 @@ const AboutPage = () => {
 
         {/* Section 2: How We Work */}
         <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
-          <h2 style={{ 
-            fontSize: '2.2rem', 
-            fontWeight: 700, 
-            color: 'var(--color-primary)', 
-            marginBottom: '3rem', 
-            textAlign: 'center',
-            letterSpacing: '-0.01em'
-          }}>
-            <FancyText text="How We Work" />
+            <h2 className="about-title" style={{ 
+              fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', 
+              fontWeight: 700, 
+              color: 'var(--color-primary)', 
+              marginBottom: '3rem', 
+              textAlign: 'center',
+              letterSpacing: '-0.01em'
+            }}>
+              <FancyText text="How We Work" />
           </h2>
           
-                     <div style={{ 
+                     <div className="work-steps-grid" style={{ 
              display: 'grid', 
              gridTemplateColumns: 'repeat(2, 1fr)', 
              gap: '6rem',
@@ -416,8 +513,8 @@ const AboutPage = () => {
 
         {/* Section 3: we have */}
         <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
-          <h2 style={{ 
-            fontSize: '2.2rem', 
+          <h2 className="about-title" style={{ 
+            fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', 
             fontWeight: 700, 
             color: 'var(--color-primary)', 
             marginBottom: '3rem', 
@@ -427,7 +524,7 @@ const AboutPage = () => {
             <FancyText text="We Have" />
           </h2>
           
-          <div style={{ 
+          <div className="team-grid" style={{ 
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)', 
             gap: '2rem',
@@ -581,8 +678,8 @@ const AboutPage = () => {
 
         {/* Section 4: What We Stand For */}
         <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
-          <h2 style={{ 
-            fontSize: '2.2rem', 
+          <h2 className="about-title" style={{ 
+            fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', 
             fontWeight: 700, 
             color: 'var(--color-primary)', 
             marginBottom: '3rem', 
@@ -592,7 +689,7 @@ const AboutPage = () => {
             <FancyText text="What We Stand For" />
           </h2>
           
-          <div style={{ 
+          <div className="values-grid" style={{ 
             display: 'grid', 
             gridTemplateColumns: 'repeat(2, 1fr)', 
             gap: '2rem',
@@ -722,8 +819,8 @@ const AboutPage = () => {
 
         {/* Section 5: What Our Team has Achieved */}
         <div className="scroll-animate" style={{ marginBottom: '6rem' }}>
-          <h2 style={{ 
-            fontSize: '2.2rem', 
+          <h2 className="about-title" style={{ 
+            fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', 
             fontWeight: 700, 
             color: 'var(--color-primary)', 
             marginBottom: '3rem', 
@@ -733,7 +830,7 @@ const AboutPage = () => {
             <FancyText text="What Our Team has Achieved" />
           </h2>
           
-          <div style={{ 
+          <div className="stats-grid" style={{ 
             display: 'grid', 
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
             gap: '2rem',

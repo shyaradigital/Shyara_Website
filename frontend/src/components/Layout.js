@@ -30,10 +30,10 @@ const Layout = ({ children }) => {
     // Not on home - let Link navigate normally (ScrollToTop will scroll after navigation)
   };
 
-  // Detect mobile device
+  // Detect mobile device - breakpoint at 1140px
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth < 1140);
     };
     
     checkMobile();
@@ -132,6 +132,7 @@ const Layout = ({ children }) => {
             <Link to="/terms" className={location.pathname === '/terms' ? 'active' : ''}>Terms</Link>
           </nav>
         )}
+        <main className="site-main">{children}</main>
         
         <footer className="site-footer">
           <div className="footer-content">

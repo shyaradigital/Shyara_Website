@@ -94,10 +94,89 @@ const ContactPage = () => {
 
   return (
     <div style={{ minHeight: '100vh', color: 'var(--color-text-primary)', position: 'relative', background: 'none', fontFamily: 'inherit', padding: 0 }}>
-      <div className="contact-container" style={{ maxWidth: 900, width: '100%', margin: '-5rem auto 0', padding: '0 1.5rem', background: 'none', border: 'none', borderRadius: 0, boxShadow: 'none', position: 'relative' }}>
+      <style>
+        {`
+          /* Contact page responsive styles */
+          .contact-container {
+            margin-top: -110px !important;
+          }
+          
+          @media (max-width: 640px) {
+            .contact-container {
+              padding: 0 1rem !important;
+            }
+            .contact-title {
+              font-size: 1.5rem !important;
+            }
+            .contact-subtitle {
+              font-size: 1.1rem !important;
+              padding: 0 1rem !important;
+            }
+            .contact-content {
+              flex-direction: column !important;
+              gap: 1.5rem !important;
+            }
+            .contact-info {
+              min-width: 100% !important;
+              max-width: 100% !important;
+              padding: 1.5rem !important;
+              min-height: auto !important;
+            }
+            .contact-form {
+              min-width: 100% !important;
+              max-width: 100% !important;
+              padding: 1.5rem !important;
+            }
+            .contact-info-title {
+              font-size: 1.5rem !important;
+            }
+            .contact-input {
+              font-size: 1rem !important;
+              padding: 14px 18px !important;
+            }
+            .contact-label {
+              font-size: 14px !important;
+            }
+            .contact-button {
+              font-size: 16px !important;
+              padding: 12px 2rem !important;
+            }
+          }
+          
+          @media (min-width: 641px) and (max-width: 768px) {
+            .contact-container {
+              padding: 0 1.25rem !important;
+            }
+            .contact-title {
+              font-size: 1.75rem !important;
+            }
+            .contact-subtitle {
+              font-size: 1.3rem !important;
+            }
+            .contact-content {
+              gap: 2rem !important;
+            }
+            .contact-info {
+              min-width: 100% !important;
+              max-width: 100% !important;
+            }
+            .contact-form {
+              min-width: 100% !important;
+              max-width: 100% !important;
+            }
+          }
+          
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .contact-content {
+              gap: 3rem !important;
+            }
+          }
+        `}
+      </style>
+      <div className="contact-container" style={{ maxWidth: 900, width: '100%', margin: '-110px auto 0', padding: '0 1.5rem', background: 'none', border: 'none', borderRadius: 0, boxShadow: 'none', position: 'relative' }}>
         <div style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto' }}>
           <AnimatedHeading text="Get in Touch" />
-          <p style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '3rem', maxWidth: 900, marginLeft: 'auto', marginRight: 'auto' }}>
+          <p className="contact-subtitle" style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '3rem', maxWidth: 900, marginLeft: 'auto', marginRight: 'auto', padding: '0 1rem' }}>
             Have a project in mind? We'd love to hear from you.
           </p>
         </div>
@@ -115,27 +194,6 @@ const ContactPage = () => {
           boxShadow: 'none',
           flexWrap: 'wrap',
         }}>
-          <style jsx>{`
-            @media (max-width: 768px) {
-              .contact-content {
-                flex-direction: column !important;
-                gap: 24px !important;
-                padding: 0 1rem !important;
-              }
-              .contact-info {
-                min-width: 100% !important;
-                max-width: 100% !important;
-                padding: 24px !important;
-                gap: 20px !important;
-                min-height: auto !important;
-              }
-              .contact-form {
-                min-width: 100% !important;
-                max-width: 100% !important;
-                padding: 24px !important;
-              }
-            }
-          `}</style>
           {/* Contact Info */}
           <div className="contact-info" style={{
             flex: '1 1 340px',
@@ -156,7 +214,7 @@ const ContactPage = () => {
             WebkitBackdropFilter: 'blur(18px)',
             margin: 0,
           }}>
-            <h2 style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-text-primary)', marginBottom: 10, textAlign: 'left' }}>Contact Information</h2>
+            <h2 className="contact-info-title" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', fontWeight: 'bold', color: 'var(--color-text-primary)', marginBottom: 10, textAlign: 'left' }}>Contact Information</h2>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: 12 }}>
               <div style={{ background: 'rgba(127,66,167,0.15)', padding: 12, borderRadius: '50%' }}>
                 <Mail style={{ width: 26, height: 26, color: 'var(--color-primary)' }} />
@@ -193,25 +251,25 @@ const ContactPage = () => {
           }}>
             <form style={{ display: 'flex', flexDirection: 'column', gap: 28, height: '100%' }} onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="name" style={{ display: 'block', fontSize: 16, fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Full Name *</label>
-                <input type="text" id="name" value={form.name} onChange={handleChange} required placeholder="Enter your full name" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: '16px 20px', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: '1.05rem', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
+                <label htmlFor="name" className="contact-label" style={{ display: 'block', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Full Name *</label>
+                <input type="text" id="name" value={form.name} onChange={handleChange} required placeholder="Enter your full name" className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
               </div>
               <div>
-                <label htmlFor="email" style={{ display: 'block', fontSize: 16, fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Email Address *</label>
-                <input type="email" id="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: '16px 20px', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: '1.05rem', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
+                <label htmlFor="email" className="contact-label" style={{ display: 'block', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Email Address *</label>
+                <input type="email" id="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
               </div>
               <div>
-                <label htmlFor="phone" style={{ display: 'block', fontSize: 16, fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Mobile Number *</label>
-                <input type="tel" id="phone" value={form.phone} onChange={handleChange} required placeholder="+91 9584661610" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: '16px 20px', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: '1.05rem', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
+                <label htmlFor="phone" className="contact-label" style={{ display: 'block', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Mobile Number *</label>
+                <input type="tel" id="phone" value={form.phone} onChange={handleChange} required placeholder="+91 9584661610" className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
               </div>
               <div>
-                <label htmlFor="message" style={{ display: 'block', fontSize: 16, fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Message *</label>
-                <textarea id="message" rows={5} value={form.message} onChange={handleChange} required placeholder="Hi, I am interested in your services. Please contact me to discuss my requirements." style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: '16px 20px', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: '1.05rem', outline: 'none', fontWeight: 400, resize: 'none' }}></textarea>
+                <label htmlFor="message" className="contact-label" style={{ display: 'block', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Message *</label>
+                <textarea id="message" rows={5} value={form.message} onChange={handleChange} required placeholder="Hi, I am interested in your services. Please contact me to discuss my requirements." className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', outline: 'none', fontWeight: 400, resize: 'none' }}></textarea>
               </div>
               {error && <div style={{ color: '#ff4d4f', fontSize: 16 }}>{error}</div>}
               {success && <div style={{ color: '#4caf50', fontSize: 16 }}>Message sent successfully!</div>}
               <div style={{ marginTop: 'auto', textAlign: 'center' }}>
-                <button type="submit" style={{ background: '#a259f7', color: '#fff', fontWeight: 700, fontSize: 17, padding: '10px 2.2rem', border: 'none', borderRadius: 999, cursor: 'pointer', boxShadow: '0 2px 8px #a259f7aa', transition: 'background 0.2s', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} disabled={submitting}>
+                <button type="submit" className="contact-button" style={{ background: '#a259f7', color: '#fff', fontWeight: 700, fontSize: 'clamp(16px, 1.2vw, 17px)', padding: 'clamp(10px, 1.2vw, 12px) clamp(1.8rem, 3vw, 2.2rem)', border: 'none', borderRadius: 999, cursor: 'pointer', boxShadow: '0 2px 8px #a259f7aa', transition: 'background 0.2s', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} disabled={submitting}>
                   {submitting ? 'Sending...' : 'Send Message'}
                 </button>
               </div>

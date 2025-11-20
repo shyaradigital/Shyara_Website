@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { X, ArrowLeft, ArrowRight } from 'lucide-react';
 import FancyText from '../components/FancyText';
-import AnimatedHeading from '../components/AnimatedHeading';
+import DriveMockupModal from '../components/portfolio/DriveMockupModal';
 
 const IMAGE_EXTENSION_REGEX = /\.(png|jpe?g)$/i;
 const PICS_PREFIX = '/pics/';
@@ -76,7 +76,7 @@ const resolveMediaSources = (originalUrl) => {
 const attachOptimizedMedia = (services) =>
   services.map((service) => ({
     ...service,
-    samples: service.samples.map((sample) => {
+    samples: (service.samples || []).map((sample) => {
       const sources = resolveMediaSources(sample.img);
       return {
         ...sample,
@@ -95,6 +95,9 @@ const LazyImage = ({ src, fallbackSrc, alt, style, onLoad, onError, ...props }) 
   const imgRef = useRef(null);
 
   useEffect(() => {
+    const currentRef = imgRef.current;
+    if (!currentRef) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -105,14 +108,10 @@ const LazyImage = ({ src, fallbackSrc, alt, style, onLoad, onError, ...props }) 
       { rootMargin: '50px' }
     );
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
-    }
+    observer.observe(currentRef);
 
     return () => {
-      if (imgRef.current) {
-        observer.disconnect();
-      }
+      observer.disconnect();
     };
   }, []);
 
@@ -160,6 +159,9 @@ const LazyVideo = ({ src, fallbackSrc, style, onLoadedData, onError, ...props })
   const videoRef = useRef(null);
 
   useEffect(() => {
+    const currentRef = videoRef.current;
+    if (!currentRef) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -170,14 +172,10 @@ const LazyVideo = ({ src, fallbackSrc, style, onLoadedData, onError, ...props })
       { rootMargin: '50px' }
     );
 
-    if (videoRef.current) {
-      observer.observe(videoRef.current);
-    }
+    observer.observe(currentRef);
 
     return () => {
-      if (videoRef.current) {
-        observer.disconnect();
-      }
+      observer.disconnect();
     };
   }, []);
 
@@ -212,29 +210,8 @@ const rawPortfolioServices = [
   {
     service: 'Social Media Management',
     description: 'Creative content, engaging posts, and strategic social media campaigns',
-    samples: [
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Apsara Developers Kirty_s Design (1).png', title: 'Apsara Developers Campaign', description: 'Professional design for developer services' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Apsara Developers Kirty_s Design.png', title: 'Apsara Developers Design', description: 'Professional developer services content' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Finest Furniture Kirty_s Design  (1).png', title: 'Furniture Brand Content', description: 'Creative posts for furniture business' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Finest Furniture Kirty_s Design  (2).png', title: 'Furniture Design 2', description: 'Modern furniture marketing content' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Finest Furniture Kirty_s Design  (3).png', title: 'Furniture Design 3', description: 'Elegant furniture promotional posts' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Finest Furniture Kirty_s Design  (5).png', title: 'Furniture Design 5', description: 'Premium furniture brand content' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Kirty Design_s (18).png', title: 'Design Collection 18', description: 'Creative design showcase' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Kirty Design_s (19).png', title: 'Design Collection 19', description: 'Modern design portfolio' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Kirty Design_s (22).png', title: 'Design Collection 22', description: 'Innovative design solutions' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Kirty Design_s (5).png', title: 'Design Collection 5', description: 'Creative design work' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Living Concept Kirty Design_s (2).png', title: 'Living Concept Posts', description: 'Lifestyle and home decor content' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Living Concept Kirty Design_s (3).png', title: 'Living Concept Design 3', description: 'Modern living space content' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Living Concept Kirty Design_s (4).png', title: 'Living Concept Design 4', description: 'Contemporary lifestyle posts' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/My talent win (1080 x 1350 px).png', title: 'Talent Showcase', description: 'Creative talent highlight' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Roy Academy Posts (4).png', title: 'Educational Content', description: 'Academic institution social media' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Splendore Kirty_s design (1).png', title: 'Splendore Brand', description: 'Luxury brand social media strategy' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Splendore Kirty_s design (3).png', title: 'Splendore Design 3', description: 'Premium luxury content' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Splendore Kirty_s design (5).png', title: 'Splendore Design 5', description: 'Elegant luxury marketing' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Sri kala chakra Kirty_s Design (1).png', title: 'Cultural Arts Content', description: 'Traditional arts and culture posts' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Sri kala chakra Kirty_s Design (2).png', title: 'Cultural Arts Design 2', description: 'Heritage cultural content' },
-      { img: process.env.PUBLIC_URL + '/pics/SMM/Sri kala chakra Kirty_s Design.png', title: 'Cultural Arts Design', description: 'Traditional cultural showcase' },
-    ],
+    samples: [], // Now using Google Drive - images loaded dynamically
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/smm-thumbnail.jpg',
     results: 'Average 60% increase in followers, 45% boost in engagement'
   },
   {
@@ -251,67 +228,85 @@ const rawPortfolioServices = [
   {
     service: 'App Development',
     description: 'Cross-platform mobile applications that solve real problems',
-    samples: [
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.12.07.jpeg', title: 'Mobile App Interface', description: 'Modern mobile app design and development' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.12.08 (1).jpeg', title: 'App Dashboard', description: 'User-friendly dashboard design' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.12.08.jpeg', title: 'App Interface 2', description: 'Clean mobile interface design' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.12.18 (1).jpeg', title: 'App Features', description: 'Core functionality implementation' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.12.18.jpeg', title: 'App Features 2', description: 'Advanced app functionality' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.12.31.jpeg', title: 'User Experience', description: 'Intuitive user interface design' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.12.55 (1).jpeg', title: 'App Screens', description: 'Multiple screen designs' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.12.55.jpeg', title: 'App Screens 2', description: 'Comprehensive screen layouts' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.13.10 (1).jpeg', title: 'Mobile Solution', description: 'Cross-platform mobile development' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.13.10.jpeg', title: 'Mobile Solution 2', description: 'Advanced mobile development' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.13.11 (1).jpeg', title: 'App Development 1', description: 'Professional app development' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.13.11.jpeg', title: 'App Development 2', description: 'Innovative app solutions' },
-      { img: process.env.PUBLIC_URL + '/pics/App Dev/WhatsApp Image 2025-09-08 at 23.13.12.jpeg', title: 'App Development 3', description: 'Complete mobile application' },
-    ],
+    samples: [], // Now using Google Drive - images loaded dynamically
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/app-dev-thumbnail.jpg',
     results: 'Launched within 8 weeks, secured initial funding'
   },
   {
     service: 'Video Editing & Reels',
     description: 'Engaging video content that captures attention and drives engagement',
-    samples: [
-      { img: process.env.PUBLIC_URL + '/pics/Reels/Black Pink Fashion Modern Outfit Style Photo Collage Instagram Reel.mp4', title: 'Fashion Reel', description: 'Trendy fashion content for Instagram' },
-      { img: process.env.PUBLIC_URL + '/pics/Reels/Gray Beige Modern Spa Treatment Mobile Video (2).mp4', title: 'Spa Treatment Video', description: 'Relaxing spa and wellness content' },
-      { img: process.env.PUBLIC_URL + '/pics/Reels/Neutral Modern Skincare Instagram Reels.mp4', title: 'Skincare Reel', description: 'Beauty and skincare promotional video' },
-      { img: process.env.PUBLIC_URL + '/pics/Reels/Yellow and White Minimalist Video Centric Financial Tips Instagram Reel.mp4', title: 'Financial Tips Video', description: 'Educational financial content' },
-    ],
+    samples: [], // Now using Google Drive - videos loaded dynamically
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/video-reels-thumbnail.jpg',
     results: 'Tripled follower count, boosted engagement significantly'
   },
   {
     service: 'Ad Campaign Management',
     description: 'Strategic advertising campaigns that deliver measurable results',
-    samples: [
-      { img: process.env.PUBLIC_URL + '/pics/ads/Apsara Developers Kirty_s Design (2).png', title: 'Developer Services Ad', description: 'Professional services advertising campaign' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Living Concept Kirty Design_s.png', title: 'Living Concept Ad', description: 'Lifestyle brand advertising' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Quickcontrol_fb_post (1).png', title: 'QuickControl Campaign', description: 'Tech product advertising' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Quickcontrol_fb_post.png', title: 'QuickControl Ad 2', description: 'Technology product promotion' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Roy Academy Posts (1).png', title: 'Educational Ad', description: 'Academic institution promotion' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Roy Academy Posts (2).png', title: 'Educational Ad 2', description: 'Learning institution marketing' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Roy Academy Posts (3).png', title: 'Educational Ad 3', description: 'Academic excellence promotion' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Roy Academy Posts.png', title: 'Educational Ad 4', description: 'Educational services advertising' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Splendore Kirty_s design (2).png', title: 'Splendore Ad', description: 'Luxury brand advertising' },
-      { img: process.env.PUBLIC_URL + '/pics/ads/Splendore Kirty_s design (4).png', title: 'Splendore Ad 2', description: 'Premium luxury brand campaign' },
-    ],
+    samples: [], // Now using Google Drive - images loaded dynamically
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/ads-thumbnail.jpg',
     results: '30% increase in sales, 25% reduction in acquisition cost'
   },
   {
     service: 'Festive Posts',
     description: 'Special occasion content and festive celebrations for brands',
-    samples: [
-      { img: process.env.PUBLIC_URL + '/pics/Festive Posts/Finest Furniture Kirty_s Design  (4).png', title: 'Festive Furniture Design', description: 'Holiday-themed furniture promotion' },
-      { img: process.env.PUBLIC_URL + '/pics/Festive Posts/Finest Furniture Kirty_s Design .png', title: 'Festive Furniture Design 2', description: 'Seasonal furniture marketing' },
-      { img: process.env.PUBLIC_URL + '/pics/Festive Posts/Gold Red and Pink Traditional Varalakshmi Vratham Instagram Post.png', title: 'Traditional Festival', description: 'Cultural festival celebration post' },
-      { img: process.env.PUBLIC_URL + '/pics/Festive Posts/Living Concept Kirty Design_s (1).png', title: 'Festive Living', description: 'Holiday home decor content' },
-      { img: process.env.PUBLIC_URL + '/pics/Festive Posts/Quickcontrol_fb_post (2).png', title: 'Festive Tech', description: 'Holiday tech promotion' },
-      { img: process.env.PUBLIC_URL + '/pics/Festive Posts/Splendore Kirty_s design.png', title: 'Festive Splendore', description: 'Luxury festive celebration' },
-    ],
+    samples: [], // Now using Google Drive - images loaded dynamically
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/festive-thumbnail.jpg',
     results: 'Enhanced brand engagement during special occasions and festivals'
   }
 ];
 
 const portfolioServices = attachOptimizedMedia(rawPortfolioServices);
+
+// Portfolio category types
+const PortfolioCategory = {
+  SMM: 'SMM',
+  ADS: 'ADS',
+  APP_DEV: 'APP_DEV',
+  REELS: 'REELS',
+  FESTIVE: 'FESTIVE',
+  WEBSITE_DEV: 'WEBSITE_DEV'
+};
+
+// Google Drive folder IDs mapping
+const DRIVE_FOLDER_IDS = {
+  [PortfolioCategory.SMM]: '1AUVLMsKOhDkiE4gzPPI84cY19Wo5BVvT',
+  [PortfolioCategory.ADS]: '1gpUYQ2CwvVpaR-rBc082en8yHoMIbeW7',
+  [PortfolioCategory.APP_DEV]: '1I9qFffnhctJwVEprMa0u4PerZJUhMHwU',
+  [PortfolioCategory.REELS]: '1EMh6UMcshbub8A-g2ZyH8-6oQNSgQ3op',
+  [PortfolioCategory.FESTIVE]: '1YojPkvfm2s_PjG2ZwimarcJZmggGKwvj',
+  [PortfolioCategory.WEBSITE_DEV]: null // Keep existing behavior
+};
+
+// Helper function to get category from service name
+const getCategoryFromService = (serviceName) => {
+  const name = serviceName.toLowerCase();
+  if (name.includes('social media')) return PortfolioCategory.SMM;
+  if (name.includes('ad campaign') || name.includes('ads')) return PortfolioCategory.ADS;
+  if (name.includes('app development')) return PortfolioCategory.APP_DEV;
+  if (name.includes('video editing') || name.includes('reels')) return PortfolioCategory.REELS;
+  if (name.includes('festive')) return PortfolioCategory.FESTIVE;
+  if (name.includes('website')) return PortfolioCategory.WEBSITE_DEV;
+  return null;
+};
+
+// Helper functions to get portfolio metadata
+const getPortfolioTitle = (category) => {
+  if (!category) return '';
+  const service = portfolioServices.find(s => getCategoryFromService(s.service) === category);
+  return service?.service || '';
+};
+
+const getPortfolioSubtitle = (category) => {
+  if (!category) return '';
+  const service = portfolioServices.find(s => getCategoryFromService(s.service) === category);
+  return service?.description || '';
+};
+
+const getPortfolioBadge = (category) => {
+  if (!category) return '';
+  const service = portfolioServices.find(s => getCategoryFromService(s.service) === category);
+  return service?.results || '';
+};
 
 const PortfolioModal = ({ isOpen, onClose, service }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -552,7 +547,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
             fontSize: '0.9rem',
             fontWeight: 600
           }}>
-            {currentImageIndex + 1} / {service.samples.length}
+            {currentImageIndex + 1} / {samples.length}
           </div>
         </div>
 
@@ -615,7 +610,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
           padding: '16px 0',
           borderTop: '1px solid rgba(162,89,247,0.1)'
         }}>
-          {service.samples.map((sample, index) => {
+          {samples.map((sample, index) => {
             const isVideo = sample.mediaType === 'video';
             return (
               <button
@@ -760,9 +755,10 @@ const ServiceCard = ({ service, onOpenModal }) => {
   const [hovered, setHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Get the first sample as thumbnail
-  const thumbnail = service.samples[0];
-  const isVideo = thumbnail.mediaType === 'video';
+  // Get the first sample as thumbnail, or use service.thumbnail for Google Drive services
+  const thumbnail = service.samples && service.samples.length > 0 ? service.samples[0] : null;
+  const thumbnailUrl = thumbnail ? thumbnail.img : (service.thumbnail || null);
+  const isVideo = thumbnail && thumbnail.mediaType === 'video';
 
   return (
     <div
@@ -800,86 +796,136 @@ const ServiceCard = ({ service, onOpenModal }) => {
         justifyContent: 'center', 
         position: 'relative' 
       }}>
-        {isVideo ? (
-          <LazyVideo
-            src={thumbnail.img}
-            fallbackSrc={thumbnail.fallbackImg}
-            style={{ 
-              width: '100%', 
-              height: '100%', 
-              objectFit: 'contain', 
-              objectPosition: 'center',
-              filter: hovered ? 'none' : 'grayscale(1)', 
-              transition: 'all 0.5s',
-              borderRadius: 0
-            }}
-            muted
-            loop
-            playsInline
-            onLoadedData={() => setImageLoaded(true)}
-          />
+        {thumbnailUrl ? (
+          <>
+            {isVideo ? (
+              <LazyVideo
+                src={thumbnail.img}
+                fallbackSrc={thumbnail.fallbackImg}
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  objectPosition: 'center',
+                  filter: hovered ? 'none' : 'grayscale(0.3)', 
+                  transition: 'all 0.5s',
+                  borderRadius: 0
+                }}
+                muted
+                loop
+                playsInline
+                onLoadedData={() => setImageLoaded(true)}
+              />
+            ) : (
+              <LazyImage
+                src={thumbnail ? thumbnail.img : thumbnailUrl}
+                fallbackSrc={thumbnail ? thumbnail.fallbackImg : thumbnailUrl}
+                alt={service.service}
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  objectPosition: 'center', 
+                  filter: hovered ? 'none' : 'grayscale(0.3)', 
+                  transition: 'all 0.5s', 
+                  borderRadius: 0, 
+                  display: 'block',
+                  opacity: imageLoaded ? 1 : 0.8
+                }}
+                onLoad={() => setImageLoaded(true)}
+              />
+            )}
+            
+            {/* Video play indicator */}
+            {isVideo && (
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                background: 'rgba(162,89,247,0.8)',
+                borderRadius: '50%',
+                width: 60,
+                height: 60,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                pointerEvents: 'none',
+                transition: 'opacity 0.3s'
+              }}>
+                <div style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '20px solid white',
+                  borderTop: '12px solid transparent',
+                  borderBottom: '12px solid transparent',
+                  marginLeft: 4
+                }} />
+              </div>
+            )}
+            
+            {/* Image count indicator */}
+            {service.samples && service.samples.length > 1 && (
+              <div style={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
+                background: 'rgba(0,0,0,0.8)',
+                color: 'white',
+                padding: '4px 8px',
+                borderRadius: 12,
+                fontSize: '0.8rem',
+                fontWeight: 600
+              }}>
+                +{service.samples.length - 1} more
+              </div>
+            )}
+            
+            {/* Google Drive indicator overlay */}
+            {!thumbnail && thumbnailUrl && (
+              <div style={{
+                position: 'absolute',
+                bottom: 12,
+                right: 12,
+                background: 'rgba(162,89,247,0.9)',
+                color: 'white',
+                padding: '6px 12px',
+                borderRadius: 20,
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}>
+                <span>📁</span>
+                <span>View Portfolio</span>
+              </div>
+            )}
+          </>
         ) : (
-          <LazyImage
-            src={thumbnail.img}
-            fallbackSrc={thumbnail.fallbackImg}
-            alt={service.service}
-            style={{ 
-              width: '100%', 
-              height: '100%', 
-              objectFit: 'contain', 
-              objectPosition: 'center', 
-              filter: hovered ? 'none' : 'grayscale(1)', 
-              transition: 'all 0.5s', 
-              borderRadius: 0, 
-              display: 'block',
-              opacity: imageLoaded ? 1 : 0.7
-            }}
-            onLoad={() => setImageLoaded(true)}
-          />
-        )}
-        
-        {/* Video play indicator */}
-        {isVideo && (
+          // Fallback placeholder for services without thumbnails
           <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: 'rgba(162,89,247,0.8)',
-            borderRadius: '50%',
-            width: 60,
-            height: 60,
+            width: '100%',
+            height: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            pointerEvents: 'none',
-            transition: 'opacity 0.3s'
+            flexDirection: 'column',
+            gap: '1rem',
+            color: 'rgba(162,89,247,0.6)'
           }}>
             <div style={{
-              width: 0,
-              height: 0,
-              borderLeft: '20px solid white',
-              borderTop: '12px solid transparent',
-              borderBottom: '12px solid transparent',
-              marginLeft: 4
-            }} />
-          </div>
-        )}
-        
-        {/* Image count indicator */}
-        {service.samples.length > 1 && (
-          <div style={{
-            position: 'absolute',
-            top: 12,
-            right: 12,
-            background: 'rgba(0,0,0,0.8)',
-            color: 'white',
-            padding: '4px 8px',
-            borderRadius: 12,
-            fontSize: '0.8rem',
-            fontWeight: 600
-          }}>
-            +{service.samples.length - 1} more
+              fontSize: '3rem',
+              opacity: 0.5
+            }}>📁</div>
+            <div style={{
+              fontSize: '0.9rem',
+              fontWeight: 600,
+              textAlign: 'center',
+              padding: '0 1rem'
+            }}>
+              View Portfolio
+            </div>
           </div>
         )}
       </div>
@@ -896,7 +942,58 @@ const Portfolio = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
   const [prefetchProgress, setPrefetchProgress] = useState(0);
+  
+  // Drive modal state
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [driveModalOpen, setDriveModalOpen] = useState(false);
 
+  // Prevent Spline from loading on Portfolio page
+  useEffect(() => {
+    // Remove any Spline scripts that might have been loaded
+    const splineScripts = document.querySelectorAll('script[src*="spline"]');
+    splineScripts.forEach(script => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    });
+
+    // Remove any Spline viewer elements
+    const splineViewers = document.querySelectorAll('spline-viewer');
+    splineViewers.forEach(viewer => {
+      if (viewer.parentNode) {
+        viewer.parentNode.removeChild(viewer);
+      }
+    });
+
+    // Clean up WebGL contexts that might be interfering
+    const canvases = document.querySelectorAll('canvas');
+    canvases.forEach(canvas => {
+      const gl = canvas.getContext('webgl') || canvas.getContext('webgl2');
+      if (gl) {
+        const loseContext = gl.getExtension('WEBGL_lose_context');
+        if (loseContext) {
+          loseContext.loseContext();
+        }
+      }
+    });
+
+    // Prevent Spline script from loading if it hasn't loaded yet
+    const originalAppendChild = document.body.appendChild;
+    document.body.appendChild = function(node) {
+      if (node.tagName === 'SCRIPT' && node.src && node.src.includes('spline')) {
+        console.log('Blocked Spline script from loading on Portfolio page');
+        return node; // Return without appending
+      }
+      return originalAppendChild.call(document.body, node);
+    };
+
+    return () => {
+      // Restore original appendChild on unmount
+      document.body.appendChild = originalAppendChild;
+    };
+  }, []);
+
+  // Only Website Development uses local images now (all others use Google Drive)
   const allSamples = useMemo(
     () => portfolioServices.flatMap((service) => service.samples),
     []
@@ -906,6 +1003,7 @@ const Portfolio = () => {
     [allSamples]
   );
 
+  // Skip loader if no local images to prefetch (all services use Drive)
   useEffect(() => {
     if (!initialPrefetchSamples.length) {
       setShowLoader(false);
@@ -970,13 +1068,40 @@ const Portfolio = () => {
   }, [showLoader, allSamples]);
 
   const handleOpenModal = (service) => {
-    setSelectedService(service);
-    setIsModalOpen(true);
+    if (!service) return;
+    
+    const category = getCategoryFromService(service.service);
+    
+    // If Website Development, use existing gallery modal
+    if (category === PortfolioCategory.WEBSITE_DEV) {
+      setSelectedService(service);
+      setIsModalOpen(true);
+      return;
+    }
+    
+    // For all other categories, use Drive modal
+    if (category && DRIVE_FOLDER_IDS[category]) {
+      setActiveCategory(category);
+      setDriveModalOpen(true);
+    } else {
+      // Fallback: if no category or folder ID, try to use regular modal if service has samples
+      if (service.samples && service.samples.length > 0) {
+        setSelectedService(service);
+        setIsModalOpen(true);
+      }
+    }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedService(null);
+  };
+
+  const handleDriveModalClose = (open) => {
+    setDriveModalOpen(open);
+    if (!open) {
+      setActiveCategory(null);
+    }
   };
 
   const loaderProgress = initialPrefetchSamples.length
@@ -987,9 +1112,208 @@ const Portfolio = () => {
     : 100;
 
   return (
-  <div style={{ minHeight: '100vh', color: 'var(--color-text-primary)', padding: '0 0 3rem 0', marginTop:'-5rem', fontFamily: 'inherit' }}>
+  <div className="portfolio-page-wrapper" style={{ minHeight: '100vh', color: 'var(--color-text-primary)', padding: '0 0 3rem 0', marginTop: '-110px', fontFamily: 'inherit' }}>
+    {/* Static Banner - Replaces Spline */}
+    <div className="portfolio-banner" style={{
+      width: '100%',
+      maxHeight: '280px',
+      minHeight: '200px',
+      background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%)',
+      position: 'relative',
+      overflow: 'hidden',
+      marginBottom: '1rem',
+      borderBottom: '1px solid rgba(122, 66, 240, 0.2)',
+      paddingTop: '80px',
+      paddingBottom: '1.5rem',
+      marginTop: '0'
+    }}>
+      {/* Gradient overlay - More subtle */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'radial-gradient(circle at 50% 50%, rgba(122, 66, 240, 0.08) 0%, transparent 60%)',
+        pointerEvents: 'none'
+      }} />
+      
+      {/* Content - Absolutely positioned to center in visible gradient area */}
+      <div className="portfolio-banner-content" style={{
+        position: 'absolute',
+        top: '80px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 2,
+        textAlign: 'center',
+        padding: '0 1rem',
+        maxWidth: '90%',
+        width: '100%',
+        animation: 'fadeInUp 0.6s ease-out',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 'calc(100% - 80px - 1.5rem)'
+      }}>
+        <h1 className="portfolio-title" style={{
+          fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
+          fontWeight: 700,
+          background: 'linear-gradient(135deg, #ffffff 0%, #a259f7 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '0.75rem',
+          lineHeight: 1.2,
+          textShadow: '0 2px 10px rgba(162, 89, 247, 0.2)',
+          filter: 'drop-shadow(0 1px 5px rgba(162, 89, 247, 0.15))'
+        }}>
+          Our Portfolio
+        </h1>
+        <p className="portfolio-description" style={{
+          fontSize: 'clamp(0.75rem, 1.2vw, 1rem)',
+          color: 'rgba(255, 255, 255, 0.75)',
+          lineHeight: 1.5,
+          margin: 0,
+          padding: '0 0.5rem'
+        }}>
+          Explore our creative work and see how we transform brands through innovative digital solutions
+        </p>
+      </div>
+    </div>
+
     <style>
       {`
+        /* Portfolio page responsive styles */
+        .portfolio-page-wrapper {
+          margin-top: -110px !important;
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        /* Banner responsive - Compact design, starts right after navbar */
+        @media (max-width: 640px) {
+          .portfolio-banner {
+            max-height: 180px !important;
+            min-height: 150px !important;
+            padding-top: 70px !important;
+            padding-bottom: 1rem !important;
+            margin-bottom: 1rem !important;
+            margin-top: 0 !important;
+          }
+          .portfolio-banner-content {
+            top: 70px !important;
+            height: calc(100% - 70px - 1rem) !important;
+            padding: 0 0.75rem !important;
+          }
+          .portfolio-title {
+            font-size: 1.5rem !important;
+            margin-bottom: 0.4rem !important;
+          }
+          .portfolio-description {
+            font-size: 0.75rem !important;
+            padding: 0 0.25rem !important;
+          }
+        }
+        
+        @media (min-width: 641px) and (max-width: 768px) {
+          .portfolio-banner {
+            max-height: 220px !important;
+            min-height: 180px !important;
+            padding-top: 75px !important;
+            padding-bottom: 1.25rem !important;
+            margin-bottom: 1rem !important;
+            margin-top: 0 !important;
+          }
+          .portfolio-banner-content {
+            top: 75px !important;
+            height: calc(100% - 75px - 1.25rem) !important;
+          }
+          .portfolio-title {
+            font-size: 1.875rem !important;
+          }
+          .portfolio-description {
+            font-size: 0.875rem !important;
+          }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .portfolio-banner {
+            max-height: 250px !important;
+            min-height: 200px !important;
+            padding-top: 80px !important;
+            padding-bottom: 1.5rem !important;
+            margin-bottom: 1rem !important;
+            margin-top: 0 !important;
+          }
+          .portfolio-banner-content {
+            top: 80px !important;
+            height: calc(100% - 80px - 1.5rem) !important;
+          }
+          .portfolio-title {
+            font-size: 2.25rem !important;
+          }
+          .portfolio-description {
+            font-size: 1rem !important;
+          }
+        }
+        
+        @media (min-width: 1025px) {
+          .portfolio-banner {
+            max-height: 280px !important;
+            min-height: 200px !important;
+            padding-top: 80px !important;
+            padding-bottom: 1.5rem !important;
+            margin-bottom: 1rem !important;
+            margin-top: 0 !important;
+          }
+          .portfolio-banner-content {
+            top: 80px !important;
+            height: calc(100% - 80px - 1.5rem) !important;
+          }
+          .portfolio-title {
+            font-size: 2.5rem !important;
+          }
+          .portfolio-description {
+            font-size: 1rem !important;
+          }
+        }
+        
+        /* Container responsive padding */
+        @media (max-width: 640px) {
+          .portfolio-container {
+            padding: 0.75rem !important;
+          }
+        }
+        
+        @media (min-width: 641px) {
+          .portfolio-container {
+            padding: 1rem 1.5rem !important;
+          }
+        }
+        
+        @media (min-width: 768px) {
+          .portfolio-container {
+            padding: 1.5rem 2.5rem !important;
+          }
+        }
+        
+        @media (min-width: 1024px) {
+          .portfolio-container {
+            padding: 2rem 2.5rem !important;
+          }
+        }
+        
+        /* Grid responsive */
         @media (max-width: 768px) {
           .portfolio-grid {
             grid-template-columns: 1fr !important;
@@ -1045,7 +1369,7 @@ const Portfolio = () => {
       `}
     </style>
     
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1rem', position: 'relative', minHeight: '100vh' }}>
+    <div className="portfolio-container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0.75rem', position: 'relative', minHeight: '100vh' }}>
         {showLoader && (
           <div style={{
             position: 'fixed',
@@ -1103,17 +1427,13 @@ const Portfolio = () => {
             </div>
           </div>
         )}
-        <AnimatedHeading text="Our Portfolio" />
-        <p style={{ fontSize: '1.15rem', color: '#a7a7a7', textAlign: 'center', marginBottom: '3rem', maxWidth: 700, marginLeft: 'auto', marginRight: 'auto' }}>
-          Explore our work across all services. Click on any service to view sample projects and designs.
-        </p>
         
         <div className="portfolio-grid" style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
           gap: 'clamp(20px, 4vw, 32px)', 
-          marginBottom: 64,
-          padding: '0 1rem'
+          marginBottom: '2.5rem',
+          padding: '0'
         }}>
           {portfolioServices.map((service, idx) => (
             <ServiceCard key={idx} service={service} onOpenModal={handleOpenModal} />
@@ -1132,6 +1452,18 @@ const Portfolio = () => {
         onClose={handleCloseModal} 
         service={selectedService} 
       />
+
+      {/* Drive Modal for SMM, Ads, App Dev, Reels, Festive */}
+      {activeCategory && DRIVE_FOLDER_IDS[activeCategory] && (
+        <DriveMockupModal
+          open={driveModalOpen && !!DRIVE_FOLDER_IDS[activeCategory]}
+          onOpenChange={handleDriveModalClose}
+          title={getPortfolioTitle(activeCategory)}
+          subtitle={getPortfolioSubtitle(activeCategory)}
+          statsBadgeText={getPortfolioBadge(activeCategory)}
+          folderId={DRIVE_FOLDER_IDS[activeCategory]}
+        />
+      )}
   </div>
 );
 };

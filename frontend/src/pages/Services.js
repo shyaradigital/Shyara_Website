@@ -125,10 +125,77 @@ const ServicesPage = () => {
   const navigate = useNavigate();
   return (
     <div style={{ minHeight: '100vh', color: 'var(--color-text-primary)', padding: '2rem 0 4rem 0', fontFamily: 'inherit', position: 'relative' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1rem', marginTop: '-7rem' }}>
+      <style>
+        {`
+          /* Services page responsive styles */
+          .services-container {
+            margin-top: -110px !important;
+          }
+          
+          @media (max-width: 640px) {
+            .services-container {
+              padding: 0 1rem !important;
+            }
+            .services-grid {
+              grid-template-columns: 1fr !important;
+              gap: 2rem !important;
+              padding: 0 0.5rem !important;
+            }
+            .service-card {
+              min-width: 100% !important;
+              max-width: 100% !important;
+            }
+            .services-title {
+              font-size: 1.5rem !important;
+            }
+            .services-subtitle {
+              font-size: 0.95rem !important;
+              padding: 0 1rem !important;
+            }
+            .services-cta {
+              padding: 1.5rem 1rem !important;
+              margin-top: 2rem !important;
+            }
+            .services-cta-title {
+              font-size: 1.2rem !important;
+            }
+            .services-cta-text {
+              font-size: 0.9rem !important;
+            }
+          }
+          
+          @media (min-width: 641px) and (max-width: 768px) {
+            .services-container {
+              padding: 0 1.25rem !important;
+            }
+            .services-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 2rem !important;
+            }
+            .service-card {
+              min-width: auto !important;
+              max-width: 100% !important;
+            }
+            .services-title {
+              font-size: 1.75rem !important;
+            }
+            .services-subtitle {
+              font-size: 1rem !important;
+            }
+          }
+          
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .services-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 2.5rem !important;
+            }
+          }
+        `}
+      </style>
+      <div className="services-container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1rem', marginTop: '-110px' }}>
         <div style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto' }}>
           <AnimatedHeading text="Our Services" />
-          <p style={{ fontSize: '1.08rem', fontWeight: 400, color: '#a7a7a7', marginBottom: '3rem' }}>
+          <p className="services-subtitle" style={{ fontSize: 'clamp(0.95rem, 1.5vw, 1.08rem)', fontWeight: 400, color: '#a7a7a7', marginBottom: '3rem', padding: '0 1rem' }}>
             Smart, scalable, and freelancer-powered digital solutions for every brand. Choose what you need.
           </p>
         </div>
@@ -150,7 +217,7 @@ const ServicesPage = () => {
           ))}
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 64 }}>
-          <div style={{
+          <div className="services-cta" style={{
             background: 'rgba(30,30,30,0.55)',
             border: '1.5px solid rgba(127,66,167,0.18)',
             boxShadow: '0 8px 32px 0 rgba(80,80,120,0.18)',
@@ -168,8 +235,8 @@ const ServicesPage = () => {
             <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', background: '#181818', borderRadius: '50%', padding: 10, boxShadow: '0 2px 12px #0006', border: '2px solid #a259f7' }}>
               <svg width="48" height="48" fill="none" viewBox="0 0 24 24"><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07-7.07l-1.41 1.41M6.34 17.66l-1.41 1.41m12.02 0l-1.41-1.41M6.34 6.34L4.93 4.93" stroke="#a259f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#a259f7', marginBottom: 10, marginTop: 24, letterSpacing: '-0.01em', textAlign: 'center' }}>Want something truly unique?</h2>
-            <p style={{ fontSize: '0.97rem', fontWeight: 400, color: 'var(--color-text-primary)' }}>
+            <h2 className="services-cta-title" style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', fontWeight: 700, color: '#a259f7', marginBottom: 10, marginTop: 24, letterSpacing: '-0.01em', textAlign: 'center' }}>Want something truly unique?</h2>
+            <p className="services-cta-text" style={{ fontSize: 'clamp(0.9rem, 1.2vw, 0.97rem)', fontWeight: 400, color: 'var(--color-text-primary)' }}>
               Check out our <span style={{ fontWeight: 600, color: 'var(--color-primary)' }}>Personalized Services</span> for custom solutions, one-on-one consulting, and more. Let us bring your vision to life!
             </p>
             <button
