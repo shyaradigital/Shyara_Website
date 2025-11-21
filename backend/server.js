@@ -45,6 +45,14 @@ const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? 3000 :
 // Middleware for parsing JSON (must come before routes)
 app.use(express.json());
 
+// Request logging middleware (for debugging)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  }
+  next();
+});
+
 // API routes (must come before static file serving)
 app.post('/api/contact', (req, res) => {
   const { name, email, message } = req.body;
@@ -161,6 +169,15 @@ app.get('/api/drive-image/:fileId', async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     return res.status(200).send(errorPlaceholder);
   }
+});
+
+// Test route to verify API is working
+app.get('/api/test', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'API is working',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Google Drive API route - List files in a folder
@@ -341,13 +358,26 @@ app.use(express.static(staticPath, {
   fallthrough: true
 }));
 
+// 404 handler for unmatched API routes (must come before SPA fallback)
+app.use('/api/*', (req, res) => {
+  console.error(`❌ API route not found: ${req.method} ${req.path}`);
+  res.status(404).json({ 
+    error: 'API endpoint not found',
+    path: req.path,
+    method: req.method
+  });
+});
+
 // SPA fallback: serve index.html for all GET requests that:
 // 1. Are not API routes
 // 2. Are not actual static files (those are handled above)
 app.get('*', (req, res, next) => {
-  // Skip API routes
+  // Skip API routes (they should have been handled above)
   if (req.path.startsWith('/api')) {
-    return next();
+    return res.status(404).json({ 
+      error: 'API endpoint not found',
+      path: req.path 
+    });
   }
   
   // Skip if it's a static file request (has extension)
@@ -407,6 +437,13 @@ app.listen(PORT, () => {
       console.log('      GOOGLE_DRIVE_API_KEY=your_api_key_here');
     }
   }
+  console.log('');
+  console.log('   📍 Registered API Routes:');
+  console.log('      - GET  /api/test');
+  console.log('      - GET  /api/health');
+  console.log('      - GET  /api/drive-list/:folderId');
+  console.log('      - GET  /api/drive-image/:fileId');
+  console.log('      - POST /api/contact');
   console.log('═══════════════════════════════════════════════════');
   console.log(`Server running on http://localhost:${PORT}`);
   if (!isProduction) {
