@@ -63,6 +63,14 @@ This guide explains how to deploy the Shyara website to Render and configure the
 | `NODE_ENV` | Auto-set | Automatically set to `production` |
 | `PORT` | Auto-set | Automatically set by Render |
 
+### Frontend API base URL (prevents `/api/drive-list` 404s)
+
+If the frontend is hosted as a static site (Cloudflare Pages/Netlify/Render Static) instead of the Node backend serving the build, browser calls to `/api/...` will hit the static host and return 404. Add a build-time env var so the React app knows where the backend lives:
+
+- `REACT_APP_BACKEND_URL=https://<your-backend-host>` (Render web service URL or custom domain that points to this Node backend)
+- Redeploy the frontend after setting it so the value is baked into the build.
+- Verify by opening `${REACT_APP_BACKEND_URL}/api/health` and checking `apiKeyConfigured: true`.
+
 ## Step 4: Verify Deployment
 
 1. Wait for the deployment to complete (check the "Logs" tab)

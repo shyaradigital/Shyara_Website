@@ -218,14 +218,33 @@ const DriveMockup = ({ title, description, folderId }) => {
   const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
 
-  // Determine API endpoint - use proxy in development or direct in production
+  const getApiBase = () => {
+    // Prefer an explicit backend URL when the frontend is hosted separately (static/CDN)
+    const envBase =
+      (process.env.REACT_APP_BACKEND_URL || process.env.REACT_APP_API_BASE_URL || '').trim();
+    if (envBase) {
+      return envBase.replace(/\/+$/, '');
+    }
+
+    // Fallbacks: same-origin for combined deployments, CRA proxy in development
+    if (typeof window !== 'undefined' && window.location?.origin) {
+      return window.location.origin.replace(/\/+$/, '');
+    }
+
+    return '';
+  };
+
+  // Determine API endpoint - supports same-origin and external backend hosts
   const getApiUrl = (folderId) => {
-    // In development, React dev server proxies to backend (via package.json proxy)
-    // In production, backend serves the API on the same domain
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? '' 
-      : ''; // Proxy handles it in development
-    
+    const baseUrl = getApiBase();
+
+    if (process.env.NODE_ENV === 'production' && !process.env.REACT_APP_BACKEND_URL) {
+      console.warn(
+        '[DriveMockup] Using current origin for API calls. ' +
+        'Set REACT_APP_BACKEND_URL when hosting frontend and backend on different domains.'
+      );
+    }
+
     return `${baseUrl}/api/drive-list/${folderId}`;
   };
 
