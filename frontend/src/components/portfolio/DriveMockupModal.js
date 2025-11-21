@@ -63,6 +63,7 @@ const DriveMockupModal = ({
 
   return (
     <div
+      className="drive-modal-overlay"
       style={{
         position: 'fixed',
         top: 0,
@@ -74,12 +75,13 @@ const DriveMockupModal = ({
         WebkitBackdropFilter: 'blur(12px)',
         zIndex: 10000,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
-        padding: 'clamp(0.5rem, 2vw, 1.5rem)',
+        padding: '0',
         overflowY: 'auto',
         overflowX: 'hidden',
-        animation: 'fadeIn 0.25s ease-out'
+        animation: 'fadeIn 0.25s ease-out',
+        WebkitOverflowScrolling: 'touch'
       }}
       onClick={handleBackdropClick}
     >
@@ -107,27 +109,59 @@ const DriveMockupModal = ({
           
           /* Typography scaling */
           .drive-modal-title {
-            font-size: clamp(1.25rem, 3vw, 2rem);
+            font-size: clamp(1.125rem, 3vw, 2rem);
             font-weight: 600;
             line-height: 1.2;
           }
           
           .drive-modal-subtitle {
-            font-size: clamp(0.875rem, 1.5vw, 1rem);
+            font-size: clamp(0.8125rem, 1.5vw, 1rem);
             line-height: 1.4;
           }
           
-          /* Responsive modal */
-          @media (max-width: 768px) {
+          /* Ensure header content is visible */
+          @media (max-width: 640px) {
+            .drive-modal-title {
+              font-size: 1.125rem !important;
+            }
+            .drive-modal-subtitle {
+              font-size: 0.8125rem !important;
+            }
+            .stats-badge {
+              margin-top: 0.5rem !important;
+              padding: 0.5rem 0.75rem !important;
+            }
+          }
+          
+          /* Default - Desktop */
+          .drive-modal-content {
+            margin-top: 1.5rem;
+          }
+          
+          /* Mobile - Full Screen Below Navbar */
+          @media (max-width: 640px) {
+            .drive-modal-overlay {
+              padding: 0 !important;
+              align-items: flex-start !important;
+            }
+            
             .drive-modal-content {
               max-width: 100% !important;
+              width: 100% !important;
               margin: 0 !important;
-              min-height: 100vh !important;
+              margin-top: 75px !important;
+              min-height: calc(100vh - 75px) !important;
+              max-height: calc(100vh - 75px) !important;
               border-radius: 0 !important;
             }
             
             .drive-modal-header {
-              padding: 1rem !important;
+              padding: 0.875rem 1rem !important;
+              position: sticky !important;
+              top: 0 !important;
+              z-index: 10 !important;
+              background: rgba(15, 15, 20, 1) !important;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
             }
             
             .drive-modal-body {
@@ -135,9 +169,34 @@ const DriveMockupModal = ({
             }
           }
           
-          @media (min-width: 769px) {
+          /* Tablet */
+          @media (min-width: 641px) and (max-width: 1024px) {
+            .drive-modal-overlay {
+              padding: 0.5rem !important;
+            }
+            
+            .drive-modal-content {
+              border-radius: 12px !important;
+              margin-top: 85px !important;
+              max-height: calc(92vh - 85px) !important;
+              width: 95% !important;
+            }
+            
+            .drive-modal-header {
+              padding: 1rem 1.25rem !important;
+            }
+          }
+          
+          /* Desktop */
+          @media (min-width: 1025px) {
+            .drive-modal-overlay {
+              padding: 1.5rem !important;
+            }
+            
             .drive-modal-content {
               border-radius: 16px !important;
+              margin-top: 0 !important;
+              width: 95% !important;
             }
           }
         `}
