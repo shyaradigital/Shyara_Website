@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { X, ZoomIn, ZoomOut } from 'lucide-react';
 
 /**
  * DrivePreviewModal Component
@@ -278,14 +278,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
               max-height: 70vh !important;
             }
             
-            .preview-nav-button {
-              width: 2.25rem !important;
-              height: 2.25rem !important;
-            }
-            
             .preview-close-button {
-              width: 2.25rem !important;
-              height: 2.25rem !important;
+              width: 2.5rem !important;
+              height: 2.5rem !important;
+              top: 1rem !important;
+              right: 1rem !important;
             }
             
             .preview-zoom-controls {
@@ -315,6 +312,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
               max-width: 85vw !important;
               max-height: 75vh !important;
             }
+            
+            .preview-close-button {
+              width: 2.5rem !important;
+              height: 2.5rem !important;
+            }
           }
           
           @media (min-width: 1025px) {
@@ -331,7 +333,7 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         `}
       </style>
 
-      {/* Modern Close Button */}
+      {/* Prominent Close Button */}
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -343,11 +345,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
           position: 'fixed',
           top: 'clamp(1rem, 2vw, 1.5rem)',
           right: 'clamp(1rem, 2vw, 1.5rem)',
-          background: 'rgba(255, 255, 255, 0.1)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
+          background: 'rgba(239, 68, 68, 0.15)',
+          border: '1px solid rgba(239, 68, 68, 0.4)',
           borderRadius: '8px',
-          width: '2.5rem',
-          height: '2.5rem',
+          width: '2.75rem',
+          height: '2.75rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -360,108 +362,47 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
           boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)'
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.8)';
+          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.9)';
           e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 1)';
-          e.currentTarget.style.transform = 'scale(1.05)';
+          e.currentTarget.style.transform = 'scale(1.08)';
+          e.currentTarget.style.boxShadow = '0 6px 30px rgba(239, 68, 68, 0.4)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+          e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.4)';
           e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.3)';
         }}
         aria-label="Close"
       >
-        <X size={20} />
+        <X size={22} />
       </button>
-
-      {/* Modern Navigation Arrows */}
+      
+      {/* Navigation Hint - Subtle */}
       {files.length > 1 && (
-        <>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handlePrev();
-            }}
-            className="preview-nav-button preview-nav-prev"
-            style={{
-              position: 'fixed',
-              left: 'clamp(1rem, 2vw, 2rem)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '8px',
-              width: '2.75rem',
-              height: '2.75rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              cursor: 'pointer',
-              zIndex: 50,
-              transition: 'all 0.2s ease',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(162, 89, 247, 0.8)';
-              e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 1)';
-              e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-            }}
-            aria-label="Previous"
-          >
-            <ChevronLeft size={22} />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleNext();
-            }}
-            className="preview-nav-button preview-nav-next"
-            style={{
-              position: 'fixed',
-              right: 'clamp(1rem, 2vw, 2rem)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '8px',
-              width: '2.75rem',
-              height: '2.75rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              cursor: 'pointer',
-              zIndex: 50,
-              transition: 'all 0.2s ease',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(162, 89, 247, 0.8)';
-              e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 1)';
-              e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-            }}
-            aria-label="Next"
-          >
-            <ChevronRight size={22} />
-          </button>
-        </>
+        <div
+          style={{
+            position: 'fixed',
+            bottom: 'calc(6rem + env(safe-area-inset-bottom, 0px))',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(0, 0, 0, 0.6)',
+            padding: '0.5rem 1rem',
+            borderRadius: '6px',
+            color: 'rgba(255, 255, 255, 0.6)',
+            fontSize: '0.75rem',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            zIndex: 45,
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            pointerEvents: 'none'
+          }}
+        >
+          Swipe or use arrow keys to navigate
+        </div>
       )}
+
+      {/* Navigation removed for cleaner experience - swipe or keyboard only */}
 
       {/* Modern Zoom Controls */}
       <div
@@ -552,14 +493,15 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         </button>
       </div>
 
-      {/* File Counter - Top Left */}
+      {/* File Counter - Top Center */}
       {files.length > 1 && (
         <div
           className="preview-file-counter"
           style={{
             position: 'fixed',
             top: 'clamp(1rem, 2vw, 1.5rem)',
-            left: 'clamp(1rem, 2vw, 1.5rem)',
+            left: '50%',
+            transform: 'translateX(-50%)',
             background: 'rgba(255, 255, 255, 0.1)',
             padding: '0.5rem 0.875rem',
             borderRadius: '8px',
