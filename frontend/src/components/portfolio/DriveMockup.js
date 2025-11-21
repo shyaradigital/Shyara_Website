@@ -31,10 +31,14 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
 
   const handleImageError = () => {
     if (currentSrc !== fallbackUrl) {
-      console.warn('Primary image failed, trying fallback:', file.name);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Primary image failed, trying fallback:', file.name);
+      }
       setCurrentSrc(fallbackUrl);
     } else {
-      console.error('Both image URLs failed:', file.name, file.id);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Both image URLs failed:', file.name, file.id);
+      }
       setError(true);
     }
   };
@@ -44,27 +48,27 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
       onClick={onClick}
       className="drive-tile"
       style={{
-        background: '#171717',
-        borderRadius: '0.5rem',
+        background: 'rgba(255, 255, 255, 0.02)',
+        borderRadius: '10px',
         overflow: 'hidden',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+        boxShadow: '0 2px 12px rgba(0, 0, 0, 0.2)',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: 'pointer',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        border: '1px solid rgba(255, 255, 255, 0.05)',
+        border: '1px solid rgba(255, 255, 255, 0.06)',
         animation: `fadeIn 0.4s ease-out ${index * 0.03}s both`
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-        e.currentTarget.style.boxShadow = '0 8px 20px rgba(122, 66, 240, 0.4), 0 0 15px rgba(122, 66, 240, 0.2), 0 0 30px rgba(122, 66, 240, 0.1)';
-        e.currentTarget.style.borderColor = 'rgba(122, 66, 240, 0.4)';
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(162, 89, 247, 0.2)';
+        e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 0.3)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0) scale(1)';
-        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
-        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.2)';
+        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
       }}
     >
       {/* Thumbnail Container */}
@@ -72,9 +76,9 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
         className="thumbnail-image-container"
         style={{
           width: '100%',
-          height: '180px',
+          height: '220px',
           overflow: 'hidden',
-          background: '#1a1a1a',
+          background: 'rgba(0, 0, 0, 0.2)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -118,7 +122,6 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
               }}
               onLoad={() => {
                 setLoaded(true);
-                console.log('✅ Video thumbnail loaded:', file.name);
               }}
               onError={handleImageError}
             />
@@ -129,26 +132,27 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  background: 'rgba(122, 66, 240, 0.9)',
+                  background: 'rgba(255, 255, 255, 0.95)',
                   borderRadius: '50%',
-                  width: '3.5rem',
-                  height: '3.5rem',
+                  width: '3rem',
+                  height: '3rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   pointerEvents: 'none',
-                  boxShadow: '0 0 20px rgba(122, 66, 240, 0.6)',
-                  zIndex: 3
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                  zIndex: 3,
+                  backdropFilter: 'blur(8px)'
                 }}
               >
                 <div
                   style={{
                     width: 0,
                     height: 0,
-                    borderLeft: '14px solid white',
-                    borderTop: '10px solid transparent',
-                    borderBottom: '10px solid transparent',
-                    marginLeft: '5px'
+                    borderLeft: '12px solid #000',
+                    borderTop: '8px solid transparent',
+                    borderBottom: '8px solid transparent',
+                    marginLeft: '4px'
                   }}
                 />
               </div>
@@ -173,30 +177,10 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
             }}
             onLoad={() => {
               setLoaded(true);
-              console.log('✅ Image loaded:', file.name);
             }}
             onError={handleImageError}
           />
         )}
-      </div>
-      
-      {/* Filename */}
-      <div
-        className="thumbnail-filename"
-        style={{
-          padding: '0.5rem',
-          color: '#d4d4d4',
-          fontSize: '0.625rem',
-          fontWeight: 400,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          background: '#171717',
-          borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-          textAlign: 'left'
-        }}
-      >
-        {file.name}
       </div>
     </div>
   );
@@ -239,10 +223,12 @@ const DriveMockup = ({ title, description, folderId }) => {
     const baseUrl = getApiBase();
 
     if (process.env.NODE_ENV === 'production' && !process.env.REACT_APP_BACKEND_URL) {
-      console.warn(
-        '[DriveMockup] Using current origin for API calls. ' +
-        'Set REACT_APP_BACKEND_URL when hosting frontend and backend on different domains.'
-      );
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(
+          '[DriveMockup] Using current origin for API calls. ' +
+          'Set REACT_APP_BACKEND_URL when hosting frontend and backend on different domains.'
+        );
+      }
     }
 
     return `${baseUrl}/api/drive-list/${folderId}`;
@@ -261,7 +247,6 @@ const DriveMockup = ({ title, description, folderId }) => {
         setError(null);
         
         const apiUrl = getApiUrl(folderId);
-        console.log('Fetching from:', apiUrl);
         
         const response = await fetch(apiUrl, {
           method: 'GET',
@@ -343,7 +328,9 @@ const DriveMockup = ({ title, description, folderId }) => {
             }
           }
           
-          console.error('API Error Response:', errorData);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('API Error Response:', errorData);
+          }
           throw new Error(errorMessage);
         }
 
@@ -351,7 +338,9 @@ const DriveMockup = ({ title, description, folderId }) => {
         
         // Validate response structure
         if (!data || !Array.isArray(data.files)) {
-          console.warn('Unexpected API response format:', data);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Unexpected API response format:', data);
+          }
           setFiles([]);
           setError('Invalid response format from server');
           return;
@@ -359,26 +348,11 @@ const DriveMockup = ({ title, description, folderId }) => {
         
         const fetchedFiles = data.files || [];
         
-        // Debug: Log first file to verify URLs
-        if (fetchedFiles.length > 0) {
-          console.log('✅ Drive files fetched:', fetchedFiles.length);
-          const firstFile = fetchedFiles[0];
-          console.log('📁 First file structure:', {
-            id: firstFile.id,
-            name: firstFile.name,
-            mimeType: firstFile.mimeType,
-            thumbnailLink: firstFile.thumbnailLink || 'null',
-            imageUrl: firstFile.thumbnailLink || `https://lh3.googleusercontent.com/d/${firstFile.id}=s800`
-          });
-        }
-        
         setFiles(fetchedFiles);
-        
-        if (fetchedFiles.length === 0) {
-          console.log('⚠️ No files found in folder');
-        }
       } catch (err) {
-        console.error('Error fetching Drive files:', err);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching Drive files:', err);
+        }
         setError(err.message || 'Failed to load files from Google Drive. Please check folder permissions and API configuration.');
       } finally {
         setLoading(false);
@@ -405,162 +379,109 @@ const DriveMockup = ({ title, description, folderId }) => {
       <div
         className="drive-mockup-wrapper"
         style={{
-          borderRadius: '1rem', // rounded-2xl
-          border: '1px solid rgba(126, 34, 206, 0.4)', // border-purple-700/40
-          background: 'linear-gradient(to bottom, #0a0a0a, #171717)', // from-neutral-950 to-neutral-900
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(126, 34, 206, 0.4), 0 0 20px rgba(122, 66, 240, 0.3)', // shadow-xl shadow-purple-900/40 with purple glow
-          overflow: 'hidden', // Keep hidden for rounded corners
-          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          transform: 'translateY(0)',
-          cursor: 'default',
+          borderRadius: '0',
+          border: 'none',
+          background: 'transparent',
+          overflow: 'hidden',
           width: '100%',
           maxWidth: '100%',
           display: 'flex',
-          flexDirection: 'column'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-4px)'; // hover:-translate-y-1
-          e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(126, 34, 206, 0.5), 0 0 30px rgba(122, 66, 240, 0.4)'; // hover:shadow-2xl hover:shadow-purple-700/50
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(126, 34, 206, 0.4), 0 0 20px rgba(122, 66, 240, 0.3)';
+          flexDirection: 'column',
+          height: '100%'
         }}
       >
-        {/* Browser Top Bar */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0.75rem 1rem',
-            background: 'rgba(23, 23, 23, 0.95)',
-            borderBottom: '1px solid rgba(38, 38, 38, 0.8)',
-            backdropFilter: 'blur(8px)'
-          }}
-        >
-          {/* Mac-style dots */}
-          <div className="browser-dots" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <div
-              style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                background: '#ef4444' // bg-red-500
-              }}
-            />
-            <div
-              style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                background: '#facc15' // bg-yellow-400
-              }}
-            />
-            <div
-              style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                background: '#22c55e' // bg-green-500
-              }}
-            />
-          </div>
 
-          {/* Label */}
-          <div
-            className="browser-label"
-            style={{
-              color: 'rgba(212, 212, 212, 0.7)',
-              fontSize: '0.75rem',
-              fontWeight: 500,
-              letterSpacing: '0.05em'
-            }}
-          >
-            Portfolio – Google Drive
-          </div>
-
-          {/* Spacer for centering */}
-          <div style={{ width: '60px' }} />
-        </div>
-
-        {/* Content Area - Scrollable Gallery */}
+        {/* Clean Gallery Content */}
         <div
           style={{
             width: '100%',
-            minHeight: '60vh',
-            maxHeight: '70vh',
+            flex: 1,
             overflowY: 'auto',
             overflowX: 'hidden',
-            background: '#1a1a1a',
+            background: 'transparent',
             position: 'relative',
-            WebkitOverflowScrolling: 'touch'
+            WebkitOverflowScrolling: 'touch',
+            padding: 'clamp(1rem, 2vw, 1.5rem)'
           }}
         >
-          {/* Loading skeleton */}
+          {/* Loading State */}
           {loading && (
             <div
               style={{
-                padding: '1.5rem',
+                padding: '2rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '50vh',
-                gap: '0.75rem',
-                background: '#1a1a1a'
+                gap: '1rem',
+                background: 'transparent'
               }}
             >
               <div style={{
-                width: '36px',
-                height: '36px',
-                border: '3px solid rgba(196, 181, 253, 0.3)',
-                borderTop: '3px solid rgba(196, 181, 253, 0.8)',
+                width: '40px',
+                height: '40px',
+                border: '3px solid rgba(162, 89, 247, 0.2)',
+                borderTop: '3px solid #a259f7',
                 borderRadius: '50%',
                 animation: 'spin 1s linear infinite'
               }} />
-              <span style={{ color: '#d4d4d4', fontSize: '0.85rem' }}>Loading gallery...</span>
+              <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.9rem', fontWeight: 500 }}>
+                Loading gallery...
+              </span>
             </div>
           )}
 
-          {/* Error state */}
+          {/* Error State */}
           {error && !loading && (
             <div
               style={{
-                padding: '1.5rem',
+                padding: '2rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '50vh',
-                gap: '0.75rem',
+                gap: '1rem',
                 textAlign: 'center',
-                color: '#d4d4d4',
-                background: '#1a1a1a'
+                background: 'transparent'
               }}
             >
-              <div style={{ fontSize: '1.75rem' }}>⚠️</div>
-              <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#ef4444' }}>Unable to load gallery</div>
-              <div style={{ fontSize: '0.75rem', color: '#a3a3a3' }}>{error}</div>
-              <div style={{ fontSize: '0.7rem', color: '#737373', marginTop: '0.375rem' }}>
-                Please ensure the folder is publicly shared
+              <div style={{ 
+                fontSize: '2.5rem',
+                filter: 'grayscale(1)',
+                opacity: 0.5
+              }}>⚠️</div>
+              <div style={{ 
+                fontSize: '1rem', 
+                fontWeight: 600, 
+                color: 'rgba(255, 255, 255, 0.8)' 
+              }}>
+                Unable to load gallery
+              </div>
+              <div style={{ 
+                fontSize: '0.875rem', 
+                color: 'rgba(255, 255, 255, 0.4)',
+                maxWidth: '400px',
+                lineHeight: 1.5
+              }}>
+                {error}
               </div>
             </div>
           )}
 
-          {/* Google Drive-style Gallery Grid */}
+          {/* Modern Clean Gallery Grid */}
           {!loading && !error && files.length > 0 && (
             <div
               className="drive-gallery-grid"
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '0.625rem',
-                padding: '0.75rem',
-                background: '#1a1a1a',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gap: 'clamp(0.75rem, 2vw, 1.25rem)',
+                padding: '0',
+                background: 'transparent',
                 maxWidth: '100%',
-                margin: '0 auto',
-                paddingBottom: '1rem'
+                margin: '0 auto'
               }}
             >
               {files.map((file, index) => {
@@ -578,29 +499,57 @@ const DriveMockup = ({ title, description, folderId }) => {
             </div>
           )}
 
-          {/* Empty state */}
+          {/* Empty State - We're Cooking */}
           {!loading && !error && files.length === 0 && (
             <div
               style={{
-                padding: '1.5rem',
+                padding: '2rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '50vh',
-                gap: '0.75rem',
+                gap: '1rem',
                 textAlign: 'center',
-                color: '#d4d4d4',
-                background: '#1a1a1a'
+                background: 'transparent'
               }}
             >
-              <div style={{ fontSize: '1.75rem' }}>📁</div>
-              <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>No media files found</div>
-              <div style={{ fontSize: '0.75rem', color: '#a3a3a3' }}>
-                This folder doesn't contain any images or videos
+              <div style={{ 
+                fontSize: '3.5rem',
+                filter: 'grayscale(0)',
+                animation: 'float 3s ease-in-out infinite'
+              }}>🍳</div>
+              <div style={{ 
+                fontSize: '1.25rem', 
+                fontWeight: 600,
+                color: 'rgba(255, 255, 255, 0.9)',
+                letterSpacing: '0.02em'
+              }}>
+                We're Cooking
+              </div>
+              <div style={{ 
+                fontSize: '0.875rem', 
+                color: 'rgba(255, 255, 255, 0.5)',
+                maxWidth: '300px',
+                lineHeight: 1.5
+              }}>
+                Fresh content is on the way. Check back soon!
               </div>
             </div>
           )}
+          
+          <style>
+            {`
+              @keyframes float {
+                0%, 100% {
+                  transform: translateY(0px);
+                }
+                50% {
+                  transform: translateY(-10px);
+                }
+              }
+            `}
+          </style>
 
           <style>
             {`
@@ -626,106 +575,64 @@ const DriveMockup = ({ title, description, folderId }) => {
                   opacity: 0.5;
                 }
               }
-              /* Responsive grid - Mobile: 2 columns, Tablet: 3, Desktop: 4 */
+              /* Modern Responsive Grid */
               @media (max-width: 480px) {
                 .drive-gallery-grid {
                   grid-template-columns: repeat(2, 1fr) !important;
-                  gap: 0.5rem !important;
-                  padding: 0.625rem !important;
-                  padding-bottom: 0.75rem !important;
-                }
-                .thumbnail-image-container {
-                  height: 140px !important;
-                }
-                .drive-tile {
-                  border-radius: 0.5rem !important;
-                }
-              }
-              @media (min-width: 481px) and (max-width: 768px) {
-                .drive-gallery-grid {
-                  grid-template-columns: repeat(3, 1fr) !important;
-                  gap: 0.625rem !important;
-                  padding: 0.75rem !important;
-                  padding-bottom: 1rem !important;
+                  gap: 0.75rem !important;
                 }
                 .thumbnail-image-container {
                   height: 160px !important;
                 }
               }
-              @media (min-width: 769px) and (max-width: 1024px) {
+              
+              @media (min-width: 481px) and (max-width: 768px) {
                 .drive-gallery-grid {
                   grid-template-columns: repeat(3, 1fr) !important;
-                  gap: 0.75rem !important;
-                  padding: 0.875rem !important;
-                  padding-bottom: 1rem !important;
+                  gap: 1rem !important;
                 }
                 .thumbnail-image-container {
                   height: 180px !important;
                 }
               }
-              @media (min-width: 1025px) {
+              
+              @media (min-width: 769px) and (max-width: 1024px) {
                 .drive-gallery-grid {
-                  grid-template-columns: repeat(4, 1fr) !important;
-                  gap: 0.875rem !important;
-                  padding: 1rem !important;
-                  padding-bottom: 1.25rem !important;
-                  max-width: 1400px !important;
-                  margin: 0 auto !important;
+                  grid-template-columns: repeat(3, 1fr) !important;
+                  gap: 1.25rem !important;
                 }
                 .thumbnail-image-container {
                   height: 200px !important;
                 }
               }
-              /* Responsive browser window elements */
-              @media (max-width: 640px) {
-                .drive-mockup-wrapper {
-                  border-width: 1px !important;
-                  box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.1), 0 5px 5px -5px rgba(126, 34, 206, 0.3), 0 0 10px rgba(122, 66, 240, 0.2) !important;
+              
+              @media (min-width: 1025px) {
+                .drive-gallery-grid {
+                  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+                  gap: 1.25rem !important;
                 }
-                .browser-dots > div {
-                  width: 8px !important;
-                  height: 8px !important;
-                }
-                .browser-label {
-                  font-size: 0.625rem !important;
-                }
-                .thumbnail-filename {
-                  font-size: 0.625rem !important;
-                  padding: 0.375rem 0.5rem !important;
+                .thumbnail-image-container {
+                  height: 220px !important;
                 }
               }
-              @media (min-width: 641px) and (max-width: 767px) {
-                .thumbnail-filename {
-                  font-size: 0.6875rem !important;
-                  padding: 0.375rem 0.5rem !important;
-                }
+              
+              /* Modern Scrollbar */
+              *::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
               }
-              @media (min-width: 768px) and (max-width: 1023px) {
-                .thumbnail-filename {
-                  font-size: 0.75rem !important;
-                  padding: 0.5rem !important;
-                }
+              
+              *::-webkit-scrollbar-track {
+                background: transparent;
               }
-              @media (min-width: 1024px) {
-                .thumbnail-filename {
-                  font-size: 0.8125rem !important;
-                  padding: 0.5rem 0.625rem !important;
-                }
+              
+              *::-webkit-scrollbar-thumb {
+                background: rgba(162, 89, 247, 0.3);
+                border-radius: 5px;
               }
-              /* Custom scrollbar for dark theme */
-              .drive-mockup-wrapper [style*="overflow: auto"]::-webkit-scrollbar {
-                width: 8px;
-                height: 8px;
-              }
-              .drive-mockup-wrapper [style*="overflow: auto"]::-webkit-scrollbar-track {
-                background: #1a1a1a;
-              }
-              .drive-mockup-wrapper [style*="overflow: auto"]::-webkit-scrollbar-thumb {
-                background: rgba(122, 66, 240, 0.5);
-                border-radius: 4px;
-              }
-              .drive-mockup-wrapper [style*="overflow: auto"]::-webkit-scrollbar-thumb:hover {
-                background: rgba(122, 66, 240, 0.7);
+              
+              *::-webkit-scrollbar-thumb:hover {
+                background: rgba(162, 89, 247, 0.5);
               }
             `}
           </style>

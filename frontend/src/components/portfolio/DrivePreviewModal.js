@@ -73,10 +73,14 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
     if (!file) return;
     const fallback = `https://lh3.googleusercontent.com/d/${file.id}=s1920`;
     if (currentSrc !== fallback) {
-      console.warn('Primary image failed, trying fallback:', file.name);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Primary image failed, trying fallback:', file.name);
+      }
       setCurrentSrc(fallback);
     } else {
-      console.error('Both image URLs failed:', file.name, file.id);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Both image URLs failed:', file.name, file.id);
+      }
       setImageLoaded(false);
     }
   };
@@ -213,20 +217,17 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'rgba(0, 0, 0, 0.7)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        background: 'rgba(0, 0, 0, 0.96)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         zIndex: 20000,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        animation: 'fadeIn 0.2s ease-out',
+        animation: 'fadeIn 0.25s ease-out',
         cursor: zoom > 1 && !isVideo ? (isDragging ? 'grabbing' : 'grab') : 'default',
-        padding: '1rem',
-        paddingTop: '4rem',
-        paddingBottom: 'calc(2rem + env(safe-area-inset-bottom, 0px))',
-        overflow: 'auto',
-        WebkitOverflowScrolling: 'touch'
+        padding: 'clamp(1rem, 2vw, 2rem)',
+        overflow: 'hidden'
       }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -234,7 +235,6 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onClick={(e) => {
-        // Close on backdrop click (not on image)
         if (e.target === e.currentTarget) {
           onClose();
         }
@@ -258,89 +258,86 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
               opacity: 0.5;
             }
           }
-          /* Responsive preview modal */
+          /* Modern Responsive Lightbox */
           @media (max-width: 640px) {
             .preview-modal-overlay {
-              padding-top: 3rem !important;
-              padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+              padding: 0.75rem !important;
             }
+            
             .preview-media-container {
               max-width: 100% !important;
-              max-height: 85vh !important;
-              padding-bottom: 2rem !important;
+              max-height: 70vh !important;
             }
+            
             .preview-image {
               max-width: 100% !important;
-              max-height: 80vh !important;
+              max-height: 70vh !important;
             }
+            
             .preview-nav-button {
-              width: 2rem !important;
-              height: 2rem !important;
+              width: 2.25rem !important;
+              height: 2.25rem !important;
             }
-            .preview-nav-button svg {
-              width: 16px !important;
-              height: 16px !important;
-            }
+            
             .preview-close-button {
+              width: 2.25rem !important;
+              height: 2.25rem !important;
+            }
+            
+            .preview-zoom-controls {
+              bottom: calc(1rem + env(safe-area-inset-bottom, 0px)) !important;
+              padding: 0.5rem !important;
+              gap: 0.375rem !important;
+            }
+            
+            .preview-zoom-controls button {
               width: 2rem !important;
               height: 2rem !important;
-              top: 0.75rem !important;
-              right: 0.75rem !important;
             }
-            .preview-close-button svg {
-              width: 16px !important;
-              height: 16px !important;
-            }
-            .preview-file-name {
-              bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)) !important;
+            
+            .preview-file-counter {
               font-size: 0.75rem !important;
-              padding: 0.5rem 1rem !important;
-            }
-            .preview-zoom-controls {
-              bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px)) !important;
-              padding: 0.5rem !important;
+              padding: 0.375rem 0.75rem !important;
             }
           }
+          
           @media (min-width: 641px) and (max-width: 1024px) {
-            .preview-modal-overlay {
-              padding-top: 3.5rem !important;
-            }
             .preview-media-container {
-              max-width: 100% !important;
-              max-height: 85vh !important;
+              max-width: 85vw !important;
+              max-height: 75vh !important;
             }
+            
             .preview-image {
-              max-width: 100% !important;
+              max-width: 85vw !important;
+              max-height: 75vh !important;
+            }
+          }
+          
+          @media (min-width: 1025px) {
+            .preview-media-container {
+              max-width: 90vw !important;
               max-height: 80vh !important;
             }
-          }
-          @media (min-width: 1025px) {
-            .preview-modal-overlay {
-              padding-top: 4rem !important;
-            }
-            .preview-media-container {
-              max-width: 100% !important;
-              max-height: 85vh !important;
-            }
+            
             .preview-image {
-              max-width: 100% !important;
+              max-width: 90vw !important;
               max-height: 80vh !important;
             }
           }
         `}
       </style>
 
-      {/* Close button */}
+      {/* Modern Close Button */}
       <button
         onClick={onClose}
         className="preview-close-button"
         style={{
           position: 'fixed',
-          top: '1rem',
-          right: '1rem',
-          background: 'rgba(0, 0, 0, 0.6)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '50%',
+          top: 'clamp(1rem, 2vw, 1.5rem)',
+          right: 'clamp(1rem, 2vw, 1.5rem)',
+          background: 'rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '8px',
           width: '2.5rem',
           height: '2.5rem',
           display: 'flex',
@@ -349,278 +346,258 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
           color: '#fff',
           cursor: 'pointer',
           zIndex: 50,
-          transition: 'all 0.2s',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+          transition: 'all 0.2s ease',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)'
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)';
-          e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.8)';
+          e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 1)';
+          e.currentTarget.style.transform = 'scale(1.05)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)';
-          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+          e.currentTarget.style.transform = 'scale(1)';
         }}
         aria-label="Close"
       >
         <X size={20} />
       </button>
 
-      {/* Navigation arrows - Inside modal, vertically centered */}
+      {/* Modern Navigation Arrows */}
       {files.length > 1 && (
         <>
           <button
             onClick={handlePrev}
             className="preview-nav-button preview-nav-prev"
             style={{
-              position: 'absolute',
-              left: '0.5rem',
+              position: 'fixed',
+              left: 'clamp(1rem, 2vw, 2rem)',
               top: '50%',
               transform: 'translateY(-50%)',
-              background: 'rgba(0, 0, 0, 0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '50%',
-              width: '2.5rem',
-              height: '2.5rem',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '8px',
+              width: '2.75rem',
+              height: '2.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#fff',
               cursor: 'pointer',
               zIndex: 50,
-              transition: 'all 0.2s',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)'
+              transition: 'all 0.2s ease',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)';
-              e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 0.5)';
+              e.currentTarget.style.background = 'rgba(162, 89, 247, 0.8)';
+              e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 1)';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
             }}
             aria-label="Previous"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={22} />
           </button>
 
           <button
             onClick={handleNext}
             className="preview-nav-button preview-nav-next"
             style={{
-              position: 'absolute',
-              right: '0.5rem',
+              position: 'fixed',
+              right: 'clamp(1rem, 2vw, 2rem)',
               top: '50%',
               transform: 'translateY(-50%)',
-              background: 'rgba(0, 0, 0, 0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '50%',
-              width: '2.5rem',
-              height: '2.5rem',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '8px',
+              width: '2.75rem',
+              height: '2.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#fff',
               cursor: 'pointer',
               zIndex: 50,
-              transition: 'all 0.2s',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)'
+              transition: 'all 0.2s ease',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)';
-              e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 0.5)';
+              e.currentTarget.style.background = 'rgba(162, 89, 247, 0.8)';
+              e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 1)';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
             }}
             aria-label="Next"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={22} />
           </button>
         </>
       )}
 
-      {/* Zoom controls - Bottom with safe area */}
+      {/* Modern Zoom Controls */}
       <div
         className="preview-zoom-controls"
         style={{
           position: 'fixed',
-          bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))',
+          bottom: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
           gap: '0.5rem',
-          background: 'rgba(0, 0, 0, 0.8)',
-          padding: '0.75rem',
-          borderRadius: '0.75rem',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
+          background: 'rgba(255, 255, 255, 0.08)',
+          padding: '0.625rem',
+          borderRadius: '10px',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
           zIndex: 50,
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
         }}
       >
         <button
           onClick={handleZoomOut}
           disabled={zoom <= 1}
           style={{
-            background: zoom <= 1 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.2)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '0.25rem',
-            width: '2.5rem',
-            height: '2.5rem',
+            background: zoom <= 1 ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.1)',
+            border: 'none',
+            borderRadius: '6px',
+            width: '2.25rem',
+            height: '2.25rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#fff',
+            color: zoom <= 1 ? 'rgba(255,255,255,0.3)' : '#fff',
             cursor: zoom <= 1 ? 'not-allowed' : 'pointer',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s ease',
+            opacity: zoom <= 1 ? 0.5 : 1
           }}
           aria-label="Zoom out"
         >
-          <ZoomOut size={20} />
+          <ZoomOut size={18} />
         </button>
 
-        <button
-          onClick={handleResetZoom}
+        <div
           style={{
-            background: 'rgba(255, 255, 255, 0.2)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '0.25rem',
-            padding: '0 1rem',
-            height: '2.5rem',
+            padding: '0 0.875rem',
+            height: '2.25rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#fff',
-            cursor: 'pointer',
-            fontSize: '0.875rem',
+            fontSize: '0.8125rem',
             fontWeight: 600,
-            transition: 'all 0.2s'
+            minWidth: '4rem'
           }}
         >
           {Math.round(zoom * 100)}%
-        </button>
+        </div>
 
         <button
           onClick={handleZoomIn}
           disabled={zoom >= 3}
           style={{
-            background: zoom >= 3 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.2)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '0.25rem',
-            width: '2.5rem',
-            height: '2.5rem',
+            background: zoom >= 3 ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.1)',
+            border: 'none',
+            borderRadius: '6px',
+            width: '2.25rem',
+            height: '2.25rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#fff',
+            color: zoom >= 3 ? 'rgba(255,255,255,0.3)' : '#fff',
             cursor: zoom >= 3 ? 'not-allowed' : 'pointer',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s ease',
+            opacity: zoom >= 3 ? 0.5 : 1
           }}
           aria-label="Zoom in"
         >
-          <ZoomIn size={20} />
+          <ZoomIn size={18} />
         </button>
       </div>
 
-      {/* File counter - Top */}
+      {/* File Counter - Top Left */}
       {files.length > 1 && (
         <div
           className="preview-file-counter"
           style={{
             position: 'fixed',
-            top: '1rem',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'rgba(0, 0, 0, 0.8)',
-            padding: '0.5rem 1rem',
-            borderRadius: '0.75rem',
+            top: 'clamp(1rem, 2vw, 1.5rem)',
+            left: 'clamp(1rem, 2vw, 1.5rem)',
+            background: 'rgba(255, 255, 255, 0.1)',
+            padding: '0.5rem 0.875rem',
+            borderRadius: '8px',
             color: '#fff',
-            fontSize: '0.875rem',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
+            fontSize: '0.8125rem',
+            fontWeight: 600,
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
             zIndex: 50,
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)'
           }}
         >
           {currentIndex + 1} / {files.length}
         </div>
       )}
 
-      {/* File name - Above zoom controls */}
-      <div
-        className="preview-file-name"
-        style={{
-          position: 'fixed',
-          bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: 'rgba(0, 0, 0, 0.8)',
-          padding: '0.75rem 1.25rem',
-          borderRadius: '0.75rem',
-          color: '#fff',
-          fontSize: '0.875rem',
-          maxWidth: '90%',
-          textAlign: 'center',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          zIndex: 50,
-          wordBreak: 'break-word',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-        }}
-      >
-        {currentFile.name}
-      </div>
-
-      {/* Media container */}
+      {/* Media Container - Centered */}
       <div
         className="preview-media-container"
         style={{
-          maxWidth: '100%',
-          maxHeight: '85vh',
+          maxWidth: '90vw',
+          maxHeight: '80vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          animation: 'slideIn 0.3s ease-out',
+          animation: 'slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
-          transition: isDragging ? 'none' : 'transform 0.2s ease-out',
+          transition: isDragging ? 'none' : 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
           cursor: zoom > 1 && !isVideo ? (isDragging ? 'grabbing' : 'grab') : 'default',
           position: 'relative',
-          background: 'transparent',
-          borderRadius: '0.75rem',
-          padding: '0',
-          paddingBottom: '2rem',
-          border: 'none',
           overflow: 'visible'
         }}
         onMouseDown={handleMouseDown}
         onDoubleClick={handleDoubleClick}
       >
-        {/* Skeleton placeholder */}
+        {/* Loading Skeleton */}
         {!imageLoaded && (
           <div
-            className="w-full h-full bg-[#111]/50 animate-pulse rounded-xl"
             style={{
               position: 'absolute',
-              top: '1.5rem',
-              left: '1.5rem',
-              right: '1.5rem',
-              bottom: '1.5rem',
-              background: 'rgba(17, 17, 17, 0.5)',
-              animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              borderRadius: '0.75rem'
+              width: '200px',
+              height: '200px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-          />
+          >
+            <div
+              style={{
+                width: '40px',
+                height: '40px',
+                border: '3px solid rgba(162, 89, 247, 0.2)',
+                borderTop: '3px solid #a259f7',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }}
+            />
+          </div>
         )}
 
-        {/* Image or Video - Simple <img> tag, NO lazy loading, NO WebGL, NO canvas */}
+        {/* Immersive Image Display */}
         {isVideo ? (
           <img
             src={currentSrc}
@@ -637,16 +614,17 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
               height: 'auto',
               objectFit: 'contain',
               opacity: imageLoaded ? 1 : 0,
-              transition: 'opacity 0.3s ease-in-out',
+              transition: 'opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
               display: imageLoaded ? 'block' : 'none',
               background: 'transparent',
               userSelect: 'none',
-              pointerEvents: 'none'
+              pointerEvents: 'none',
+              borderRadius: '6px',
+              boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5)'
             }}
             draggable={false}
             onLoad={() => {
               setImageLoaded(true);
-              console.log('✅ Video thumbnail loaded in preview:', currentFile.name);
             }}
             onError={handleImageError}
           />
@@ -666,16 +644,17 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
               height: 'auto',
               objectFit: 'contain',
               opacity: imageLoaded ? 1 : 0,
-              transition: 'opacity 0.3s ease-in-out',
+              transition: 'opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
               display: imageLoaded ? 'block' : 'none',
               background: 'transparent',
               userSelect: 'none',
-              pointerEvents: 'none'
+              pointerEvents: 'none',
+              borderRadius: '6px',
+              boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5)'
             }}
             draggable={false}
             onLoad={() => {
               setImageLoaded(true);
-              console.log('✅ Full image loaded in preview:', currentFile.name);
             }}
             onError={handleImageError}
           />

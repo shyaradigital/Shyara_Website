@@ -132,7 +132,6 @@ const Layout = ({ children }) => {
             <Link to="/terms" className={location.pathname === '/terms' ? 'active' : ''}>Terms</Link>
           </nav>
         )}
-        <main className="site-main">{children}</main>
         
         <footer className="site-footer">
           <div className="footer-content">

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+﻿import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { X, ArrowLeft, ArrowRight } from 'lucide-react';
 import FancyText from '../components/FancyText';
 import DriveMockupModal from '../components/portfolio/DriveMockupModal';
@@ -211,7 +212,7 @@ const rawPortfolioServices = [
     service: 'Social Media Management',
     description: 'Creative content, engaging posts, and strategic social media campaigns',
     samples: [], // Now using Google Drive - images loaded dynamically
-    thumbnail: process.env.PUBLIC_URL + '/thumbnails/smm-thumbnail.jpg',
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/smm-thumbnail.png',
     results: 'Average 60% increase in followers, 45% boost in engagement'
   },
   {
@@ -229,28 +230,28 @@ const rawPortfolioServices = [
     service: 'App Development',
     description: 'Cross-platform mobile applications that solve real problems',
     samples: [], // Now using Google Drive - images loaded dynamically
-    thumbnail: process.env.PUBLIC_URL + '/thumbnails/app-dev-thumbnail.jpg',
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/app-dev-thumbnail.png',
     results: 'Launched within 8 weeks, secured initial funding'
   },
   {
     service: 'Video Editing & Reels',
     description: 'Engaging video content that captures attention and drives engagement',
     samples: [], // Now using Google Drive - videos loaded dynamically
-    thumbnail: process.env.PUBLIC_URL + '/thumbnails/video-reels-thumbnail.jpg',
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/video-reels-thumbnail.png',
     results: 'Tripled follower count, boosted engagement significantly'
   },
   {
     service: 'Ad Campaign Management',
     description: 'Strategic advertising campaigns that deliver measurable results',
     samples: [], // Now using Google Drive - images loaded dynamically
-    thumbnail: process.env.PUBLIC_URL + '/thumbnails/ads-thumbnail.jpg',
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/ads-thumbnail.png',
     results: '30% increase in sales, 25% reduction in acquisition cost'
   },
   {
     service: 'Festive Posts',
     description: 'Special occasion content and festive celebrations for brands',
     samples: [], // Now using Google Drive - images loaded dynamically
-    thumbnail: process.env.PUBLIC_URL + '/thumbnails/festive-thumbnail.jpg',
+    thumbnail: process.env.PUBLIC_URL + '/thumbnails/festive-thumbnail.png',
     results: 'Enhanced brand engagement during special occasions and festivals'
   }
 ];
@@ -276,6 +277,12 @@ const DRIVE_FOLDER_IDS = {
   [PortfolioCategory.FESTIVE]: '1YojPkvfm2s_PjG2ZwimarcJZmggGKwvj',
   [PortfolioCategory.WEBSITE_DEV]: null // Keep existing behavior
 };
+
+const HERO_METRICS = [
+  { label: 'Brand lifts delivered', value: '140+', accent: '#a259f7' },
+  { label: 'Avg. engagement jump', value: '+45%', accent: '#66e4a8' },
+  { label: 'Time to first delivery', value: '72 hrs', accent: '#7bd3ff' },
+];
 
 // Helper function to get category from service name
 const getCategoryFromService = (serviceName) => {
@@ -329,12 +336,9 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
     setShowMockup(false);
   }, [service, currentImageIndex]);
 
-  if (!hasContent) {
-    return null;
-  }
+  if (!hasContent) return null;
 
   const handleBackdropClick = (e) => {
-    // Close modal only if clicking on the backdrop, not the modal content
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -348,7 +352,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'rgba(0,0,0,0.9)',
+        background: 'rgba(0,0,0,0.88)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -358,15 +362,15 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
       onClick={handleBackdropClick}
     >
       <div className="portfolio-modal" style={{
-        background: 'rgba(30,30,40,0.95)',
-        borderRadius: 16,
-        padding: '2rem',
+        background: 'rgba(18,18,24,0.94)',
+        borderRadius: 18,
+        padding: '1.5rem',
         maxWidth: 900,
-        width: '90%',
-        maxHeight: '80vh',
+        width: '92%',
+        maxHeight: '82vh',
         overflow: 'auto',
-        border: '1px solid rgba(162,89,247,0.2)',
-        boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        boxShadow: '0 18px 50px rgba(0,0,0,0.55)',
         position: 'relative',
         scrollbarWidth: 'thin',
         scrollbarColor: '#a259f7 #1e1e28'
@@ -384,75 +388,66 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
               background: linear-gradient(180deg, #a259f7 0%, #7f42a7 100%);
               border-radius: 4px;
             }
-            .portfolio-modal::-webkit-scrollbar-thumb:hover {
-              background: linear-gradient(180deg, #b366ff 0%, #8f52b7 100%);
-            }
           `}
         </style>
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            background: 'none',
-            border: 'none',
-            color: '#a7a7a7',
-            cursor: 'pointer',
-            padding: 8,
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'background 0.2s'
-          }}
-        >
-          <X size={24} />
-        </button>
-
-        <div style={{ marginBottom: 40, borderBottom: '1px solid rgba(162,89,247,0.2)', paddingBottom: 24 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-            <div style={{ flex: 1 }}>
-              <h2 style={{ color: '#a259f7', fontSize: '2.2rem', fontWeight: 700, margin: '0 0 12px 0', lineHeight: 1.2 }}>
-                {service.service}
-              </h2>
-              <p style={{ color: '#bdbdbd', fontSize: '1.1rem', margin: 0, lineHeight: 1.5, maxWidth: '600px' }}>
-                {service.description}
-              </p>
-            </div>
-            <div style={{ 
-              background: 'rgba(76,175,80,0.1)',
-              border: '1px solid rgba(76,175,80,0.2)',
-              borderRadius: 8, 
-              padding: '12px 16px',
-              marginLeft: 24,
-              marginTop: 40,
-              minWidth: '200px',
-              textAlign: 'center',
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16, gap: 12 }}>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              color: '#d4d4d8',
+              cursor: 'pointer',
+              borderRadius: 10,
+              padding: '8px 10px',
+              minWidth: 40,
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              height: 'fit-content'
-            }}>
-              <span style={{ color: '#4CAF50', fontWeight: 600, fontSize: '0.95rem', lineHeight: 1.3 }}>
-                {service.results.split(', ').map((part, index) => (
-                  <div key={index} style={{ marginBottom: index < service.results.split(', ').length - 1 ? '4px' : 0 }}>
-                    {part}
-                  </div>
-                ))}
-              </span>
-            </div>
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <X size={18} />
+          </button>
+          <div style={{ flex: 1, textAlign: 'right', color: '#c6c8d5', fontSize: 14 }}>
+            {currentImageIndex + 1} / {samples.length}
           </div>
         </div>
 
-        <div style={{ position: 'relative', marginBottom: 24 }}>
+        <div style={{ marginBottom: 20 }}>
+          <h2 style={{ color: '#f7f8fb', fontSize: '1.6rem', fontWeight: 800, margin: '0 0 6px 0', lineHeight: 1.2 }}>
+            {service.service}
+          </h2>
+          <p style={{ color: '#c7c9d4', fontSize: '1rem', margin: 0, lineHeight: 1.5 }}>
+            {service.description}
+          </p>
+          {service.results && (
+            <div style={{
+              marginTop: 10,
+              background: 'rgba(15, 24, 18, 0.7)',
+              border: '1px solid rgba(29, 59, 38, 0.8)',
+              borderRadius: 12,
+              padding: '10px 12px',
+              color: '#4ade80',
+              fontWeight: 600,
+              fontSize: '0.95rem'
+            }}>
+              {service.results.split(', ').map((part, index) => (
+                <div key={index} style={{ marginBottom: index < service.results.split(', ').length - 1 ? '4px' : 0 }}>
+                  {part}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div style={{ position: 'relative', marginBottom: 16 }}>
           <div style={{
             width: '100%',
             maxHeight: 'min(70vh, 520px)',
             borderRadius: 12,
             overflow: 'hidden',
             position: 'relative',
-            background: '#111',
+            background: '#0f0f15',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -489,84 +484,66 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
               />
             )}
             
-            {/* Navigation arrows */}
             <button
               onClick={prevImage}
               style={{
                 position: 'absolute',
-                left: 16,
+                left: 12,
                 top: '50%',
                 transform: 'translateY(-50%)',
-                background: 'rgba(0,0,0,0.7)',
-                border: 'none',
+                background: 'rgba(0,0,0,0.65)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 color: 'white',
-                padding: 12,
+                padding: 10,
                 borderRadius: '50%',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.2s'
+                justifyContent: 'center'
               }}
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={18} />
             </button>
             
             <button
               onClick={nextImage}
               style={{
                 position: 'absolute',
-                right: 16,
+                right: 12,
                 top: '50%',
                 transform: 'translateY(-50%)',
-                background: 'rgba(0,0,0,0.7)',
-                border: 'none',
+                background: 'rgba(0,0,0,0.65)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 color: 'white',
-                padding: 12,
+                padding: 10,
                 borderRadius: '50%',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.2s'
+                justifyContent: 'center'
               }}
             >
-              <ArrowRight size={20} />
+              <ArrowRight size={18} />
             </button>
-          </div>
-
-          {/* Image counter */}
-          <div style={{
-            position: 'absolute',
-            bottom: 16,
-            right: 16,
-            background: 'rgba(0,0,0,0.8)',
-            color: 'white',
-            padding: '8px 12px',
-            borderRadius: 20,
-            fontSize: '0.9rem',
-            fontWeight: 600
-          }}>
-            {currentImageIndex + 1} / {samples.length}
           </div>
         </div>
 
         <div style={{ 
-          background: 'rgba(30,30,40,0.6)', 
+          background: 'rgba(30,30,40,0.5)', 
           borderRadius: 12, 
-          padding: '20px 24px', 
-          marginBottom: 24,
-          border: '1px solid rgba(162,89,247,0.1)',
+          padding: '14px 16px', 
+          marginBottom: 16,
+          border: '1px solid rgba(162,89,247,0.08)',
           textAlign: 'center'
         }}>
-          <h3 style={{ color: '#e7e7e7', fontSize: '1.3rem', fontWeight: 700, marginBottom: 8, textAlign: 'center' }}>
+          <h3 style={{ color: '#e7e7e7', fontSize: '1.2rem', fontWeight: 700, marginBottom: 6, textAlign: 'center' }}>
             {currentSample.title}
           </h3>
-          <p style={{ color: '#bdbdbd', fontSize: '1rem', lineHeight: 1.6, textAlign: 'center', margin: 0 }}>
+          <p style={{ color: '#bdbdbd', fontSize: '0.95rem', lineHeight: 1.5, textAlign: 'center', margin: 0 }}>
             {currentSample.description}
           </p>
           {currentSample.mockup && (
-            <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+            <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
               <button
                 onClick={() => setShowMockup(true)}
                 style={{
@@ -574,7 +551,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                   color: '#fff',
                   border: 'none',
                   borderRadius: 999,
-                  padding: '0.65rem 1.5rem',
+                  padding: '0.55rem 1.3rem',
                   fontWeight: 600,
                   cursor: 'pointer',
                   boxShadow: '0 6px 18px rgba(162,89,247,0.35)'
@@ -589,26 +566,25 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                   color: '#e7e7e7',
                   border: '1px solid rgba(255,255,255,0.2)',
                   borderRadius: 999,
-                  padding: '0.65rem 1.5rem',
+                  padding: '0.55rem 1.3rem',
                   fontWeight: 600,
                   cursor: 'pointer'
                 }}
               >
-                Open in New Tab
+                Open →
               </button>
             </div>
           )}
         </div>
 
-        {/* Thumbnail navigation */}
         <div style={{ 
           display: 'flex', 
-          gap: 12, 
+          gap: 10, 
           justifyContent: 'flex-start', 
-          marginTop: 24,
+          marginTop: 12,
           flexWrap: 'wrap',
-          padding: '16px 0',
-          borderTop: '1px solid rgba(162,89,247,0.1)'
+          padding: '12px 0',
+          borderTop: '1px solid rgba(162,89,247,0.08)'
         }}>
           {samples.map((sample, index) => {
             const isVideo = sample.mediaType === 'video';
@@ -617,11 +593,11 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                 key={index}
                 onClick={() => setCurrentImageIndex(index)}
                 style={{
-                  width: 60,
-                  height: 60,
+                  width: 56,
+                  height: 56,
                   borderRadius: 8,
                   overflow: 'hidden',
-                  border: currentImageIndex === index ? '2px solid #a259f7' : '2px solid transparent',
+                  border: currentImageIndex === index ? '2px solid #a259f7' : '1px solid rgba(255,255,255,0.1)',
                   cursor: 'pointer',
                   background: 'none',
                   padding: 0,
@@ -635,7 +611,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                     style={{
                       width: '100%',
                       height: '100%',
-                      objectFit: 'contain'
+                      objectFit: 'cover'
                     }}
                     muted
                     playsInline
@@ -648,16 +624,17 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                     style={{
                       width: '100%',
                       height: '100%',
-                      objectFit: 'contain'
+                      objectFit: 'cover'
                     }}
                     onError={(e) => {
-                      console.warn(`Failed to load thumbnail: ${sample.img}`);
+                      if (process.env.NODE_ENV === 'development') {
+                        console.warn(`Failed to load thumbnail: ${sample.img}`);
+                      }
                       e.target.style.display = 'none';
                     }}
                   />
                 )}
                 
-                {/* Video indicator for thumbnails */}
                 {isVideo && (
                   <div style={{
                     position: 'absolute',
@@ -666,8 +643,8 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                     transform: 'translate(-50%, -50%)',
                     background: 'rgba(162,89,247,0.8)',
                     borderRadius: '50%',
-                    width: 20,
-                    height: 20,
+                    width: 18,
+                    height: 18,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -676,9 +653,9 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                     <div style={{
                       width: 0,
                       height: 0,
-                      borderLeft: '6px solid white',
-                      borderTop: '4px solid transparent',
-                      borderBottom: '4px solid transparent',
+                      borderLeft: '5px solid white',
+                      borderTop: '3px solid transparent',
+                      borderBottom: '3px solid transparent',
                       marginLeft: 1
                     }} />
                   </div>
@@ -751,34 +728,22 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
   );
 };
 
-const ServiceCard = ({ service, onOpenModal }) => {
+const ServiceCard = ({ service, onOpenModal, index }) => {
   const [hovered, setHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Get the first sample as thumbnail, or use service.thumbnail for Google Drive services
-  const thumbnail = service.samples && service.samples.length > 0 ? service.samples[0] : null;
-  const thumbnailUrl = thumbnail ? thumbnail.img : (service.thumbnail || null);
+  // Check if service has samples (like Website Development)
+  const hasSamples = service.samples && service.samples.length > 0;
+  const thumbnail = hasSamples ? service.samples[0] : null;
+  const thumbnailUrl = thumbnail ? thumbnail.img : service.thumbnail;
   const isVideo = thumbnail && thumbnail.mediaType === 'video';
 
   return (
     <div
-      className="portfolio-item"
+      className="portfolio-card-modern"
       tabIndex={0}
       style={{
-        background: hovered ? 'rgba(30,30,30,0.85)' : 'rgba(30,30,30,0.65)',
-        border: '2px solid rgba(127,66,167,0.18)',
-        boxShadow: hovered ? '0 12px 40px 0 rgba(0,0,0,0.4)' : '0 8px 32px 0 rgba(80,80,120,0.18)',
-        borderRadius: 18,
-        overflow: 'hidden',
-        transition: 'all 0.3s ease',
-        cursor: 'pointer',
-        minHeight: 320,
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        transform: hovered ? 'scale(1.02)' : 'scale(1)',
+        animationDelay: `${index * 0.08}s`
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -786,30 +751,40 @@ const ServiceCard = ({ service, onOpenModal }) => {
       onBlur={() => setHovered(false)}
       onClick={() => onOpenModal(service)}
     >
-      <div style={{ 
-        width: '100%', 
-        height: 220, 
-        overflow: 'hidden', 
-        background: '#111', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        position: 'relative' 
+      {/* Image Container */}
+      <div style={{
+        width: '100%',
+        height: '240px',
+        overflow: 'hidden',
+        background: 'rgba(0,0,0,0.2)',
+        position: 'relative'
       }}>
+        {/* Loading Skeleton */}
+        {!imageLoaded && thumbnailUrl && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 75%)',
+            backgroundSize: '200% 100%',
+            animation: 'shimmer 2s infinite'
+          }} />
+        )}
+        
         {thumbnailUrl ? (
           <>
             {isVideo ? (
               <LazyVideo
                 src={thumbnail.img}
                 fallbackSrc={thumbnail.fallbackImg}
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'cover', 
-                  objectPosition: 'center',
-                  filter: hovered ? 'none' : 'grayscale(0.3)', 
-                  transition: 'all 0.5s',
-                  borderRadius: 0
+                className="portfolio-card-image"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center'
                 }}
                 muted
                 loop
@@ -817,93 +792,93 @@ const ServiceCard = ({ service, onOpenModal }) => {
                 onLoadedData={() => setImageLoaded(true)}
               />
             ) : (
-              <LazyImage
-                src={thumbnail ? thumbnail.img : thumbnailUrl}
-                fallbackSrc={thumbnail ? thumbnail.fallbackImg : thumbnailUrl}
+              <img
+                src={thumbnailUrl}
                 alt={service.service}
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'cover', 
-                  objectPosition: 'center', 
-                  filter: hovered ? 'none' : 'grayscale(0.3)', 
-                  transition: 'all 0.5s', 
-                  borderRadius: 0, 
-                  display: 'block',
-                  opacity: imageLoaded ? 1 : 0.8
+                className="portfolio-card-image"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  opacity: imageLoaded ? 1 : 0.8,
+                  transition: 'opacity 0.3s ease-in-out'
                 }}
                 onLoad={() => setImageLoaded(true)}
+                onError={(e) => {
+                  if (process.env.NODE_ENV === 'development') {
+                    console.error('Failed to load thumbnail:', thumbnailUrl);
+                  }
+                  setImageLoaded(true);
+                }}
               />
             )}
-            
-            {/* Video play indicator */}
-            {isVideo && (
+
+            {/* Sample Count Badge - Only show for services with multiple samples */}
+            {hasSamples && service.samples.length > 1 && (
               <div style={{
                 position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                background: 'rgba(162,89,247,0.8)',
-                borderRadius: '50%',
-                width: 60,
-                height: 60,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                pointerEvents: 'none',
-                transition: 'opacity 0.3s'
-              }}>
-                <div style={{
-                  width: 0,
-                  height: 0,
-                  borderLeft: '20px solid white',
-                  borderTop: '12px solid transparent',
-                  borderBottom: '12px solid transparent',
-                  marginLeft: 4
-                }} />
-              </div>
-            )}
-            
-            {/* Image count indicator */}
-            {service.samples && service.samples.length > 1 && (
-              <div style={{
-                position: 'absolute',
-                top: 12,
-                right: 12,
-                background: 'rgba(0,0,0,0.8)',
+                top: '0.75rem',
+                right: '0.75rem',
+                background: 'rgba(0,0,0,0.75)',
+                backdropFilter: 'blur(8px)',
                 color: 'white',
-                padding: '4px 8px',
-                borderRadius: 12,
-                fontSize: '0.8rem',
-                fontWeight: 600
-              }}>
-                +{service.samples.length - 1} more
-              </div>
-            )}
-            
-            {/* Google Drive indicator overlay */}
-            {!thumbnail && thumbnailUrl && (
-              <div style={{
-                position: 'absolute',
-                bottom: 12,
-                right: 12,
-                background: 'rgba(162,89,247,0.9)',
-                color: 'white',
-                padding: '6px 12px',
-                borderRadius: 20,
+                padding: '0.375rem 0.75rem',
+                borderRadius: '6px',
                 fontSize: '0.75rem',
                 fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
+                border: '1px solid rgba(255,255,255,0.1)'
               }}>
-                <span>📁</span>
-                <span>View Portfolio</span>
+                {service.samples.length} items
+              </div>
+            )}
+            
+            {/* Gallery Badge - Show for services using Google Drive */}
+            {!hasSamples && thumbnailUrl && (
+              <div style={{
+                position: 'absolute',
+                top: '0.75rem',
+                right: '0.75rem',
+                background: 'rgba(162, 89, 247, 0.85)',
+                backdropFilter: 'blur(8px)',
+                color: 'white',
+                padding: '0.375rem 0.75rem',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                border: '1px solid rgba(162, 89, 247, 0.3)',
+                boxShadow: '0 2px 8px rgba(162, 89, 247, 0.3)'
+              }}>
+                Gallery
+              </div>
+            )}
+
+            {/* Hover Overlay */}
+            {hovered && (
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%)',
+                display: 'flex',
+                alignItems: 'flex-end',
+                padding: '1.25rem',
+                animation: 'fadeInUp 0.3s ease-out'
+              }}>
+                <span style={{
+                  color: 'white',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  opacity: 0.9
+                }}>
+                  View Gallery →
+                </span>
               </div>
             )}
           </>
         ) : (
-          // Fallback placeholder for services without thumbnails
           <div style={{
             width: '100%',
             height: '100%',
@@ -911,27 +886,36 @@ const ServiceCard = ({ service, onOpenModal }) => {
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
-            gap: '1rem',
-            color: 'rgba(162,89,247,0.6)'
+            gap: '0.75rem',
+            color: 'rgba(162,89,247,0.4)'
           }}>
-            <div style={{
-              fontSize: '3rem',
-              opacity: 0.5
-            }}>📁</div>
-            <div style={{
-              fontSize: '0.9rem',
-              fontWeight: 600,
-              textAlign: 'center',
-              padding: '0 1rem'
-            }}>
-              View Portfolio
+            <div style={{ fontSize: '2.5rem', opacity: 0.5 }}>📁</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 600, textAlign: 'center', padding: '0 1rem', color: 'rgba(255,255,255,0.4)' }}>
+              View Gallery
             </div>
           </div>
         )}
       </div>
-      <div style={{ padding: '24px 24px 16px 24px', flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: 120 }}>
-        <h3 style={{ fontWeight: 700, fontSize: 22, color: 'var(--color-text-primary)', marginBottom: 8 }}><FancyText text={service.service} /></h3>
-        <p style={{ color: 'var(--color-text-secondary)', fontSize: 15 }}>{service.results}</p>
+
+      {/* Card Content */}
+      <div className="portfolio-card-content">
+        <h3 style={{ 
+          fontWeight: 600, 
+          fontSize: 'clamp(1rem, 2vw, 1.1rem)', 
+          color: '#f5f5f7', 
+          margin: '0 0 0.5rem 0',
+          lineHeight: 1.3
+        }}>
+          {service.service}
+        </h3>
+        <p style={{ 
+          color: 'rgba(255,255,255,0.5)', 
+          fontSize: 'clamp(0.8rem, 1.5vw, 0.875rem)', 
+          margin: 0,
+          lineHeight: 1.5
+        }}>
+          {service.results}
+        </p>
       </div>
     </div>
   );
@@ -946,6 +930,9 @@ const Portfolio = () => {
   // Drive modal state
   const [activeCategory, setActiveCategory] = useState(null);
   const [driveModalOpen, setDriveModalOpen] = useState(false);
+  
+  // Category filter state
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Prevent Spline from loading on Portfolio page
   useEffect(() => {
@@ -981,7 +968,9 @@ const Portfolio = () => {
     const originalAppendChild = document.body.appendChild;
     document.body.appendChild = function(node) {
       if (node.tagName === 'SCRIPT' && node.src && node.src.includes('spline')) {
-        console.log('Blocked Spline script from loading on Portfolio page');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Blocked Spline script from loading on Portfolio page');
+        }
         return node; // Return without appending
       }
       return originalAppendChild.call(document.body, node);
@@ -1104,6 +1093,13 @@ const Portfolio = () => {
     }
   };
 
+  const handleCategoryPreview = (category) => {
+    const folderId = DRIVE_FOLDER_IDS[category];
+    if (!folderId) return;
+    setActiveCategory(category);
+    setDriveModalOpen(true);
+  };
+
   const loaderProgress = initialPrefetchSamples.length
     ? Math.min(
         Math.round((prefetchProgress / initialPrefetchSamples.length) * 100),
@@ -1111,82 +1107,117 @@ const Portfolio = () => {
       )
     : 100;
 
+  // Filter services based on selected category
+  const filteredServices = selectedCategory === 'all' 
+    ? portfolioServices 
+    : portfolioServices.filter(service => getCategoryFromService(service.service) === selectedCategory);
+
+  const categories = [
+    { id: 'all', label: 'All Work' },
+    { id: PortfolioCategory.SMM, label: 'Social Media' },
+    { id: PortfolioCategory.WEBSITE_DEV, label: 'Websites' },
+    { id: PortfolioCategory.APP_DEV, label: 'Apps' },
+    { id: PortfolioCategory.REELS, label: 'Video & Reels' },
+    { id: PortfolioCategory.ADS, label: 'Campaigns' },
+    { id: PortfolioCategory.FESTIVE, label: 'Festive' }
+  ];
+
   return (
-  <div className="portfolio-page-wrapper" style={{ minHeight: '100vh', color: 'var(--color-text-primary)', padding: '0 0 3rem 0', marginTop: '-110px', fontFamily: 'inherit' }}>
-    {/* Static Banner - Replaces Spline */}
-    <div className="portfolio-banner" style={{
+  <div className="portfolio-page-wrapper" style={{ minHeight: '100vh', color: '#f5f5f7', padding: '0', paddingTop: '82px', marginTop: '-110px', fontFamily: 'inherit', background: 'transparent' }}>
+    
+    {/* Compact Hero Section */}
+    <div className="portfolio-hero" style={{
       width: '100%',
-      maxHeight: '280px',
-      minHeight: '200px',
-      background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%)',
-      position: 'relative',
-      overflow: 'hidden',
-      marginBottom: '1rem',
-      borderBottom: '1px solid rgba(122, 66, 240, 0.2)',
-      paddingTop: '80px',
-      paddingBottom: '1.5rem',
-      marginTop: '0'
+      padding: '0 clamp(1rem, 5vw, 2rem) clamp(1rem, 2vw, 1.25rem)',
+      textAlign: 'center',
+      background: 'transparent',
+      margin: '0',
+      marginTop: '-100px'
     }}>
-      {/* Gradient overlay - More subtle */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'radial-gradient(circle at 50% 50%, rgba(122, 66, 240, 0.08) 0%, transparent 60%)',
-        pointerEvents: 'none'
-      }} />
-      
-      {/* Content - Absolutely positioned to center in visible gradient area */}
-      <div className="portfolio-banner-content" style={{
-        position: 'absolute',
-        top: '80px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 2,
-        textAlign: 'center',
-        padding: '0 1rem',
-        maxWidth: '90%',
-        width: '100%',
-        animation: 'fadeInUp 0.6s ease-out',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 'calc(100% - 80px - 1.5rem)'
+      <h1 style={{
+        fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+        fontWeight: 700,
+        background: 'linear-gradient(135deg, #ffffff 0%, #c4b5fd 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        margin: 0,
+        marginBottom: '0.625rem',
+        padding: 0,
+        lineHeight: 1.05,
+        letterSpacing: '-0.02em'
       }}>
-        <h1 className="portfolio-title" style={{
-          fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
-          fontWeight: 700,
-          background: 'linear-gradient(135deg, #ffffff 0%, #a259f7 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          marginBottom: '0.75rem',
-          lineHeight: 1.2,
-          textShadow: '0 2px 10px rgba(162, 89, 247, 0.2)',
-          filter: 'drop-shadow(0 1px 5px rgba(162, 89, 247, 0.15))'
-        }}>
-          Our Portfolio
-        </h1>
-        <p className="portfolio-description" style={{
-          fontSize: 'clamp(0.75rem, 1.2vw, 1rem)',
-          color: 'rgba(255, 255, 255, 0.75)',
-          lineHeight: 1.5,
-          margin: 0,
-          padding: '0 0.5rem'
-        }}>
-          Explore our creative work and see how we transform brands through innovative digital solutions
-        </p>
-      </div>
+        Our Work
+      </h1>
+      <p style={{
+        fontSize: 'clamp(0.95rem, 2vw, 1.1rem)',
+        color: 'rgba(255, 255, 255, 0.6)',
+        lineHeight: 1.4,
+        margin: '0 auto',
+        maxWidth: '600px',
+        fontWeight: 400
+      }}>
+        Transforming brands through creative digital experiences
+      </p>
     </div>
 
     <style>
       {`
-        /* Portfolio page responsive styles */
+        /* Modern Portfolio Styles - Override site-main padding */
         .portfolio-page-wrapper {
           margin-top: -110px !important;
+          padding-top: 82px !important;
+        }
+        
+        /* Hero Section - Aggressive Negative Margin to Push Up */
+        .portfolio-hero {
+          margin: 0 !important;
+          margin-top: -100px !important;
+          padding-top: 0 !important;
+        }
+        
+        .portfolio-hero h1 {
+          margin-top: 0 !important;
+          padding-top: 0 !important;
+        }
+        
+        .portfolio-hero p {
+          margin-top: 0 !important;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+          .portfolio-page-wrapper {
+            margin-top: -80px !important;
+            padding-top: 82px !important;
+          }
+          .portfolio-hero {
+            padding: 0 1rem 0.875rem !important;
+            margin: 0 !important;
+            margin-top: -90px !important;
+          }
+          .portfolio-hero h1 {
+            font-size: 1.75rem !important;
+            line-height: 1 !important;
+            margin: 0 0 0.5rem 0 !important;
+          }
+          .portfolio-hero p {
+            font-size: 0.9rem !important;
+            line-height: 1.3 !important;
+            margin: 0 !important;
+          }
+        }
+        
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .portfolio-page-wrapper {
+            margin-top: -80px !important;
+            padding-top: 82px !important;
+          }
+          .portfolio-hero {
+            padding: 0 1.5rem 1rem !important;
+            margin: 0 !important;
+            margin-top: -95px !important;
+          }
         }
         
         @keyframes fadeInUp {
@@ -1199,253 +1230,387 @@ const Portfolio = () => {
             transform: translateY(0);
           }
         }
+
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
         
-        /* Banner responsive - Compact design, starts right after navbar */
+        @keyframes shimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
+        
+        /* Category Tabs Wrapper */
+        .category-tabs-wrapper {
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          position: relative;
+        }
+        
+        /* Category Filter Tabs - Scrollable */
+        .category-tabs {
+          display: flex;
+          gap: 0.5rem;
+          padding: 0 1rem 0.5rem 1rem;
+          overflow-x: auto;
+          overflow-y: hidden;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(162, 89, 247, 0.3) transparent;
+          scroll-behavior: smooth;
+          scroll-snap-type: x proximity;
+        }
+        
+        .category-tabs::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        .category-tabs::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        
+        .category-tabs::-webkit-scrollbar-thumb {
+          background: rgba(162, 89, 247, 0.3);
+          border-radius: 2px;
+        }
+        
+        .category-tabs::-webkit-scrollbar-thumb:hover {
+          background: rgba(162, 89, 247, 0.5);
+        }
+        
+        /* Desktop - Centered */
+        @media (min-width: 1025px) {
+          .category-tabs {
+            justify-content: center;
+            flex-wrap: wrap;
+            overflow-x: visible;
+          }
+        }
+        
+        /* Tablet - Scrollable */
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .category-tabs {
+            justify-content: flex-start;
+            scrollbar-width: thin;
+            padding-bottom: 0.75rem;
+          }
+          
+          .category-tabs::-webkit-scrollbar {
+            height: 6px;
+          }
+        }
+        
+        /* Mobile - Scrollable with visible scrollbar */
         @media (max-width: 640px) {
-          .portfolio-banner {
-            max-height: 180px !important;
-            min-height: 150px !important;
-            padding-top: 70px !important;
-            padding-bottom: 1rem !important;
-            margin-bottom: 1rem !important;
-            margin-top: 0 !important;
+          .category-tabs {
+            justify-content: flex-start;
+            padding: 0 0.75rem 0.75rem 0.75rem;
+            gap: 0.625rem;
           }
-          .portfolio-banner-content {
-            top: 70px !important;
-            height: calc(100% - 70px - 1rem) !important;
-            padding: 0 0.75rem !important;
-          }
-          .portfolio-title {
-            font-size: 1.5rem !important;
-            margin-bottom: 0.4rem !important;
-          }
-          .portfolio-description {
-            font-size: 0.75rem !important;
-            padding: 0 0.25rem !important;
+          
+          .category-tabs::-webkit-scrollbar {
+            height: 5px;
           }
         }
         
-        @media (min-width: 641px) and (max-width: 768px) {
-          .portfolio-banner {
-            max-height: 220px !important;
-            min-height: 180px !important;
-            padding-top: 75px !important;
-            padding-bottom: 1.25rem !important;
-            margin-bottom: 1rem !important;
-            margin-top: 0 !important;
-          }
-          .portfolio-banner-content {
-            top: 75px !important;
-            height: calc(100% - 75px - 1.25rem) !important;
-          }
-          .portfolio-title {
-            font-size: 1.875rem !important;
-          }
-          .portfolio-description {
-            font-size: 0.875rem !important;
+        .category-tab {
+          flex-shrink: 0;
+          padding: 0.625rem 1.25rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 999px;
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.875rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          white-space: nowrap;
+          scroll-snap-align: start;
+          -webkit-tap-highlight-color: transparent;
+          user-select: none;
+        }
+        
+        /* Mobile specific tab styling */
+        @media (max-width: 640px) {
+          .category-tab {
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
           }
         }
         
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .portfolio-banner {
-            max-height: 250px !important;
-            min-height: 200px !important;
-            padding-top: 80px !important;
-            padding-bottom: 1.5rem !important;
-            margin-bottom: 1rem !important;
-            margin-top: 0 !important;
+        .category-tab:hover {
+          background: rgba(255, 255, 255, 0.06);
+          color: rgba(255, 255, 255, 0.9);
+          border-color: rgba(162, 89, 247, 0.3);
+        }
+        
+        .category-tab.active {
+          background: rgba(162, 89, 247, 0.15);
+          border-color: rgba(162, 89, 247, 0.5);
+          color: #c4b5fd;
+        }
+        
+        /* Modern Gallery Grid */
+        .portfolio-grid-modern {
+          display: grid;
+          gap: 1rem;
+          padding: 0 1rem;
+          animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @media (max-width: 640px) {
+          .portfolio-grid-modern {
+            grid-template-columns: 1fr;
+            gap: 1rem;
           }
-          .portfolio-banner-content {
-            top: 80px !important;
-            height: calc(100% - 80px - 1.5rem) !important;
-          }
-          .portfolio-title {
-            font-size: 2.25rem !important;
-          }
-          .portfolio-description {
-            font-size: 1rem !important;
+        }
+        
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .portfolio-grid-modern {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            padding: 0 1.5rem;
           }
         }
         
         @media (min-width: 1025px) {
-          .portfolio-banner {
-            max-height: 280px !important;
-            min-height: 200px !important;
-            padding-top: 80px !important;
-            padding-bottom: 1.5rem !important;
-            margin-bottom: 1rem !important;
-            margin-top: 0 !important;
-          }
-          .portfolio-banner-content {
-            top: 80px !important;
-            height: calc(100% - 80px - 1.5rem) !important;
-          }
-          .portfolio-title {
-            font-size: 2.5rem !important;
-          }
-          .portfolio-description {
-            font-size: 1rem !important;
+          .portfolio-grid-modern {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            padding: 0 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
           }
         }
         
-        /* Container responsive padding */
+        /* Modern Card Styles */
+        .portfolio-card-modern {
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 12px;
+          overflow: hidden;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          animation: slideIn 0.4s ease-out;
+          animation-fill-mode: both;
+        }
+        
+        .portfolio-card-modern:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(162, 89, 247, 0.2);
+          border-color: rgba(162, 89, 247, 0.3);
+        }
+        
+        .portfolio-card-image {
+          width: 100%;
+          height: 240px;
+          object-fit: cover;
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .portfolio-card-modern:hover .portfolio-card-image {
+          transform: scale(1.05);
+        }
+        
+        .portfolio-card-content {
+          padding: 1.25rem;
+        }
+        
+        /* Stats Section */
+        .stats-container {
+          display: grid;
+          gap: 1rem;
+          padding: 0 1rem;
+          margin-bottom: 1.75rem;
+        }
+        
         @media (max-width: 640px) {
-          .portfolio-container {
-            padding: 0.75rem !important;
+          .stats-container {
+            grid-template-columns: 1fr;
+            gap: 0.875rem;
+            margin-bottom: 1.5rem;
           }
         }
         
-        @media (min-width: 641px) {
-          .portfolio-container {
-            padding: 1rem 1.5rem !important;
-          }
-        }
-        
-        @media (min-width: 768px) {
-          .portfolio-container {
-            padding: 1.5rem 2.5rem !important;
-          }
-        }
-        
-        @media (min-width: 1024px) {
-          .portfolio-container {
-            padding: 2rem 2.5rem !important;
-          }
-        }
-        
-        /* Grid responsive */
-        @media (max-width: 768px) {
-          .portfolio-grid {
-            grid-template-columns: 1fr !important;
-            gap: 20px !important;
-            padding: 0 !important;
-          }
-          
-          .portfolio-item {
-            min-height: 280px !important;
-          }
-          
-          .portfolio-modal {
-            padding: 1rem !important;
-            margin: 1rem !important;
-            max-height: 90vh !important;
-          }
-          
-          .portfolio-modal h2 {
-            font-size: 1.8rem !important;
-          }
-          
-          .portfolio-modal p {
-            font-size: 1rem !important;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .portfolio-item {
-            min-height: 250px !important;
-          }
-          
-          .portfolio-modal {
-            padding: 0.5rem !important;
-            margin: 0.5rem !important;
-          }
-          
-          .portfolio-modal h2 {
-            font-size: 1.5rem !important;
-          }
-        }
-        
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .portfolio-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .stats-container {
+            grid-template-columns: repeat(3, 1fr);
+            padding: 0 1.5rem;
+            margin-bottom: 1.75rem;
           }
         }
         
         @media (min-width: 1025px) {
-          .portfolio-grid {
-            grid-template-columns: repeat(3, 1fr) !important;
+          .stats-container {
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 1400px;
+            margin: 0 auto 1.75rem;
+            padding: 0 2rem;
           }
+        }
+        
+        /* Loading Screen */
+        .portfolio-loader {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.95);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          z-index: 999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1rem;
+          animation: fadeInUp 0.3s ease-out;
         }
       `}
     </style>
     
-    <div className="portfolio-container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0.75rem', position: 'relative', minHeight: '100vh' }}>
+    <div className="portfolio-container" style={{ maxWidth: '100%', margin: '0 auto', padding: '0 0 4rem', position: 'relative', minHeight: '100vh' }}>
+        
+        {/* Subtle Stats Section */}
+        <div className="stats-container" style={{ marginBottom: '1.75rem' }}>
+          {HERO_METRICS.map((item, idx) => (
+            <div key={item.label} style={{
+              background: 'rgba(255,255,255,0.02)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              borderRadius: '10px',
+              padding: '1rem 1.25rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.25rem',
+              transition: 'all 0.3s ease',
+              cursor: 'default',
+              animation: `slideIn 0.4s ease-out ${idx * 0.1}s both`
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+              e.currentTarget.style.borderColor = `${item.accent}40`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+            }}>
+              <span style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: item.accent, lineHeight: 1 }}>{item.value}</span>
+              <span style={{ fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Category Filter Tabs - Scrollable Container */}
+        <div style={{ 
+          marginBottom: '2rem',
+          position: 'relative',
+          width: '100%'
+        }}>
+          <div 
+            className="category-tabs-wrapper"
+          >
+            <div className="category-tabs">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  className={`category-tab ${selectedCategory === cat.id ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory(cat.id)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Loading Screen */}
         {showLoader && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(5,5,12,0.92)',
-            zIndex: 999,
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'center',
-            paddingTop: '5rem',
-            paddingLeft: '1.5rem',
-            paddingRight: '1.5rem',
-            backdropFilter: 'blur(8px)'
-          }}>
+          <div className="portfolio-loader">
             <div style={{
-              background: 'rgba(20,20,30,0.9)',
-              border: '1px solid rgba(162,89,247,0.25)',
-              borderRadius: 24,
+              background: 'rgba(15,15,20,0.95)',
+              border: '1px solid rgba(162,89,247,0.2)',
+              borderRadius: '16px',
               padding: '2rem',
               width: '100%',
-              maxWidth: 420,
+              maxWidth: '380px',
               textAlign: 'center',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.45)'
+              boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
             }}>
-              <p style={{ color: '#a259f7', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '0.85rem', marginBottom: '1rem' }}>
-                Preparing Portfolio
-              </p>
-              <h3 style={{ margin: 0, color: '#fff', fontSize: '1.6rem', fontWeight: 700 }}>
-                Loading showcase…
+              <div style={{ 
+                width: '48px', 
+                height: '48px', 
+                border: '3px solid rgba(162,89,247,0.2)', 
+                borderTop: '3px solid #a259f7', 
+                borderRadius: '50%', 
+                animation: 'spin 1s linear infinite',
+                margin: '0 auto 1.5rem'
+              }} />
+              <h3 style={{ margin: '0 0 0.5rem 0', color: '#fff', fontSize: '1.25rem', fontWeight: 600 }}>
+                Loading Portfolio
               </h3>
-              <p style={{ color: '#a7a7a7', margin: '0.75rem 0 1.5rem' }}>
-                High-resolution images & reels are warming up in the background.
+              <p style={{ color: 'rgba(255,255,255,0.5)', margin: '0 0 1.5rem', fontSize: '0.9rem' }}>
+                Preparing your experience...
               </p>
               <div style={{
                 width: '100%',
-                height: 8,
-                background: 'rgba(255,255,255,0.08)',
-                borderRadius: 999,
-                overflow: 'hidden',
-                marginBottom: '0.75rem'
+                height: '6px',
+                background: 'rgba(255,255,255,0.05)',
+                borderRadius: '999px',
+                overflow: 'hidden'
               }}>
                 <div style={{
                   width: `${loaderProgress}%`,
                   height: '100%',
-                  background: 'linear-gradient(90deg,#7f42a7,#a259f7)',
-                  transition: 'width 0.3s ease'
+                  background: 'linear-gradient(90deg, #7f42a7, #a259f7)',
+                  transition: 'width 0.3s ease',
+                  borderRadius: '999px'
                 }} />
               </div>
-              <span style={{ color: '#e7e7e7', fontSize: '0.9rem', letterSpacing: '0.02em' }}>
+              <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginTop: '0.75rem', display: 'block' }}>
                 {loaderProgress}%
               </span>
             </div>
           </div>
         )}
         
-        <div className="portfolio-grid" style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-          gap: 'clamp(20px, 4vw, 32px)', 
-          marginBottom: '2.5rem',
-          padding: '0'
-        }}>
-          {portfolioServices.map((service, idx) => (
-            <ServiceCard key={idx} service={service} onOpenModal={handleOpenModal} />
-        ))}
-      </div>
+        {/* Modern Portfolio Grid */}
+        <div className="portfolio-grid-modern">
+          {filteredServices.map((service, idx) => (
+            <ServiceCard key={idx} service={service} onOpenModal={handleOpenModal} index={idx} />
+          ))}
+        </div>
 
-      <div style={{ textAlign: 'center', marginTop: 32 }}>
-        <p style={{ color: '#a7a7a7', fontSize: '1.08rem' }}>
-          Want to see more? <a href="/contact" style={{ color: 'var(--color-primary)', fontWeight: 600, textDecoration: 'underline' }}>Contact us</a> for a full portfolio or to discuss your project!
-        </p>
-      </div>
+        {/* Footer CTA */}
+        <div style={{ textAlign: 'center', marginTop: '3rem', padding: '0 1rem' }}>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 'clamp(0.9rem, 2vw, 1rem)', lineHeight: 1.6 }}>
+            Interested in working with us?{' '}
+            <Link to="/contact" style={{ color: '#c4b5fd', fontWeight: 600, textDecoration: 'none', borderBottom: '1px solid rgba(196, 181, 253, 0.3)' }}>
+              Get in touch
+            </Link>
+          </p>
+        </div>
     </div>
+    
+    <style>
+      {`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}
+    </style>
 
       <PortfolioModal 
         isOpen={isModalOpen} 

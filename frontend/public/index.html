@@ -22,6 +22,21 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Shyara</title>
+    
+    <!-- Console Suppression - Must load FIRST -->
+    <script>
+      (function() {
+        const suppress = ['WebGL', 'GL_INVALID', 'Framebuffer', 'Tracking Prevention', 'emailjs', 'updating from', 'spline', 'blocked access'];
+        const check = (args) => suppress.some(s => String(args[0] || '').includes(s));
+        
+        const oe = console.error, ow = console.warn, ol = console.log, oi = console.info;
+        console.error = function(...a) { if (!check(a)) oe.apply(console, a); };
+        console.warn = function(...a) { if (!check(a)) ow.apply(console, a); };
+        console.log = function(...a) { if (!check(a)) ol.apply(console, a); };
+        console.info = function(...a) { if (!check(a)) oi.apply(console, a); };
+      })();
+    </script>
+    
     <!-- EmailJS Script -->
     <script 
       type="text/javascript" 

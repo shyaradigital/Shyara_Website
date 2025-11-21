@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './style.css';
 import ResponsiveHome from './components/ResponsiveHome';
@@ -24,6 +24,65 @@ import { CartProvider } from './context/CartContext';
 import TermsPage from './pages/Terms';
 import ScrollToTop from './components/ScrollToTop';
 import TestDrive from './pages/TestDrive';
+
+// Error Boundary Component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // Only log in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error caught by boundary:', error, errorInfo);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#0a0a0a',
+          color: '#fff',
+          textAlign: 'center',
+          padding: '2rem'
+        }}>
+          <div>
+            <h1 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#a259f7' }}>
+              Something went wrong
+            </h1>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                background: '#a259f7',
+                color: '#fff',
+                border: 'none',
+                padding: '0.75rem 1.5rem',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: 600
+              }}
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // 404 Component
 const NotFound = () => {
@@ -83,34 +142,36 @@ const NotFound = () => {
 
 function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <CartProvider>
-        <Routes>
-          <Route path="/" element={<Layout><ResponsiveHome /></Layout>} />
-          <Route path="/home-alt" element={<HomeNoLoading />} />
-          <Route path="/client-login" element={<Layout><ClientLoginPage /></Layout>} />
-          <Route path="/about" element={<Layout><ResponsiveAbout /></Layout>} />
-          <Route path="/services" element={<Layout><Services /></Layout>} />
-          <Route path="/portfolio" element={<Layout><Portfolio /></Layout>} />
-          <Route path="/contact" element={<Layout><Contact /></Layout>} />
-          <Route path="/services/social-media-management" element={<Layout><SocialMediaManagementPage /></Layout>} />
-          <Route path="/services/festive-posts" element={<Layout><FestivePostsPage /></Layout>} />
-          <Route path="/services/ads-campaign-management" element={<Layout><AdsCampaignManagementPage /></Layout>} />
-          <Route path="/services/website-development" element={<Layout><WebsiteDevelopmentPage /></Layout>} />
-          <Route path="/services/app-development" element={<Layout><AppDevelopmentPage /></Layout>} />
-          <Route path="/services/video-editing-reels" element={<Layout><VideoEditingReelsPage /></Layout>} />
-          <Route path="/services/personalized" element={<Layout><PersonalizedServicesPage /></Layout>} />
-          <Route path="/cart" element={<Layout><Cart /></Layout>} />
-          <Route path="/add-items" element={<Layout><AddItemsPage /></Layout>} />
-          <Route path="/checkout" element={<Layout><Checkout /></Layout>} />
-          <Route path="/payment" element={<Layout><Payment /></Layout>} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/test-drive" element={<TestDrive />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </CartProvider>
-    </Router>
+    <ErrorBoundary>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <ScrollToTop />
+        <CartProvider>
+          <Routes>
+            <Route path="/" element={<Layout><ResponsiveHome /></Layout>} />
+            <Route path="/home-alt" element={<HomeNoLoading />} />
+            <Route path="/client-login" element={<Layout><ClientLoginPage /></Layout>} />
+            <Route path="/about" element={<Layout><ResponsiveAbout /></Layout>} />
+            <Route path="/services" element={<Layout><Services /></Layout>} />
+            <Route path="/portfolio" element={<Layout><Portfolio /></Layout>} />
+            <Route path="/contact" element={<Layout><Contact /></Layout>} />
+            <Route path="/services/social-media-management" element={<Layout><SocialMediaManagementPage /></Layout>} />
+            <Route path="/services/festive-posts" element={<Layout><FestivePostsPage /></Layout>} />
+            <Route path="/services/ads-campaign-management" element={<Layout><AdsCampaignManagementPage /></Layout>} />
+            <Route path="/services/website-development" element={<Layout><WebsiteDevelopmentPage /></Layout>} />
+            <Route path="/services/app-development" element={<Layout><AppDevelopmentPage /></Layout>} />
+            <Route path="/services/video-editing-reels" element={<Layout><VideoEditingReelsPage /></Layout>} />
+            <Route path="/services/personalized" element={<Layout><PersonalizedServicesPage /></Layout>} />
+            <Route path="/cart" element={<Layout><Cart /></Layout>} />
+            <Route path="/add-items" element={<Layout><AddItemsPage /></Layout>} />
+            <Route path="/checkout" element={<Layout><Checkout /></Layout>} />
+            <Route path="/payment" element={<Layout><Payment /></Layout>} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/test-drive" element={<TestDrive />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </CartProvider>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

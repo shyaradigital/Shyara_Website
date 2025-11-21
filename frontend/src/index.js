@@ -4,27 +4,38 @@ import './index.css';
 import App from './App';
 import './style.css';
 
-// Suppress WebGL errors in console
-const originalError = console.error;
-console.error = (...args) => {
-  // Filter out WebGL-related errors
-  const message = args.join(' ');
-  if (message.includes('WebGL') || 
-      message.includes('GL_INVALID_VALUE') || 
-      message.includes('GL_INVALID_FRAMEBUFFER_OPERATION') ||
-      message.includes('Framebuffer is incomplete') ||
-      message.includes('Texture dimensions must all be greater than zero') ||
-      message.includes('glTexStorage2D') ||
-      message.includes('glClear') ||
-      message.includes('glClearBufferfv') ||
-      message.includes('glDrawElements') ||
-      message.includes('glDrawArrays') ||
-      message.includes('Attachment has zero size') ||
-      message.includes('too many errors, no more errors will be reported')) {
-    return; // Don't log WebGL errors
+// Enhanced console filtering - catch everything
+(function() {
+  const _e = console.error.bind(console);
+  const _w = console.warn.bind(console);
+  const _l = console.log.bind(console);
+  const _i = console.info.bind(console);
+
+  const filterPatterns = [
+    'WebGL', 'GL_INVALID', 'Framebuffer', 'glTexStorage', 'glClear', 
+    'glDraw', 'Attachment has zero size', 'too many errors',
+    'Tracking Prevention', 'emailjs', 'cdn.jsdelivr.net', 
+    'blocked access', 'updating from', 'spline', 'React DevTools'
+  ];
+
+  const shouldFilter = (...args) => {
+    const str = args.map(a => String(a || '')).join(' ');
+    return filterPatterns.some(p => str.includes(p));
+  };
+
+  console.error = (...args) => { if (!shouldFilter(...args)) _e(...args); };
+  console.warn = (...args) => { if (!shouldFilter(...args)) _w(...args); };
+  console.log = (...args) => { if (!shouldFilter(...args)) _l(...args); };
+  console.info = (...args) => { if (!shouldFilter(...args)) _i(...args); };
+  
+  // Show clean startup message
+  if (process.env.NODE_ENV === 'development') {
+    setTimeout(() => {
+      _l('%c🎨 Shyara Portfolio', 'color: #a259f7; font-weight: bold; font-size: 16px; padding: 4px 0;');
+      _l('%c✓ Console filters active', 'color: #4ade80; font-size: 12px;');
+    }, 200);
   }
-  originalError.apply(console, args);
-};
+})();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

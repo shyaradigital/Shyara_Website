@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, ArrowLeft } from 'lucide-react';
 import DriveMockup from './DriveMockup';
 
 /**
@@ -67,104 +67,75 @@ const DriveMockupModal = ({
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'rgba(0, 0, 0, 0.85)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
+        background: 'rgba(0, 0, 0, 0.92)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         zIndex: 10000,
         display: 'flex',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'center',
-        padding: '0',
+        padding: 'clamp(0.5rem, 2vw, 1.5rem)',
         overflowY: 'auto',
         overflowX: 'hidden',
-        animation: 'fadeIn 0.2s ease-out'
+        animation: 'fadeIn 0.25s ease-out'
       }}
       onClick={handleBackdropClick}
     >
       <style>
         {`
           @keyframes fadeIn {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
           }
+          
           @keyframes slideUp {
             from {
               opacity: 0;
-              transform: scale(0.95) translateY(10px);
+              transform: translateY(20px);
             }
             to {
               opacity: 1;
-              transform: scale(1) translateY(0);
+              transform: translateY(0);
             }
           }
+          
           .drive-modal-content {
-            animation: slideUp 0.3s ease-out;
+            animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
           }
+          
           /* Typography scaling */
-          @media (max-width: 640px) {
-            .drive-modal-title {
-              font-size: 1.25rem !important; /* text-xl */
-            }
-            .drive-modal-subtitle {
-              font-size: 0.875rem !important; /* text-sm */
-            }
+          .drive-modal-title {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+            font-weight: 600;
+            line-height: 1.2;
           }
-          @media (min-width: 641px) {
-            .drive-modal-title {
-              font-size: 1.5rem !important; /* text-2xl */
-            }
-            .drive-modal-subtitle {
-              font-size: 0.95rem !important;
-            }
+          
+          .drive-modal-subtitle {
+            font-size: clamp(0.875rem, 1.5vw, 1rem);
+            line-height: 1.4;
           }
-          @media (min-width: 768px) {
-            .drive-modal-title {
-              font-size: 1.875rem !important; /* text-3xl */
-            }
-            .drive-modal-subtitle {
-              font-size: 1rem !important; /* text-base */
-            }
-          }
-          @media (min-width: 1024px) {
-            .drive-modal-title {
-              font-size: 2.25rem !important; /* text-4xl */
-            }
-            .drive-modal-subtitle {
-              font-size: 1.125rem !important; /* text-lg */
-            }
-          }
+          
+          /* Responsive modal */
           @media (max-width: 768px) {
             .drive-modal-content {
               max-width: 100% !important;
               margin: 0 !important;
               min-height: 100vh !important;
-              height: auto !important;
               border-radius: 0 !important;
             }
+            
             .drive-modal-header {
-              flex-direction: column !important;
-              align-items: flex-start !important;
               padding: 1rem !important;
             }
-            .drive-modal-header > div:first-child {
-              width: 100% !important;
-            }
-            .drive-modal-header .stats-badge {
-              width: 100% !important;
-              margin-left: 0 !important;
-              margin-top: 0.75rem !important;
-            }
+            
             .drive-modal-body {
               padding: 1rem !important;
             }
           }
-          @media (max-width: 1024px) {
+          
+          @media (min-width: 769px) {
             .drive-modal-content {
-              max-height: none !important;
+              border-radius: 16px !important;
             }
           }
         `}
@@ -173,172 +144,177 @@ const DriveMockupModal = ({
       <div
         className="drive-modal-content"
         style={{
-          background: 'rgba(10, 10, 10, 0.95)',
-          borderRadius: '1rem',
-          border: '1px solid rgba(126, 34, 206, 0.3)',
-          maxWidth: '72rem',
+          background: 'rgba(15, 15, 20, 0.98)',
+          borderRadius: '16px',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          maxWidth: '90rem',
           width: '100%',
-          margin: '0',
+          maxHeight: '90vh',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-          minHeight: '100vh'
+          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
+          overflow: 'hidden'
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        {/* Clean Header with Back Button */}
         <div
           className="drive-modal-header"
           style={{
-            padding: '1rem 1.5rem',
-            borderBottom: '1px solid rgba(38, 38, 38, 0.8)',
+            padding: 'clamp(1rem, 2vw, 1.5rem)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
             display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem',
-            flexShrink: 0
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: '1rem',
+            flexShrink: 0,
+            background: 'rgba(0, 0, 0, 0.2)'
           }}
         >
-          <div
-            className="drive-modal-header-row"
+          {/* Back Button */}
+          <button
+            onClick={() => onOpenChange(false)}
             style={{
+              background: 'rgba(162, 89, 247, 0.1)',
+              border: '1px solid rgba(162, 89, 247, 0.3)',
+              borderRadius: '8px',
+              color: '#c4b5fd',
+              cursor: 'pointer',
+              padding: '0.5rem',
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              gap: '0.75rem',
-              flexWrap: 'wrap'
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+              width: '2.25rem',
+              height: '2.25rem',
+              flexShrink: 0
             }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(162, 89, 247, 0.2)';
+              e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 0.5)';
+              e.currentTarget.style.transform = 'translateX(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(162, 89, 247, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(162, 89, 247, 0.3)';
+              e.currentTarget.style.transform = 'translateX(0)';
+            }}
+            aria-label="Back to portfolio"
           >
-            <div className="drive-modal-title-section" style={{ flex: 1, minWidth: '200px' }}>
-              <h2
-                className="drive-modal-title"
+            <ArrowLeft size={18} />
+          </button>
+
+          {/* Title Section */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h2
+              className="drive-modal-title"
+              style={{
+                color: '#f5f5f7',
+                margin: '0 0 0.375rem 0'
+              }}
+            >
+              {title}
+            </h2>
+            {subtitle && (
+              <p
+                className="drive-modal-subtitle"
                 style={{
-                  color: '#c4b5fd',
-                  fontSize: '1.25rem',
-                  fontWeight: 700,
-                  margin: 0,
-                  lineHeight: 1.3
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  margin: 0
                 }}
               >
-                {title}
-              </h2>
-              {subtitle && (
-                <p
-                  className="drive-modal-subtitle"
-                  style={{
-                    color: 'rgba(212, 212, 212, 0.7)',
-                    fontSize: '0.875rem',
-                    margin: '0.375rem 0 0 0',
-                    lineHeight: 1.4
-                  }}
-                >
-                  {subtitle}
-                </p>
-              )}
-            </div>
-
-            {/* Stats Badge */}
+                {subtitle}
+              </p>
+            )}
+            
+            {/* Stats Badge - Inline below title */}
             {statsBadgeText && (
               <div
                 className="stats-badge"
                 style={{
-                  background: 'rgba(15, 24, 18, 1)',
-                  border: '1px solid rgba(29, 59, 38, 1)',
-                  borderRadius: '0.75rem',
+                  marginTop: '0.75rem',
+                  background: 'rgba(34, 197, 94, 0.08)',
+                  border: '1px solid rgba(34, 197, 94, 0.2)',
+                  borderRadius: '8px',
                   padding: '0.625rem 0.875rem',
-                  minWidth: 'auto',
-                  width: '100%',
-                  textAlign: 'left',
-                  display: 'flex',
+                  display: 'inline-flex',
                   flexDirection: 'column',
-                  justifyContent: 'center',
-                  height: 'fit-content',
-                  marginLeft: '0',
                   gap: '0.25rem'
                 }}
               >
                 {statsBadgeText.split(', ').map((part, index) => (
-                  <p
+                  <span
                     key={index}
                     style={{
                       color: '#4ade80',
-                      fontWeight: 600,
-                      fontSize: '0.875rem',
-                      lineHeight: 1.3,
-                      margin: 0
+                      fontWeight: 500,
+                      fontSize: '0.8125rem',
+                      lineHeight: 1.3
                     }}
                   >
                     {part}
-                  </p>
+                  </span>
                 ))}
               </div>
             )}
-
-            {/* Close Button */}
-            <button
-              onClick={() => onOpenChange(false)}
-              style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '0.5rem',
-                color: 'rgba(212, 212, 212, 0.8)',
-                cursor: 'pointer',
-                padding: '0.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s',
-                width: '2rem',
-                height: '2rem',
-                flexShrink: 0
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.color = '#fff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                e.currentTarget.style.color = 'rgba(212, 212, 212, 0.8)';
-              }}
-              aria-label="Close modal"
-            >
-              <X size={20} />
-            </button>
           </div>
+
+          {/* Close Button */}
+          <button
+            onClick={() => onOpenChange(false)}
+            style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '8px',
+              color: 'rgba(255, 255, 255, 0.7)',
+              cursor: 'pointer',
+              padding: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+              width: '2.25rem',
+              height: '2.25rem',
+              flexShrink: 0
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              e.currentTarget.style.color = '#fff';
+              e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+            }}
+            aria-label="Close modal"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        {/* Body */}
+        {/* Body - Clean Gallery */}
         <div
           className="drive-modal-body"
           style={{
-            padding: '1rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px)) 1.5rem',
+            padding: '0',
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
             width: '100%',
-            minHeight: 0
+            minHeight: 0,
+            overflow: 'hidden'
           }}
         >
           <div style={{ 
             width: '100%', 
             flex: 1, 
             display: 'flex', 
-            flexDirection: 'column'
+            flexDirection: 'column',
+            overflow: 'hidden'
           }}>
             <DriveMockup title={title} folderId={folderId} />
           </div>
-
-          {/* Helper text */}
-          <p
-            style={{
-              color: 'rgba(212, 212, 212, 0.5)',
-              fontSize: '0.8rem',
-              marginTop: '0.75rem',
-              textAlign: 'center',
-              lineHeight: 1.4
-            }}
-          >
-            Scroll inside the gallery to explore all creatives
-          </p>
         </div>
       </div>
     </div>
