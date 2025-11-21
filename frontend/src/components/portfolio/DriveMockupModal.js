@@ -72,9 +72,11 @@ const DriveMockupModal = ({
         WebkitBackdropFilter: 'blur(8px)',
         zIndex: 10000,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
-        padding: '1rem',
+        padding: '0',
+        overflowY: 'auto',
+        overflowX: 'hidden',
         animation: 'fadeIn 0.2s ease-out'
       }}
       onClick={handleBackdropClick}
@@ -139,12 +141,14 @@ const DriveMockupModal = ({
             .drive-modal-content {
               max-width: 100% !important;
               margin: 0 !important;
-              height: 100vh !important;
+              min-height: 100vh !important;
+              height: auto !important;
               border-radius: 0 !important;
             }
             .drive-modal-header {
               flex-direction: column !important;
               align-items: flex-start !important;
+              padding: 1rem !important;
             }
             .drive-modal-header > div:first-child {
               width: 100% !important;
@@ -152,7 +156,15 @@ const DriveMockupModal = ({
             .drive-modal-header .stats-badge {
               width: 100% !important;
               margin-left: 0 !important;
-              margin-top: 1rem !important;
+              margin-top: 0.75rem !important;
+            }
+            .drive-modal-body {
+              padding: 1rem !important;
+            }
+          }
+          @media (max-width: 1024px) {
+            .drive-modal-content {
+              max-height: none !important;
             }
           }
         `}
@@ -164,34 +176,35 @@ const DriveMockupModal = ({
           background: 'rgba(10, 10, 10, 0.95)',
           borderRadius: '1rem',
           border: '1px solid rgba(126, 34, 206, 0.3)',
-          maxWidth: '72rem', // max-w-6xl
+          maxWidth: '72rem',
           width: '100%',
-          margin: '0 1rem', // mx-4
-          maxHeight: '90vh',
+          margin: '0',
           display: 'flex',
           flexDirection: 'column',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-          overflow: 'visible' // Changed from 'hidden' to allow iframe to render
+          minHeight: '100vh'
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div
+          className="drive-modal-header"
           style={{
-            padding: '1.5rem 2rem',
+            padding: '1rem 1.5rem',
             borderBottom: '1px solid rgba(38, 38, 38, 0.8)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem'
+            gap: '0.75rem',
+            flexShrink: 0
           }}
         >
           <div
-            className="drive-modal-header"
+            className="drive-modal-header-row"
             style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'flex-start',
-              gap: '1rem',
+              gap: '0.75rem',
               flexWrap: 'wrap'
             }}
           >
@@ -199,11 +212,11 @@ const DriveMockupModal = ({
               <h2
                 className="drive-modal-title"
                 style={{
-                  color: '#c4b5fd', // text-purple-300
-                  fontSize: '1.5rem', // text-2xl
-                  fontWeight: 600, // font-semibold
+                  color: '#c4b5fd',
+                  fontSize: '1.25rem',
+                  fontWeight: 700,
                   margin: 0,
-                  lineHeight: 1.2
+                  lineHeight: 1.3
                 }}
               >
                 {title}
@@ -212,10 +225,10 @@ const DriveMockupModal = ({
                 <p
                   className="drive-modal-subtitle"
                   style={{
-                    color: 'rgba(212, 212, 212, 0.7)', // muted white
-                    fontSize: '0.95rem',
-                    margin: '0.5rem 0 0 0',
-                    lineHeight: 1.5
+                    color: 'rgba(212, 212, 212, 0.7)',
+                    fontSize: '0.875rem',
+                    margin: '0.375rem 0 0 0',
+                    lineHeight: 1.4
                   }}
                 >
                   {subtitle}
@@ -228,34 +241,35 @@ const DriveMockupModal = ({
               <div
                 className="stats-badge"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1))',
-                  border: '1px solid rgba(34, 197, 94, 0.2)',
-                  borderRadius: '0.5rem',
-                  padding: '0.75rem 1rem',
-                  minWidth: '200px',
-                  textAlign: 'center',
+                  background: 'rgba(15, 24, 18, 1)',
+                  border: '1px solid rgba(29, 59, 38, 1)',
+                  borderRadius: '0.75rem',
+                  padding: '0.625rem 0.875rem',
+                  minWidth: 'auto',
+                  width: '100%',
+                  textAlign: 'left',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                   height: 'fit-content',
-                  marginLeft: 'auto'
+                  marginLeft: '0',
+                  gap: '0.25rem'
                 }}
               >
-                <span
-                  style={{
-                    color: '#4ade80', // green-400
-                    fontWeight: 600,
-                    fontSize: '0.9rem',
-                    lineHeight: 1.4
-                  }}
-                >
-                  {statsBadgeText.split(', ').map((part, index, array) => (
-                    <React.Fragment key={index}>
-                      {part}
-                      {index < array.length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </span>
+                {statsBadgeText.split(', ').map((part, index) => (
+                  <p
+                    key={index}
+                    style={{
+                      color: '#4ade80',
+                      fontWeight: 600,
+                      fontSize: '0.875rem',
+                      lineHeight: 1.3,
+                      margin: 0
+                    }}
+                  >
+                    {part}
+                  </p>
+                ))}
               </div>
             )}
 
@@ -294,24 +308,21 @@ const DriveMockupModal = ({
 
         {/* Body */}
         <div
+          className="drive-modal-body"
           style={{
-            padding: '1.5rem 2rem calc(2rem + env(safe-area-inset-bottom, 0px)) 2rem',
-            overflow: 'visible', // Changed from 'auto' to 'visible' to prevent iframe clipping
+            padding: '1rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px)) 1.5rem',
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
             width: '100%',
-            minHeight: 0, // Allow flex child to shrink
-            position: 'relative'
+            minHeight: 0
           }}
         >
           <div style={{ 
             width: '100%', 
             flex: 1, 
             display: 'flex', 
-            flexDirection: 'column',
-            position: 'relative',
-            overflow: 'visible'
+            flexDirection: 'column'
           }}>
             <DriveMockup title={title} folderId={folderId} />
           </div>
@@ -319,14 +330,14 @@ const DriveMockupModal = ({
           {/* Helper text */}
           <p
             style={{
-              color: 'rgba(212, 212, 212, 0.6)',
-              fontSize: '0.875rem',
-              marginTop: '1rem',
+              color: 'rgba(212, 212, 212, 0.5)',
+              fontSize: '0.8rem',
+              marginTop: '0.75rem',
               textAlign: 'center',
-              lineHeight: 1.5
+              lineHeight: 1.4
             }}
           >
-            Scroll inside the window to explore all sample creatives, carousels, and reels directly from our Google Drive.
+            Scroll inside the gallery to explore all creatives
           </p>
         </div>
       </div>

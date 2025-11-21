@@ -488,36 +488,38 @@ const DriveMockup = ({ title, description, folderId }) => {
         <div
           style={{
             width: '100%',
-            minHeight: '70vh',
+            minHeight: '60vh',
             maxHeight: '70vh',
-            overflow: 'auto',
-            background: '#1a1a1a', // Dark gray background (not pure black)
-            position: 'relative'
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            background: '#1a1a1a',
+            position: 'relative',
+            WebkitOverflowScrolling: 'touch'
           }}
         >
           {/* Loading skeleton */}
           {loading && (
             <div
               style={{
-                padding: '2rem',
+                padding: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '70vh',
-                gap: '1rem',
+                minHeight: '50vh',
+                gap: '0.75rem',
                 background: '#1a1a1a'
               }}
             >
               <div style={{
-                width: '40px',
-                height: '40px',
+                width: '36px',
+                height: '36px',
                 border: '3px solid rgba(196, 181, 253, 0.3)',
                 borderTop: '3px solid rgba(196, 181, 253, 0.8)',
                 borderRadius: '50%',
                 animation: 'spin 1s linear infinite'
               }} />
-              <span style={{ color: '#d4d4d4', fontSize: '0.9rem' }}>Loading gallery...</span>
+              <span style={{ color: '#d4d4d4', fontSize: '0.85rem' }}>Loading gallery...</span>
             </div>
           )}
 
@@ -525,23 +527,23 @@ const DriveMockup = ({ title, description, folderId }) => {
           {error && !loading && (
             <div
               style={{
-                padding: '2rem',
+                padding: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '70vh',
-                gap: '1rem',
+                minHeight: '50vh',
+                gap: '0.75rem',
                 textAlign: 'center',
                 color: '#d4d4d4',
                 background: '#1a1a1a'
               }}
             >
-              <div style={{ fontSize: '2rem' }}>⚠️</div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#ef4444' }}>Unable to load gallery</div>
-              <div style={{ fontSize: '0.8rem', color: '#a3a3a3' }}>{error}</div>
-              <div style={{ fontSize: '0.75rem', color: '#737373', marginTop: '0.5rem' }}>
-                Please ensure the folder is publicly shared and the API key is configured.
+              <div style={{ fontSize: '1.75rem' }}>⚠️</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#ef4444' }}>Unable to load gallery</div>
+              <div style={{ fontSize: '0.75rem', color: '#a3a3a3' }}>{error}</div>
+              <div style={{ fontSize: '0.7rem', color: '#737373', marginTop: '0.375rem' }}>
+                Please ensure the folder is publicly shared
               </div>
             </div>
           )}
@@ -553,11 +555,12 @@ const DriveMockup = ({ title, description, folderId }) => {
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '0.5rem',
+                gap: '0.625rem',
                 padding: '0.75rem',
                 background: '#1a1a1a',
                 maxWidth: '100%',
-                margin: '0 auto'
+                margin: '0 auto',
+                paddingBottom: '1rem'
               }}
             >
               {files.map((file, index) => {
@@ -579,22 +582,22 @@ const DriveMockup = ({ title, description, folderId }) => {
           {!loading && !error && files.length === 0 && (
             <div
               style={{
-                padding: '2rem',
+                padding: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '70vh',
-                gap: '1rem',
+                minHeight: '50vh',
+                gap: '0.75rem',
                 textAlign: 'center',
                 color: '#d4d4d4',
                 background: '#1a1a1a'
               }}
             >
-              <div style={{ fontSize: '2rem' }}>📁</div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>No media files found</div>
-              <div style={{ fontSize: '0.8rem', color: '#a3a3a3' }}>
-                This folder doesn't contain any images or videos.
+              <div style={{ fontSize: '1.75rem' }}>📁</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>No media files found</div>
+              <div style={{ fontSize: '0.75rem', color: '#a3a3a3' }}>
+                This folder doesn't contain any images or videos
               </div>
             </div>
           )}
@@ -623,50 +626,54 @@ const DriveMockup = ({ title, description, folderId }) => {
                   opacity: 0.5;
                 }
               }
-              /* Responsive grid - Mobile: 2 columns, Tablet: 3, Small laptop: 4, Large: 4 */
+              /* Responsive grid - Mobile: 2 columns, Tablet: 3, Desktop: 4 */
               @media (max-width: 480px) {
                 .drive-gallery-grid {
                   grid-template-columns: repeat(2, 1fr) !important;
                   gap: 0.5rem !important;
-                  padding: 0.5rem !important;
+                  padding: 0.625rem !important;
+                  padding-bottom: 0.75rem !important;
                 }
                 .thumbnail-image-container {
-                  height: 160px !important;
+                  height: 140px !important;
                 }
                 .drive-tile {
                   border-radius: 0.5rem !important;
                 }
               }
-              @media (min-width: 481px) and (max-width: 900px) {
+              @media (min-width: 481px) and (max-width: 768px) {
+                .drive-gallery-grid {
+                  grid-template-columns: repeat(3, 1fr) !important;
+                  gap: 0.625rem !important;
+                  padding: 0.75rem !important;
+                  padding-bottom: 1rem !important;
+                }
+                .thumbnail-image-container {
+                  height: 160px !important;
+                }
+              }
+              @media (min-width: 769px) and (max-width: 1024px) {
                 .drive-gallery-grid {
                   grid-template-columns: repeat(3, 1fr) !important;
                   gap: 0.75rem !important;
-                  padding: 0.75rem !important;
+                  padding: 0.875rem !important;
+                  padding-bottom: 1rem !important;
                 }
                 .thumbnail-image-container {
-                  height: 200px !important;
+                  height: 180px !important;
                 }
               }
-              @media (min-width: 901px) and (max-width: 1200px) {
+              @media (min-width: 1025px) {
                 .drive-gallery-grid {
                   grid-template-columns: repeat(4, 1fr) !important;
-                  gap: 1rem !important;
+                  gap: 0.875rem !important;
                   padding: 1rem !important;
-                }
-                .thumbnail-image-container {
-                  height: 240px !important;
-                }
-              }
-              @media (min-width: 1201px) {
-                .drive-gallery-grid {
-                  grid-template-columns: repeat(4, 1fr) !important;
-                  gap: 1rem !important;
-                  padding: 1rem !important;
+                  padding-bottom: 1.25rem !important;
                   max-width: 1400px !important;
                   margin: 0 auto !important;
                 }
                 .thumbnail-image-container {
-                  height: 240px !important;
+                  height: 200px !important;
                 }
               }
               /* Responsive browser window elements */
@@ -684,17 +691,25 @@ const DriveMockup = ({ title, description, folderId }) => {
                 }
                 .thumbnail-filename {
                   font-size: 0.625rem !important;
-                  padding: 0.375rem !important;
+                  padding: 0.375rem 0.5rem !important;
                 }
               }
-              @media (min-width: 641px) {
+              @media (min-width: 641px) and (max-width: 767px) {
+                .thumbnail-filename {
+                  font-size: 0.6875rem !important;
+                  padding: 0.375rem 0.5rem !important;
+                }
+              }
+              @media (min-width: 768px) and (max-width: 1023px) {
                 .thumbnail-filename {
                   font-size: 0.75rem !important;
+                  padding: 0.5rem !important;
                 }
               }
-              @media (min-width: 768px) {
+              @media (min-width: 1024px) {
                 .thumbnail-filename {
-                  font-size: 0.875rem !important;
+                  font-size: 0.8125rem !important;
+                  padding: 0.5rem 0.625rem !important;
                 }
               }
               /* Custom scrollbar for dark theme */
