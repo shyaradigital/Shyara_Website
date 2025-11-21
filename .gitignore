@@ -15,11 +15,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment variables
-.env
-.env.*
-backend/.env
-frontend/.env
+# Environment variables (commented out - .env is now committed since repo is private)
+# .env
+# .env.*
+# backend/.env
+# frontend/.env
 
 # OS/Editor files
 .DS_Store

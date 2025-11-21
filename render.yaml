@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: shyara-website
+    env: node
+    buildCommand: cd frontend && npm install && npm run build && cd ../backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      # IMPORTANT: Set GOOGLE_DRIVE_API_KEY in Render dashboard Environment tab
+      # Do NOT commit the actual API key here - set it in the dashboard instead
+      - key: GOOGLE_DRIVE_API_KEY
+        sync: false  # This means you must set it manually in the dashboard
+    healthCheckPath: /
+    autoDeploy: true
+

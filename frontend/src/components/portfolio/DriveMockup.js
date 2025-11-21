@@ -252,29 +252,79 @@ const DriveMockup = ({ title, description, folderId }) => {
         });
 
         if (!response.ok) {
-          // Try to get detailed error information
+          // Handle different error scenarios
           let errorData;
-          try {
-            errorData = await response.json();
-          } catch (e) {
-            const text = await response.text();
-            errorData = { error: `HTTP ${response.status}: ${response.statusText}`, raw: text };
+          let errorMessage = 'Failed to load files from Google Drive';
+          
+          // Special handling for 404 - API endpoint not found
+          if (response.status === 404) {
+            errorMessage = 'API endpoint not found. Please ensure the backend server is running and the API routes are configured correctly.';
+            errorData = { 
+              error: errorMessage,
+              status: 404,
+              statusText: response.statusText
+            };
+          } else {
+            // Try to get detailed error information for other status codes
+            try {
+              // Check if response body is already consumed
+              if (response.bodyUsed) {
+                errorData = { 
+                  error: `HTTP ${response.status}: ${response.statusText}`, 
+                  raw: 'Response body already consumed' 
+                };
+              } else {
+                // Try to read as JSON first
+                try {
+                  const clonedResponse = response.clone();
+                  errorData = await clonedResponse.json();
+                } catch (jsonError) {
+                  // If JSON parsing fails, try text (but only if body isn't used)
+                  if (!response.bodyUsed) {
+                    try {
+                      const textResponse = response.clone();
+                      const text = await textResponse.text();
+                      errorData = { 
+                        error: `HTTP ${response.status}: ${response.statusText}`, 
+                        raw: text || 'Empty response' 
+                      };
+                    } catch (textError) {
+                      // If text reading also fails, create basic error
+                      errorData = { 
+                        error: `HTTP ${response.status}: ${response.statusText}`, 
+                        raw: 'Could not read response body' 
+                      };
+                    }
+                  } else {
+                    errorData = { 
+                      error: `HTTP ${response.status}: ${response.statusText}`, 
+                      raw: 'Response body already consumed' 
+                    };
+                  }
+                }
+              }
+            } catch (e) {
+              // If all else fails, create a basic error object
+              errorData = { 
+                error: `HTTP ${response.status}: ${response.statusText}`, 
+                raw: e.message || 'Could not read error response',
+                details: 'Failed to parse error response'
+              };
+            }
+            
+            // Extract user-friendly error message from errorData
+            if (errorData.details) {
+              if (errorData.details.error) {
+                errorMessage = errorData.details.error.message || errorMessage;
+              } else if (errorData.details.raw) {
+                errorMessage = `API Error: ${errorData.details.raw.substring(0, 100)}`;
+              }
+            } else if (errorData.error) {
+              errorMessage = errorData.error;
+            }
           }
           
           console.error('API Error Response:', errorData);
-          
-          // Provide user-friendly error messages
-          let errorMessage = 'Failed to load files from Google Drive';
-          if (errorData.details) {
-            if (errorData.details.error) {
-              errorMessage = errorData.details.error.message || errorMessage;
-            } else if (errorData.details.raw) {
-              errorMessage = `API Error: ${errorData.details.raw.substring(0, 100)}`;
-            }
-          } else if (errorData.error) {
-            errorMessage = errorData.error;
-          }
-          
           throw new Error(errorMessage);
         }
 

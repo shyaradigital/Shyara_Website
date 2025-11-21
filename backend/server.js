@@ -1,7 +1,42 @@
-require('dotenv').config();
-const express = require('express');
+// Load environment variables
+// In production (Render), environment variables are set directly in the dashboard
+// In development, load from .env file
 const path = require('path');
 const fs = require('fs');
+
+// Only load dotenv in development - Render provides env vars directly in production
+const isProduction = process.env.NODE_ENV === 'production';
+
+if (!isProduction) {
+  // Development mode: Try multiple locations for .env file
+  const possibleEnvPaths = [
+    path.join(__dirname, '.env'),           // Same directory as server.js
+    path.join(__dirname, '..', '.env'),     // Parent directory
+    path.join(process.cwd(), '.env'),       // Current working directory
+    path.join(process.cwd(), 'backend', '.env') // backend subdirectory from root
+  ];
+
+  let envLoaded = false;
+  for (const envPath of possibleEnvPaths) {
+    if (fs.existsSync(envPath)) {
+      require('dotenv').config({ path: envPath });
+      console.log('✅ Loaded .env file from:', envPath);
+      envLoaded = true;
+      break;
+    }
+  }
+
+  if (!envLoaded) {
+    // Try default dotenv behavior (looks for .env in current directory)
+    require('dotenv').config();
+    console.log('ℹ️  No .env file found, using process.env');
+  }
+} else {
+  // Production mode: Use process.env directly (Render sets these automatically)
+  console.log('ℹ️  Production mode: Using environment variables from Render');
+}
+
+const express = require('express');
 const app = express();
 // Use different port in development (3001) to avoid conflict with React dev server (3000)
 // In production, use PORT from environment or default to 3000
@@ -19,6 +54,18 @@ app.post('/api/contact', (req, res) => {
   // For demo: log the contact form data
   console.log('Contact form submission:', { name, email, message });
   res.json({ success: true });
+});
+
+// Diagnostic endpoint to check API key status (useful for debugging)
+app.get('/api/health', (req, res) => {
+  const apiKey = process.env.GOOGLE_DRIVE_API_KEY;
+  res.json({
+    status: 'ok',
+    environment: process.env.NODE_ENV || 'undefined',
+    apiKeyConfigured: !!apiKey,
+    apiKeyLength: apiKey ? apiKey.length : 0,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Google Drive Image Proxy - Streams images from Drive API to bypass CORS
@@ -123,9 +170,16 @@ app.get('/api/drive-list/:folderId', async (req, res) => {
     const apiKey = process.env.GOOGLE_DRIVE_API_KEY;
 
     // Debug: Check if API key is loaded
-    console.log('API KEY PRESENT:', apiKey ? true : false);
-    console.log('API KEY LENGTH:', apiKey ? apiKey.length : 0);
-    console.log('FOLDER ID:', folderId);
+    console.log('═══════════════════════════════════════════════════');
+    console.log('🔑 API KEY DEBUG INFO:');
+    console.log('  - API KEY PRESENT:', apiKey ? 'YES' : 'NO');
+    console.log('  - API KEY LENGTH:', apiKey ? apiKey.length : 0);
+    console.log('  - API KEY PREFIX:', apiKey ? apiKey.substring(0, 10) + '...' : 'N/A');
+    console.log('  - FOLDER ID:', folderId);
+    console.log('  - NODE_ENV:', process.env.NODE_ENV || 'undefined');
+    console.log('  - CWD:', process.cwd());
+    console.log('  - __dirname:', __dirname);
+    console.log('═══════════════════════════════════════════════════');
 
     if (!apiKey) {
       console.error('ERROR: Google Drive API key not found in environment variables');
@@ -156,27 +210,36 @@ app.get('/api/drive-list/:folderId', async (req, res) => {
     });
     
     if (!response.ok) {
-      // Get raw error response
-      const rawError = await response.text();
-      console.error('═══════════════════════════════════════════════════');
-      console.error('GOOGLE DRIVE RAW ERROR (Status:', response.status, '):');
-      console.error(rawError);
-      console.error('═══════════════════════════════════════════════════');
+      // Get raw error response - clone the response first to avoid "body already read" error
+      let rawError = '';
+      let errorDetails = {};
       
-      // Try to parse as JSON for better error message
-      let errorDetails;
       try {
-        errorDetails = JSON.parse(rawError);
-      } catch (e) {
-        errorDetails = { raw: rawError };
+        // Clone the response to read it safely
+        const clonedResponse = response.clone();
+        rawError = await clonedResponse.text();
+        
+        console.error('═══════════════════════════════════════════════════');
+        console.error('GOOGLE DRIVE RAW ERROR (Status:', response.status, '):');
+        console.error(rawError);
+        console.error('═══════════════════════════════════════════════════');
+        
+        // Try to parse as JSON for better error message
+        try {
+          errorDetails = JSON.parse(rawError);
+        } catch (e) {
+          errorDetails = { raw: rawError };
+        }
+      } catch (readError) {
+        console.error('Error reading error response:', readError.message);
+        errorDetails = { error: 'Could not read error response' };
       }
 
       return res.status(response.status).json({ 
         error: 'Failed to fetch files from Google Drive',
         status: response.status,
         statusText: response.statusText,
-        details: errorDetails,
-        rawError: rawError
+        details: errorDetails
       });
     }
 
@@ -317,7 +380,36 @@ app.get('*', (req, res, next) => {
 });
 
 app.listen(PORT, () => {
+  console.log('═══════════════════════════════════════════════════');
+  console.log('🚀 Server starting...');
+  console.log(`   Port: ${PORT}`);
+  console.log(`   Static files: ${staticPath}`);
+  console.log(`   NODE_ENV: ${process.env.NODE_ENV || 'undefined'}`);
+  console.log(`   Environment: ${isProduction ? 'PRODUCTION (Render)' : 'DEVELOPMENT'}`);
+  console.log('');
+  
+  // Check API key
+  const apiKey = process.env.GOOGLE_DRIVE_API_KEY;
+  console.log(`   🔑 GOOGLE_DRIVE_API_KEY: ${apiKey ? '✅ LOADED' : '❌ NOT FOUND'}`);
+  if (apiKey) {
+    console.log(`      - Length: ${apiKey.length} characters`);
+    console.log(`      - Prefix: ${apiKey.substring(0, 10)}...`);
+  } else {
+    console.log('   ⚠️  WARNING: Google Drive API will not work!');
+    if (isProduction) {
+      console.log('   📝 To fix: Set GOOGLE_DRIVE_API_KEY in Render dashboard:');
+      console.log('      1. Go to your Render service dashboard');
+      console.log('      2. Navigate to Environment tab');
+      console.log('      3. Add: GOOGLE_DRIVE_API_KEY = your_api_key_here');
+      console.log('      4. Save and redeploy');
+    } else {
+      console.log('   📝 To fix: Create backend/.env file with:');
+      console.log('      GOOGLE_DRIVE_API_KEY=your_api_key_here');
+    }
+  }
+  console.log('═══════════════════════════════════════════════════');
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Static files served from: ${staticPath}`);
-  console.log(`Make sure frontend is built: cd frontend && npm run build`);
+  if (!isProduction) {
+    console.log(`Make sure frontend is built: cd frontend && npm run build`);
+  }
 }); 

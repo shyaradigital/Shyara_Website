@@ -1,145 +1,138 @@
 # Render Deployment Guide
 
-## How to Restart Server on Render
+This guide explains how to deploy the Shyara website to Render and configure the Google Drive API.
 
-### Option 1: Manual Restart from Dashboard (Quickest)
+## Prerequisites
 
-1. **Go to Render Dashboard**
-   - Visit https://dashboard.render.com
-   - Log in to your account
+1. A Render account (sign up at https://render.com)
+2. A Google Drive API key (see below)
+3. Your code pushed to GitHub
 
-2. **Navigate to Your Service**
-   - Click on your service name (e.g., "shyara-app" or your service name)
+## Step 1: Get Google Drive API Key
 
-3. **Click "Manual Deploy"**
-   - Find the "Manual Deploy" button in the top right
-   - Click "Deploy latest commit"
-   - This will rebuild and restart your service
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the **Google Drive API**:
+   - Navigate to "APIs & Services" > "Library"
+   - Search for "Google Drive API"
+   - Click "Enable"
+4. Create credentials:
+   - Go to "APIs & Services" > "Credentials"
+   - Click "Create Credentials" > "API Key"
+   - Copy your API key
+   - (Optional) Restrict the API key to only Google Drive API for security
 
-### Option 2: Restart from Service Dashboard
+## Step 2: Deploy to Render
 
-1. **Go to Your Service**
-   - Open your service in Render dashboard
+### Option A: Using render.yaml (Recommended)
 
-2. **Click "Manual Deploy"** or **"Redeploy"**
-   - This will restart the service with the latest code
+1. Push your code to GitHub (the `render.yaml` file is already configured)
+2. In Render dashboard:
+   - Click "New" > "Blueprint"
+   - Connect your GitHub repository
+   - Render will automatically detect `render.yaml` and configure the service
 
-### Option 3: Push to Trigger Auto-Deploy
+### Option B: Manual Setup
 
-1. **Commit and Push Your Changes**
-   ```bash
-   git add .
-   git commit -m "Fix SPA routing"
-   git push origin main  # or your branch name
+1. In Render dashboard, click "New" > "Web Service"
+2. Connect your GitHub repository
+3. Configure the service:
+   - **Name**: `shyara-website` (or your preferred name)
+   - **Environment**: `Node`
+   - **Build Command**: `cd frontend && npm install && npm run build && cd ../backend && npm install`
+   - **Start Command**: `cd backend && npm start`
+   - **Root Directory**: Leave empty (or set to repository root)
+
+## Step 3: Set Environment Variables
+
+**CRITICAL**: You must set the `GOOGLE_DRIVE_API_KEY` environment variable in Render.
+
+1. In your Render service dashboard, go to the **Environment** tab
+2. Click "Add Environment Variable"
+3. Add:
+   - **Key**: `GOOGLE_DRIVE_API_KEY`
+   - **Value**: Your Google Drive API key (from Step 1)
+4. Click "Save Changes"
+5. Render will automatically redeploy your service
+
+### Required Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GOOGLE_DRIVE_API_KEY` | ✅ Yes | Your Google Drive API key |
+| `NODE_ENV` | Auto-set | Automatically set to `production` |
+| `PORT` | Auto-set | Automatically set by Render |
+
+## Step 4: Verify Deployment
+
+1. Wait for the deployment to complete (check the "Logs" tab)
+2. Visit your Render service URL
+3. Check the server logs for:
    ```
-
-2. **Render will automatically**
-   - Detect the push
-   - Rebuild the application
-   - Restart the service
-
-## Render Configuration
-
-Make sure your Render service is configured correctly:
-
-### Build Command (for Docker):
-```bash
-# If using Docker:
-docker build -t shyara-app .
-
-# Render should auto-detect Docker if Dockerfile exists
-```
-
-### Start Command:
-```bash
-# For Node.js (if not using Docker):
-cd backend && npm start
-
-# For Docker:
-# Render will use CMD from Dockerfile
-```
-
-### Environment Variables:
-- `NODE_ENV=production`
-- `PORT=3000` (or use Render's `$PORT` variable)
-
-### Root Directory:
-- If your repo root is the project root, leave blank
-- If needed, set to: `.` (root)
-
-## Verify Deployment Settings - CRITICAL!
-
-**The logs show the frontend is building but the backend server is NOT starting!**
-
-### Fix Your Render Service Configuration:
-
-1. **Go to Render Dashboard** → Your Service → Settings
-
-2. **Check Service Type**:
-   - Must be: **"Web Service"** (NOT "Static Site")
-   - If it's "Static Site", create a new "Web Service" and delete the old one
-
-3. **Build Command** (IMPORTANT):
+   🔑 GOOGLE_DRIVE_API_KEY: ✅ LOADED
    ```
-   cd frontend && npm install && npm run build
-   ```
-   This builds the frontend before starting the backend.
+   If you see `❌ NOT FOUND`, the environment variable is not set correctly.
 
-4. **Start Command** (CRITICAL - This is missing!):
-   ```
-   cd backend && npm start
-   ```
-   This must be set, otherwise Render won't start your Express server!
-
-5. **Root Directory**:
-   - Leave empty (default: repository root)
-
-6. **Environment Variables**:
-   - `NODE_ENV=production`
-   - `PORT` - Render sets this automatically, but your server.js should use `process.env.PORT || 3000`
-
-### The Problem:
-Your logs show:
-- ✅ Frontend dependencies installed
-- ✅ Backend dependencies installed  
-- ✅ Frontend built successfully
-- ❌ **Server never started!**
-
-This means the **Start Command** is missing or incorrect in your Render settings!
+4. Test the API key:
+   - Visit: `https://your-app.onrender.com/api/health`
+   - You should see: `{"apiKeyConfigured": true, ...}`
 
 ## Troubleshooting
 
-### Service Won't Start:
-1. Check **Logs** tab in Render dashboard
-2. Look for errors in build or startup
-3. Verify all dependencies are in package.json
+### Google Drive API Not Working
 
-### Direct Links Still Not Working:
-1. **Verify the build completed** - Check logs for "Build folder is ready"
-2. **Check server logs** - Should show:
-   ```
-   Serving static files from: /app/frontend/build
-   Index.html exists: true
-   ```
-3. **Test the route** - Check logs when accessing `/services`
+**Problem**: Images from Google Drive don't load on the deployed site.
 
-### How to View Logs:
-1. Go to your service in Render dashboard
-2. Click **"Logs"** tab
-3. You'll see real-time logs
+**Solutions**:
 
-## Quick Restart Steps:
+1. **Check Environment Variable**:
+   - Go to Render dashboard > Environment tab
+   - Verify `GOOGLE_DRIVE_API_KEY` is set
+   - Check the value doesn't have extra spaces or quotes
+   - Save and redeploy
 
-1. **Go to**: https://dashboard.render.com
-2. **Click**: Your service name
-3. **Click**: "Manual Deploy" → "Deploy latest commit"
-4. **Wait**: 2-5 minutes for deployment
-5. **Test**: Visit `shyara.co.in/services`
+2. **Check Server Logs**:
+   - In Render dashboard, go to "Logs" tab
+   - Look for startup messages
+   - If you see `❌ NOT FOUND`, the API key is not loaded
 
-## Important Notes:
+3. **Verify API Key**:
+   - Test the health endpoint: `https://your-app.onrender.com/api/health`
+   - Check `apiKeyConfigured` is `true`
 
-- **First Deploy**: Make sure all files are committed and pushed to your repository
-- **Docker Setup**: If using Docker, Render will auto-detect the Dockerfile
-- **Auto-Deploy**: Render auto-deploys on push to your connected branch (usually `main`)
-- **Build Time**: Typically takes 3-5 minutes to rebuild and restart
+4. **API Key Restrictions**:
+   - If your API key has restrictions, make sure:
+     - Google Drive API is enabled
+     - HTTP referrer restrictions allow your Render domain
+     - IP restrictions allow Render's IPs (or remove IP restrictions)
+
+5. **Redeploy**:
+   - After changing environment variables, Render should auto-redeploy
+   - If not, manually trigger a redeploy from the dashboard
+
+### Build Failures
+
+- Check the build logs in Render dashboard
+- Ensure `frontend/package.json` and `backend/package.json` are correct
+- Verify Node.js version compatibility (Render uses Node 18 by default)
+
+### Port Issues
+
+- Render automatically sets the `PORT` environment variable
+- The server code uses `process.env.PORT || 3000`
+- No manual configuration needed
+
+## Security Notes
+
+- **Never commit** your `.env` file or API keys to GitHub
+- Use Render's environment variables for all secrets
+- Consider restricting your Google Drive API key to specific domains/IPs
+- Regularly rotate your API keys
+
+## Support
+
+If you continue to have issues:
+1. Check Render's logs for detailed error messages
+2. Verify your Google Drive API key works by testing it locally
+3. Ensure your Google Drive folders are shared correctly (if using shared folders)
 

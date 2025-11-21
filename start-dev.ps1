@@ -32,5 +32,5 @@ Write-Host "📍 Backend API: http://localhost:3001" -ForegroundColor Cyan
 Write-Host "📍 Frontend App: http://localhost:3000" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Press any key to exit this script (servers will continue running)..." -ForegroundColor Gray
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Read-Host
 
