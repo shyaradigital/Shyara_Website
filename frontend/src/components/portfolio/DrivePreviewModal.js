@@ -227,7 +227,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         justifyContent: 'center',
         animation: 'fadeIn 0.25s ease-out',
         cursor: zoom > 1 && !isVideo ? (isDragging ? 'grabbing' : 'grab') : 'default',
-        padding: 'clamp(1rem, 2vw, 2rem)',
+        padding: '0',
+        paddingTop: '85px',
+        paddingBottom: 'clamp(1rem, 2vw, 2rem)',
+        paddingLeft: 'clamp(1rem, 2vw, 2rem)',
+        paddingRight: 'clamp(1rem, 2vw, 2rem)',
         overflow: 'hidden'
       }}
       onMouseMove={handleMouseMove}
@@ -265,24 +269,31 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
           /* Modern Responsive Lightbox */
           @media (max-width: 640px) {
             .preview-modal-overlay {
-              padding: 0.75rem !important;
+              padding: 0 !important;
+              padding-top: 75px !important;
             }
             
             .preview-media-container {
               max-width: 100% !important;
-              max-height: 70vh !important;
+              max-height: 60vh !important;
             }
             
             .preview-image {
               max-width: 100% !important;
-              max-height: 70vh !important;
+              max-height: 60vh !important;
             }
             
             .preview-close-button {
               width: 2.5rem !important;
               height: 2.5rem !important;
-              top: 1rem !important;
-              right: 1rem !important;
+              top: calc(75px + 0.75rem) !important;
+              right: 0.75rem !important;
+            }
+            
+            .preview-file-counter {
+              top: calc(75px + 0.75rem) !important;
+              font-size: 0.75rem !important;
+              padding: 0.375rem 0.75rem !important;
             }
             
             .preview-zoom-controls {
@@ -295,27 +306,32 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
               width: 2rem !important;
               height: 2rem !important;
             }
-            
-            .preview-file-counter {
-              font-size: 0.75rem !important;
-              padding: 0.375rem 0.75rem !important;
-            }
           }
           
           @media (min-width: 641px) and (max-width: 1024px) {
+            .preview-modal-overlay {
+              padding-top: 85px !important;
+            }
+            
             .preview-media-container {
               max-width: 85vw !important;
-              max-height: 75vh !important;
+              max-height: 70vh !important;
             }
             
             .preview-image {
               max-width: 85vw !important;
-              max-height: 75vh !important;
+              max-height: 70vh !important;
             }
             
             .preview-close-button {
               width: 2.5rem !important;
               height: 2.5rem !important;
+              top: calc(85px + 1rem) !important;
+              right: 1rem !important;
+            }
+            
+            .preview-file-counter {
+              top: calc(85px + 1rem) !important;
             }
           }
           
@@ -333,7 +349,7 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         `}
       </style>
 
-      {/* Prominent Close Button */}
+      {/* Prominent Close Button - Always Visible */}
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -343,7 +359,7 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         className="preview-close-button"
         style={{
           position: 'fixed',
-          top: 'clamp(1rem, 2vw, 1.5rem)',
+          top: 'calc(85px + clamp(0.5rem, 2vw, 1rem))',
           right: 'clamp(1rem, 2vw, 1.5rem)',
           background: 'rgba(239, 68, 68, 0.15)',
           border: '1px solid rgba(239, 68, 68, 0.4)',
@@ -355,7 +371,7 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
           justifyContent: 'center',
           color: '#fff',
           cursor: 'pointer',
-          zIndex: 50,
+          zIndex: 20001,
           transition: 'all 0.2s ease',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
@@ -493,13 +509,13 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         </button>
       </div>
 
-      {/* File Counter - Top Center */}
+      {/* File Counter - Top Center, Below Navbar */}
       {files.length > 1 && (
         <div
           className="preview-file-counter"
           style={{
             position: 'fixed',
-            top: 'clamp(1rem, 2vw, 1.5rem)',
+            top: 'calc(85px + clamp(0.5rem, 2vw, 1rem))',
             left: '50%',
             transform: 'translateX(-50%)',
             background: 'rgba(255, 255, 255, 0.1)',
@@ -510,7 +526,7 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
             fontWeight: 600,
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            zIndex: 50,
+            zIndex: 20001,
             border: '1px solid rgba(255, 255, 255, 0.15)',
             boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)'
           }}

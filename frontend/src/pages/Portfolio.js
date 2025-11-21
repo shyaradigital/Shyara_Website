@@ -353,11 +353,17 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
         right: 0,
         bottom: 0,
         background: 'rgba(0,0,0,0.88)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 10000,
-        padding: '1rem'
+        padding: '0',
+        paddingTop: '85px',
+        paddingBottom: '1rem',
+        paddingLeft: '1rem',
+        paddingRight: '1rem'
       }}
       onClick={handleBackdropClick}
     >
@@ -367,7 +373,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
         padding: '1.5rem',
         maxWidth: 900,
         width: '92%',
-        maxHeight: '82vh',
+        maxHeight: 'calc(90vh - 85px)',
         overflow: 'auto',
         border: '1px solid rgba(255,255,255,0.06)',
         boxShadow: '0 18px 50px rgba(0,0,0,0.55)',
@@ -1608,6 +1614,22 @@ const Portfolio = () => {
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        
+        /* Portfolio Modal (Website Dev) - Responsive */
+        @media (max-width: 640px) {
+          .portfolio-modal {
+            padding: 1rem !important;
+            max-height: calc(100vh - 90px) !important;
+            width: 95% !important;
+            border-radius: 12px !important;
+          }
+        }
+        
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .portfolio-modal {
+            max-height: calc(88vh - 85px) !important;
+          }
         }
       `}
     </style>
