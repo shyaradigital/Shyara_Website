@@ -68,6 +68,23 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
     }
   }, [index, files]);
 
+  // Define navigation functions BEFORE useEffect
+  const handleNext = () => {
+    if (currentIndex < files.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setCurrentIndex(0); // Loop to start
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    } else {
+      setCurrentIndex(files.length - 1); // Loop to end
+    }
+  };
+
   const handleImageError = () => {
     const file = files[currentIndex];
     if (!file) return;
@@ -104,22 +121,6 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentIndex, zoom]);
-
-  const handleNext = () => {
-    if (currentIndex < files.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(0); // Loop to start
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      setCurrentIndex(files.length - 1); // Loop to end
-    }
-  };
 
   const handleZoomIn = () => {
     setZoom(prev => Math.min(prev + 0.25, 3));
@@ -235,7 +236,10 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onClick={(e) => {
+        // Only close if clicking the backdrop itself, not the image or controls
         if (e.target === e.currentTarget) {
+          e.preventDefault();
+          e.stopPropagation();
           onClose();
         }
       }}
@@ -329,7 +333,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
 
       {/* Modern Close Button */}
       <button
-        onClick={onClose}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onClose();
+        }}
         className="preview-close-button"
         style={{
           position: 'fixed',
@@ -370,7 +378,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
       {files.length > 1 && (
         <>
           <button
-            onClick={handlePrev}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handlePrev();
+            }}
             className="preview-nav-button preview-nav-prev"
             style={{
               position: 'fixed',
@@ -408,7 +420,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
           </button>
 
           <button
-            onClick={handleNext}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleNext();
+            }}
             className="preview-nav-button preview-nav-next"
             style={{
               position: 'fixed',
@@ -468,7 +484,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         }}
       >
         <button
-          onClick={handleZoomOut}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleZoomOut();
+          }}
           disabled={zoom <= 1}
           style={{
             background: zoom <= 1 ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.1)',
@@ -506,7 +526,11 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         </div>
 
         <button
-          onClick={handleZoomIn}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleZoomIn();
+          }}
           disabled={zoom >= 3}
           style={{
             background: zoom >= 3 ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.1)',

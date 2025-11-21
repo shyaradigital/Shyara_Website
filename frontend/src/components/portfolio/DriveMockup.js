@@ -45,7 +45,11 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
 
   return (
     <div
-      onClick={onClick}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClick();
+      }}
       className="drive-tile"
       style={{
         background: 'rgba(255, 255, 255, 0.02)',

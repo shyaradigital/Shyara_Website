@@ -55,6 +55,8 @@ const DriveMockupModal = ({
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
+      e.preventDefault();
+      e.stopPropagation();
       onOpenChange(false);
     }
   };
@@ -173,7 +175,11 @@ const DriveMockupModal = ({
         >
           {/* Back Button */}
           <button
-            onClick={() => onOpenChange(false)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onOpenChange(false);
+            }}
             style={{
               background: 'rgba(162, 89, 247, 0.1)',
               border: '1px solid rgba(162, 89, 247, 0.3)',
@@ -261,7 +267,11 @@ const DriveMockupModal = ({
 
           {/* Close Button */}
           <button
-            onClick={() => onOpenChange(false)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onOpenChange(false);
+            }}
             style={{
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
