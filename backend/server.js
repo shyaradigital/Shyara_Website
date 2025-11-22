@@ -290,8 +290,10 @@ if (isProduction) {
         imgSrc: [
           "'self'",
           "data:", // Base64 images
+          "blob:", // Spline blob images
           "https://lh3.googleusercontent.com", // Google Drive images
-          "https://*.googleusercontent.com" // Google Drive images (wildcard)
+          "https://*.googleusercontent.com", // Google Drive images (wildcard)
+          "https://app.spline.design" // Spline app images
         ],
         connectSrc: [
           "'self'",
@@ -300,9 +302,14 @@ if (isProduction) {
           "https://prod.spline.design", // Spline 3D model CDN
           "https://*.spline.design", // Spline 3D model CDN (wildcard)
           "https://www.gstatic.com", // Spline Draco decoder WASM files
+          "https://fonts.gstatic.com", // Spline fonts
           "https://unpkg.com" // Spline modelling WASM files
         ],
-        fontSrc: ["'self'", "data:"],
+        fontSrc: [
+          "'self'",
+          "data:",
+          "https://fonts.gstatic.com" // Spline fonts
+        ],
         workerSrc: [
           "'self'",
           "blob:" // Required for Spline 3D viewer Web Workers
@@ -365,9 +372,14 @@ if (isProduction) {
           "https://prod.spline.design", // Spline 3D model CDN
           "https://*.spline.design", // Spline 3D model CDN (wildcard)
           "https://www.gstatic.com", // Spline Draco decoder WASM files
+          "https://fonts.gstatic.com", // Spline fonts
           "https://unpkg.com" // Spline modelling WASM files
         ],
-        fontSrc: ["'self'", "data:"],
+        fontSrc: [
+          "'self'",
+          "data:",
+          "https://fonts.gstatic.com" // Spline fonts
+        ],
         workerSrc: [
           "'self'",
           "blob:" // Required for Spline 3D viewer Web Workers

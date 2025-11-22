@@ -502,7 +502,7 @@ const Home = () => {
                   }}
                   style={{
                     position: 'absolute',
-                    bottom: '15%',
+                    bottom: '25%',
                     right: '22%',
                     transform: 'translateX(-50%)',
                     background: 'rgba(162, 89, 247, 0.9)',
