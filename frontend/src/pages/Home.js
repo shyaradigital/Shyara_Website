@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Sparkles, Target, Users, Award, Zap, TrendingUp } from 'lucide-react';
 import FancyText from '../components/FancyText';
 import { waitForHydration, hasValidDimensions } from '../utils/hydration';
@@ -27,6 +27,7 @@ const loadSplineViewerScript = () => {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
   const [fadeIn, setFadeIn] = React.useState(false);
   const [loadingDone, setLoadingDone] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
@@ -472,25 +473,65 @@ const Home = () => {
            
                       {/* Desktop 3D Robot - Loads only when hero section is visible and container has valid size */}
            {!isMobile && splineScriptLoaded && containerValid && (
-             <spline-viewer 
-              ref={splineRef}
-              className="cbot robot-quick-fade" 
-              url="https://prod.spline.design/7Xyc-4Wtw5VI1PDk/scene.splinecode"
-              style={{
-                width: '100%',
-                height: '100%',
-                minWidth: '1px',
-                minHeight: '1px',
-                zIndex: 0, // Ensure it's behind the main content
-                marginTop: '-15rem', // Move robot up with the hero content
-                opacity: (loadingDone && robotFadeIn) ? 1 : 0,
-                transform: (loadingDone && robotFadeIn) ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.98)',
-                transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                visibility: (loadingDone && containerValid) ? 'visible' : 'hidden', // Hide completely during loading or if container invalid
-                filter: 'brightness(1.8) contrast(1.15)', // Brighten the robot's face
-                pointerEvents: 'none' // Disable all interactions including the button at the bottom
-              }}
-            />
+             <>
+               <spline-viewer 
+                ref={splineRef}
+                className="cbot robot-quick-fade" 
+                url="https://prod.spline.design/7Xyc-4Wtw5VI1PDk/scene.splinecode"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  minWidth: '1px',
+                  minHeight: '1px',
+                  zIndex: 0, // Ensure it's behind the main content
+                  marginTop: '-15rem', // Move robot up with the hero content
+                  opacity: (loadingDone && robotFadeIn) ? 1 : 0,
+                  transform: (loadingDone && robotFadeIn) ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.98)',
+                  transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                  visibility: (loadingDone && containerValid) ? 'visible' : 'hidden', // Hide completely during loading or if container invalid
+                  filter: 'brightness(1.8) contrast(1.15)' // Brighten the robot's face
+                }}
+              />
+              {/* Overlay button to redirect to About page */}
+              {(loadingDone && robotFadeIn) && (
+                <a
+                  href="/about"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/about');
+                  }}
+                  style={{
+                    position: 'absolute',
+                    bottom: '15%',
+                    right: '22%',
+                    transform: 'translateX(-50%)',
+                    background: 'rgba(162, 89, 247, 0.9)',
+                    color: '#fff',
+                    padding: '12px 24px',
+                    borderRadius: '25px',
+                    textDecoration: 'none',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                    zIndex: 5,
+                    border: '2px solid rgba(162, 89, 247, 1)',
+                    boxShadow: '0 4px 12px rgba(162, 89, 247, 0.4)',
+                    transition: 'all 0.3s ease',
+                    opacity: (loadingDone && robotFadeIn) ? 1 : 0,
+                    pointerEvents: (loadingDone && robotFadeIn) ? 'auto' : 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(162, 89, 247, 1)';
+                    e.currentTarget.style.transform = 'translateX(-50%) scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(162, 89, 247, 0.9)';
+                    e.currentTarget.style.transform = 'translateX(-50%) scale(1)';
+                  }}
+                >
+                  About Shyara
+                </a>
+              )}
+             </>
            )}
            {/* Fallback placeholder for Spline (shows nothing, but maintains layout) */}
            {!isMobile && !splineScriptLoaded && (

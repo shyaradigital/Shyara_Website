@@ -388,10 +388,48 @@ const HomeNoLoading = () => {
               height: '100%',
               minWidth: '1px',
               minHeight: '1px',
-              filter: 'brightness(1.8) contrast(1.15)', // Brighten the robot's face
-              pointerEvents: 'none' // Disable all interactions including the button at the bottom
+              filter: 'brightness(1.8) contrast(1.15)' // Brighten the robot's face
             }}
           />
+        )}
+        {/* Overlay button to redirect to About page */}
+        {splineReady && !splineError && containerValid && splineScriptLoaded && (
+          <a
+            href="/about"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/about');
+            }}
+            style={{
+              position: 'absolute',
+              bottom: '15%',
+              right: '22%',
+              transform: 'translateX(-50%)',
+              background: 'rgba(162, 89, 247, 0.9)',
+              color: '#fff',
+              padding: '12px 24px',
+              borderRadius: '25px',
+              textDecoration: 'none',
+              fontWeight: '600',
+              fontSize: '14px',
+              zIndex: 5,
+              border: '2px solid rgba(162, 89, 247, 1)',
+              boxShadow: '0 4px 12px rgba(162, 89, 247, 0.4)',
+              transition: 'all 0.3s ease',
+              opacity: fadeIn ? 1 : 0,
+              pointerEvents: fadeIn ? 'auto' : 'none'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(162, 89, 247, 1)';
+              e.currentTarget.style.transform = 'translateX(-50%) scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(162, 89, 247, 0.9)';
+              e.currentTarget.style.transform = 'translateX(-50%) scale(1)';
+            }}
+          >
+            About Shyara
+          </a>
         )}
         {splineError && (
           <div 
