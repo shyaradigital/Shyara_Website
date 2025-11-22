@@ -28,13 +28,15 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
 
   // Handle browser back button/swipe back
   useEffect(() => {
-    const handlePopState = () => {
+    const handlePopState = (e) => {
       // Close preview modal when user swipes back - go back to gallery modal
       if (historyAddedRef.current && !isClosingRef.current) {
         historyAddedRef.current = false;
         isClosingRef.current = false;
         // Call onClose to return to gallery modal
-        // The browser has already navigated back in history, so we just need to close the modal
+        // The browser has already navigated back in history (removed preview state)
+        // We're now at the gallery modal state, so just close the preview
+        // The gallery modal should remain open
         onClose();
       }
       isClosingRef.current = false;
@@ -275,16 +277,12 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
               e.preventDefault();
               e.stopPropagation();
               // Close preview modal and return to gallery modal
+              // Just call onClose directly - this will close the preview and show the gallery
+              // Don't manipulate history here to avoid triggering popstate handlers
               if (historyAddedRef.current) {
                 historyAddedRef.current = false;
-                isClosingRef.current = true;
-                // Go back in history to remove the state we added
-                window.history.back();
-                // The popstate handler will call onClose()
-              } else {
-                // No history state, just close directly
-                onClose();
               }
+              onClose();
             }
           }}
     >
@@ -395,16 +393,12 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
           e.preventDefault();
           e.stopPropagation();
           // Close preview modal and return to gallery modal
+          // Just call onClose directly - this will close the preview and show the gallery
+          // Don't manipulate history here to avoid triggering popstate handlers
           if (historyAddedRef.current) {
             historyAddedRef.current = false;
-            isClosingRef.current = true;
-            // Go back in history to remove the state we added
-            window.history.back();
-            // The popstate handler will call onClose()
-          } else {
-            // No history state, just close directly
-            onClose();
           }
+          onClose();
         }}
         className="preview-close-button"
         style={{

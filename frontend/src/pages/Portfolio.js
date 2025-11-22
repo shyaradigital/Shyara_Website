@@ -1114,17 +1114,30 @@ const Portfolio = () => {
 
   // Handle browser back button/swipe back
   useEffect(() => {
-    const handlePopState = () => {
+    const handlePopState = (e) => {
+      const currentState = e.state;
+      
       // If modal is open, close it when user swipes back
       if (isModalOpen) {
         setIsModalOpen(false);
         setSelectedService(null);
         modalHistoryAdded.current = false;
       }
+      
+      // Handle gallery modal (DriveMockupModal)
       if (driveModalOpen) {
-        setDriveModalOpen(false);
-        setActiveCategory(null);
-        modalHistoryAdded.current = false;
+        // If state is null, we've gone back past all modal states - close gallery and return to portfolio
+        // If state has preview:true, the preview modal is still open (shouldn't happen, but handle it)
+        // If state has modal:true but no preview, we're at gallery level - don't close yet
+        // We only close the gallery if state is null (meaning we're back at portfolio page)
+        if (currentState === null || (!currentState.preview && !currentState.modal)) {
+          // State is null or doesn't have modal state - we're back at portfolio page
+          setDriveModalOpen(false);
+          setActiveCategory(null);
+          modalHistoryAdded.current = false;
+        }
+        // If currentState.modal is true (gallery state), the preview modal's handler will close itself
+        // and we should keep the gallery open, so don't do anything here
       }
     };
 
