@@ -279,7 +279,8 @@ if (isProduction) {
           "'self'",
           (req, res) => `'nonce-${res.locals.nonce}'`, // Nonce for inline scripts
           "https://cdn.jsdelivr.net", // EmailJS (if still used)
-          "https://unpkg.com" // Spline viewer
+          "https://unpkg.com", // Spline viewer
+          "'unsafe-eval'" // Required for Spline 3D viewer (uses new Function() for dynamic code compilation)
         ],
         styleSrc: [
           "'self'",
