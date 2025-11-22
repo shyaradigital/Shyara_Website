@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Users, Zap, TrendingUp } from 'lucide-react';
 import { waitForHydration, hasValidDimensions } from '../utils/hydration';
 
@@ -27,6 +27,7 @@ const loadSplineViewerScript = () => {
 };
 
 const HomeNoLoading = () => {
+  const navigate = useNavigate();
   const [fadeIn, setFadeIn] = React.useState(false);
   const [splineReady, setSplineReady] = useState(false);
   const [splineScriptLoaded, setSplineScriptLoaded] = useState(false);
