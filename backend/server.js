@@ -303,6 +303,10 @@ if (isProduction) {
           "https://unpkg.com" // Spline modelling WASM files
         ],
         fontSrc: ["'self'", "data:"],
+        workerSrc: [
+          "'self'",
+          "blob:" // Required for Spline 3D viewer Web Workers
+        ],
         objectSrc: ["'none'"],
         mediaSrc: ["'self'"],
         frameSrc: ["'none'"],
@@ -364,6 +368,10 @@ if (isProduction) {
           "https://unpkg.com" // Spline modelling WASM files
         ],
         fontSrc: ["'self'", "data:"],
+        workerSrc: [
+          "'self'",
+          "blob:" // Required for Spline 3D viewer Web Workers
+        ],
         objectSrc: ["'none'"],
         mediaSrc: ["'self'"],
         frameSrc: ["'none'"],
