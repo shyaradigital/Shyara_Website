@@ -294,7 +294,9 @@ if (isProduction) {
         connectSrc: [
           "'self'",
           "https://api.emailjs.com", // EmailJS API
-          "https://*.googleapis.com" // Google Drive API
+          "https://*.googleapis.com", // Google Drive API
+          "https://prod.spline.design", // Spline 3D model CDN
+          "https://*.spline.design" // Spline 3D model CDN (wildcard)
         ],
         fontSrc: ["'self'", "data:"],
         objectSrc: ["'none'"],
@@ -350,7 +352,9 @@ if (isProduction) {
           "http://localhost:*", // Allow localhost connections for dev server
           "ws://localhost:*", // WebSocket for hot reloading
           "https://api.emailjs.com",
-          "https://*.googleapis.com"
+          "https://*.googleapis.com",
+          "https://prod.spline.design", // Spline 3D model CDN
+          "https://*.spline.design" // Spline 3D model CDN (wildcard)
         ],
         fontSrc: ["'self'", "data:"],
         objectSrc: ["'none'"],
