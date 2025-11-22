@@ -487,7 +487,7 @@ const Home = () => {
                 transform: (loadingDone && robotFadeIn) ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.98)',
                 transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
                 visibility: (loadingDone && containerValid) ? 'visible' : 'hidden', // Hide completely during loading or if container invalid
-                filter: 'brightness(1.4) contrast(1.1)' // Brighten the robot's face
+                filter: 'brightness(1.8) contrast(1.15)' // Brighten the robot's face
               }}
             />
            )}
