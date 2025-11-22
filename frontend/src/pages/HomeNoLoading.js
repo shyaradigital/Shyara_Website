@@ -403,9 +403,9 @@ const HomeNoLoading = () => {
             }}
             style={{
               position: 'absolute',
-              bottom: '35%',
-              left: '50%',
-              transform: 'translateX(-50%)',
+              bottom: '20%',
+              right: '15%',
+              transform: 'none',
               background: 'rgba(162, 89, 247, 0.9)',
               color: '#fff',
               padding: '12px 24px',
@@ -422,11 +422,11 @@ const HomeNoLoading = () => {
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'rgba(162, 89, 247, 1)';
-              e.currentTarget.style.transform = 'translateX(-50%) scale(1.05)';
+              e.currentTarget.style.transform = 'scale(1.05)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'rgba(162, 89, 247, 0.9)';
-              e.currentTarget.style.transform = 'translateX(-50%) scale(1)';
+              e.currentTarget.style.transform = 'scale(1)';
             }}
           >
             About Shyara
