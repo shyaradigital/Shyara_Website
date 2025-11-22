@@ -5,9 +5,31 @@ import { useNavigate, Link } from 'react-router-dom';
 import { LogIn, Users, Zap, TrendingUp } from 'lucide-react';
 import { waitForHydration, hasValidDimensions } from '../utils/hydration';
 
+let splineScriptPromise = null;
+
+const loadSplineViewerScript = () => {
+  if (typeof window === 'undefined') return Promise.resolve();
+  if (window.__splineViewerLoaded) return Promise.resolve();
+  if (!splineScriptPromise) {
+    splineScriptPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.src = 'https://unpkg.com/@splinetool/viewer@latest/build/spline-viewer.js';
+      script.onload = () => {
+        window.__splineViewerLoaded = true;
+        resolve();
+      };
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+  return splineScriptPromise;
+};
+
 const HomeNoLoading = () => {
   const [fadeIn, setFadeIn] = React.useState(false);
   const [splineReady, setSplineReady] = useState(false);
+  const [splineScriptLoaded, setSplineScriptLoaded] = useState(false);
   const [splineError, setSplineError] = useState(false);
   const [showScrollArrow, setShowScrollArrow] = useState(true);
   const [containerValid, setContainerValid] = useState(false);
@@ -113,6 +135,22 @@ const HomeNoLoading = () => {
     };
   }, [fadeIn]);
 
+  // Load Spline script when container is valid
+  useEffect(() => {
+    if (!containerValid || splineScriptLoaded || !fadeIn) {
+      return;
+    }
+
+    loadSplineViewerScript()
+      .then(() => {
+        setSplineScriptLoaded(true);
+      })
+      .catch((err) => {
+        console.warn('Spline viewer failed to load (non-critical):', err);
+        setSplineError(true);
+      });
+  }, [containerValid, fadeIn, splineScriptLoaded]);
+
   // Handle Spline viewer errors
   useEffect(() => {
     if (splineRef.current) {
@@ -127,7 +165,7 @@ const HomeNoLoading = () => {
         }
       };
     }
-  }, [splineReady]);
+  }, [splineReady, splineScriptLoaded]);
 
   // Initialize AOS for individual elements within sections
   useEffect(() => {
@@ -340,7 +378,7 @@ const HomeNoLoading = () => {
           </p>
         </div>
         
-        {splineReady && !splineError && containerValid && (
+        {splineReady && !splineError && containerValid && splineScriptLoaded && (
           <spline-viewer 
             ref={splineRef}
             className="cbot" 
