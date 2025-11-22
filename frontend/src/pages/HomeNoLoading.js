@@ -403,8 +403,8 @@ const HomeNoLoading = () => {
             }}
             style={{
               position: 'absolute',
-              bottom: '25%',
-              right: '22%',
+              bottom: '35%',
+              left: '50%',
               transform: 'translateX(-50%)',
               background: 'rgba(162, 89, 247, 0.9)',
               color: '#fff',
