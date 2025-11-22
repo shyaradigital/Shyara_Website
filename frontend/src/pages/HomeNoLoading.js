@@ -591,7 +591,46 @@ const HomeNoLoading = () => {
                 const scene = viewer.application.scene;
                 scene.traverse((object) => {
                   const name = (object.name || '').toLowerCase();
-                  if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna') || name.includes('link') || name.includes('text')) {
+                  
+                  // Hide by name patterns
+                  if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna') || name.includes('link') || name.includes('text') || name.includes('about') || name.includes('shyara')) {
+                    object.visible = false;
+                    object.traverse((child) => {
+                      child.visible = false;
+                    });
+                  }
+                  
+                  // Hide by position (buttons at bottom)
+                  if (object.position && object.position.y < -2) {
+                    if (object.type === 'Mesh' || object.type === 'Group') {
+                      const hasText = object.children && object.children.some(child => 
+                        child.type === 'Text' || child.type === 'TextGeometry'
+                      );
+                      if (hasText) {
+                        object.visible = false;
+                        object.traverse((child) => {
+                          child.visible = false;
+                        });
+                      }
+                    }
+                  }
+                  
+                  // Hide text objects
+                  if (object.type === 'Text' || object.type === 'TextGeometry') {
+                    const text = (object.text || object.userData?.text || '').toLowerCase();
+                    if (text.includes('connect') || text.includes('wanna') || text.includes('about') || text.includes('shyara')) {
+                      object.visible = false;
+                      if (object.parent) {
+                        object.parent.visible = false;
+                        object.parent.traverse((child) => {
+                          child.visible = false;
+                        });
+                      }
+                    }
+                  }
+                  
+                  // Hide interactive objects
+                  if (object.userData && (object.userData.onClick || object.userData.onHover || object.userData.url || object.userData.link || object.userData.interactive)) {
                     object.visible = false;
                     object.traverse((child) => {
                       child.visible = false;

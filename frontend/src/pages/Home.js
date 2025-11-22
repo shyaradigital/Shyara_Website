@@ -293,17 +293,62 @@ const Home = () => {
             if (scene) {
               scene.traverse((object) => {
                 const name = (object.name || '').toLowerCase();
-                if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna') || name.includes('link')) {
+                
+                // Hide by name patterns
+                if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna') || name.includes('link') || name.includes('text') || name.includes('about') || name.includes('shyara')) {
                   object.visible = false;
                   object.traverse((child) => {
                     child.visible = false;
                   });
                 }
+                
+                // Hide by position (buttons are likely at bottom of scene, negative Y or low Y values)
+                if (object.position && object.position.y < -2) {
+                  // Check if it's a UI element by checking if it has text or is a plane/box
+                  if (object.type === 'Mesh' || object.type === 'Group') {
+                    const hasText = object.children && object.children.some(child => 
+                      child.type === 'Text' || child.type === 'TextGeometry' || 
+                      (child.material && child.material.name && child.material.name.toLowerCase().includes('text'))
+                    );
+                    if (hasText || (object.material && typeof object.material === 'object' && object.material.name && object.material.name.toLowerCase().includes('button'))) {
+                      object.visible = false;
+                      object.traverse((child) => {
+                        child.visible = false;
+                      });
+                    }
+                  }
+                }
+                
+                // Hide text objects
+                if (object.type === 'Text' || object.type === 'TextGeometry' || (object.geometry && object.geometry.type === 'TextGeometry')) {
+                  const text = (object.text || object.userData?.text || '').toLowerCase();
+                  if (text.includes('connect') || text.includes('wanna') || text.includes('about') || text.includes('shyara')) {
+                    object.visible = false;
+                    if (object.parent) {
+                      object.parent.visible = false;
+                      object.parent.traverse((child) => {
+                        child.visible = false;
+                      });
+                    }
+                  }
+                }
+                
                 // Also check userData
                 if (object.userData) {
-                  if (object.userData.isButton || object.userData.isUI || object.userData.type === 'button' || object.userData.type === 'ui') {
+                  if (object.userData.isButton || object.userData.isUI || object.userData.type === 'button' || object.userData.type === 'ui' || object.userData.interactive) {
                     object.visible = false;
+                    object.traverse((child) => {
+                      child.visible = false;
+                    });
                   }
+                }
+                
+                // Hide objects with interactive properties
+                if (object.userData && (object.userData.onClick || object.userData.onHover || object.userData.url || object.userData.link)) {
+                  object.visible = false;
+                  object.traverse((child) => {
+                    child.visible = false;
+                  });
                 }
               });
             }
@@ -685,7 +730,46 @@ const Home = () => {
                     const scene = viewer.application.scene;
                     scene.traverse((object) => {
                       const name = (object.name || '').toLowerCase();
-                      if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna') || name.includes('link') || name.includes('text')) {
+                      
+                      // Hide by name patterns
+                      if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna') || name.includes('link') || name.includes('text') || name.includes('about') || name.includes('shyara')) {
+                        object.visible = false;
+                        object.traverse((child) => {
+                          child.visible = false;
+                        });
+                      }
+                      
+                      // Hide by position (buttons at bottom)
+                      if (object.position && object.position.y < -2) {
+                        if (object.type === 'Mesh' || object.type === 'Group') {
+                          const hasText = object.children && object.children.some(child => 
+                            child.type === 'Text' || child.type === 'TextGeometry'
+                          );
+                          if (hasText) {
+                            object.visible = false;
+                            object.traverse((child) => {
+                              child.visible = false;
+                            });
+                          }
+                        }
+                      }
+                      
+                      // Hide text objects
+                      if (object.type === 'Text' || object.type === 'TextGeometry') {
+                        const text = (object.text || object.userData?.text || '').toLowerCase();
+                        if (text.includes('connect') || text.includes('wanna') || text.includes('about') || text.includes('shyara')) {
+                          object.visible = false;
+                          if (object.parent) {
+                            object.parent.visible = false;
+                            object.parent.traverse((child) => {
+                              child.visible = false;
+                            });
+                          }
+                        }
+                      }
+                      
+                      // Hide interactive objects
+                      if (object.userData && (object.userData.onClick || object.userData.onHover || object.userData.url || object.userData.link || object.userData.interactive)) {
                         object.visible = false;
                         object.traverse((child) => {
                           child.visible = false;
