@@ -473,22 +473,23 @@ const Home = () => {
                       {/* Desktop 3D Robot - Loads only when hero section is visible and container has valid size */}
            {!isMobile && splineScriptLoaded && containerValid && (
              <spline-viewer 
-               ref={splineRef}
-               className="cbot robot-quick-fade" 
-               url="https://prod.spline.design/7Xyc-4Wtw5VI1PDk/scene.splinecode"
-               style={{
-                 width: '100%',
-                 height: '100%',
-                 minWidth: '1px',
-                 minHeight: '1px',
-                 zIndex: 0, // Ensure it's behind the main content
-                 marginTop: '-15rem', // Move robot up with the hero content
-                 opacity: (loadingDone && robotFadeIn) ? 1 : 0,
-                 transform: (loadingDone && robotFadeIn) ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.98)',
-                 transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                 visibility: (loadingDone && containerValid) ? 'visible' : 'hidden' // Hide completely during loading or if container invalid
-               }}
-             />
+              ref={splineRef}
+              className="cbot robot-quick-fade" 
+              url="https://prod.spline.design/7Xyc-4Wtw5VI1PDk/scene.splinecode"
+              style={{
+                width: '100%',
+                height: '100%',
+                minWidth: '1px',
+                minHeight: '1px',
+                zIndex: 0, // Ensure it's behind the main content
+                marginTop: '-15rem', // Move robot up with the hero content
+                opacity: (loadingDone && robotFadeIn) ? 1 : 0,
+                transform: (loadingDone && robotFadeIn) ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.98)',
+                transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                visibility: (loadingDone && containerValid) ? 'visible' : 'hidden', // Hide completely during loading or if container invalid
+                filter: 'brightness(1.4) contrast(1.1)' // Brighten the robot's face
+              }}
+            />
            )}
            {/* Fallback placeholder for Spline (shows nothing, but maintains layout) */}
            {!isMobile && !splineScriptLoaded && (
@@ -588,36 +589,6 @@ const Home = () => {
             </div>
           )}
 
-                     {/* LinkedIn Connect Button Overlapping Robot (Desktop only) */}
-          {!isMobile && (
-            <a 
-              href="https://www.linkedin.com/company/shyaradigital/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="linkedin-connect"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '22%',
-                transform: 'translateY(-50%)',
-                background: 'transparent',
-                color: 'transparent',
-                padding: '26px 100px',
-                borderRadius: '25px',
-                textDecoration: 'none',
-                fontWeight: '600',
-                fontSize: '14px',
-                boxShadow: 'none',
-                zIndex: 10,
-                border: 'none',
-                backdropFilter: 'none',
-                WebkitBackdropFilter: 'none',
-                opacity: fadeIn ? 1 : 0
-              }}
-
-                          >
-              </a>
-          )}
         </div>
 
         {/* Additional Scrollable Sections with Enhanced Animations */}

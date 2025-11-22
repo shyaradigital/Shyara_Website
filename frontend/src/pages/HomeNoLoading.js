@@ -387,7 +387,8 @@ const HomeNoLoading = () => {
               width: '100%',
               height: '100%',
               minWidth: '1px',
-              minHeight: '1px'
+              minHeight: '1px',
+              filter: 'brightness(1.4) contrast(1.1)' // Brighten the robot's face
             }}
           />
         )}
@@ -421,33 +422,6 @@ const HomeNoLoading = () => {
             </div>
           </div>
         )}
-        {/* LinkedIn Connect Button Overlapping Robot */}
-        <a 
-          href="https://www.linkedin.com/company/shyaradigital/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-                     style={{
-             position: 'absolute',
-             top: '81%',
-             right: '22%',
-             transform: 'translateY(-50%)',
-             background: 'transparent',
-             color: 'transparent',
-             padding: '26px 100px',
-             borderRadius: '25px',
-             textDecoration: 'none',
-             fontWeight: '600',
-             fontSize: '14px',
-             boxShadow: 'none',
-             zIndex: 10,
-             border: 'none',
-             backdropFilter: 'none',
-             WebkitBackdropFilter: 'none',
-             opacity: 1
-           }}
-          
-                 >
-         </a>
               </div>
 
         {/* Additional Scrollable Sections */}
