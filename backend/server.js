@@ -280,6 +280,7 @@ if (isProduction) {
           (req, res) => `'nonce-${res.locals.nonce}'`, // Nonce for inline scripts
           "https://cdn.jsdelivr.net", // EmailJS (if still used)
           "https://unpkg.com", // Spline viewer
+          "https://www.gstatic.com", // Spline Draco decoder WASM wrapper
           "'unsafe-eval'" // Required for Spline 3D viewer (uses new Function() for dynamic code compilation)
         ],
         styleSrc: [
@@ -297,7 +298,9 @@ if (isProduction) {
           "https://api.emailjs.com", // EmailJS API
           "https://*.googleapis.com", // Google Drive API
           "https://prod.spline.design", // Spline 3D model CDN
-          "https://*.spline.design" // Spline 3D model CDN (wildcard)
+          "https://*.spline.design", // Spline 3D model CDN (wildcard)
+          "https://www.gstatic.com", // Spline Draco decoder WASM files
+          "https://unpkg.com" // Spline modelling WASM files
         ],
         fontSrc: ["'self'", "data:"],
         objectSrc: ["'none'"],
@@ -336,7 +339,8 @@ if (isProduction) {
           (req, res) => `'nonce-${res.locals.nonce}'`, // Nonce for inline scripts
           "'unsafe-eval'", // Allow eval for React dev tools and hot reloading
           "https://cdn.jsdelivr.net",
-          "https://unpkg.com"
+          "https://unpkg.com",
+          "https://www.gstatic.com" // Spline Draco decoder WASM wrapper
         ],
         styleSrc: [
           "'self'",
@@ -355,7 +359,9 @@ if (isProduction) {
           "https://api.emailjs.com",
           "https://*.googleapis.com",
           "https://prod.spline.design", // Spline 3D model CDN
-          "https://*.spline.design" // Spline 3D model CDN (wildcard)
+          "https://*.spline.design", // Spline 3D model CDN (wildcard)
+          "https://www.gstatic.com", // Spline Draco decoder WASM files
+          "https://unpkg.com" // Spline modelling WASM files
         ],
         fontSrc: ["'self'", "data:"],
         objectSrc: ["'none'"],
