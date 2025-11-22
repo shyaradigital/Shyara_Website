@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { LogIn, Users, Zap, TrendingUp } from 'lucide-react';
 import { waitForHydration, hasValidDimensions } from '../utils/hydration';
 
@@ -27,7 +27,6 @@ const loadSplineViewerScript = () => {
 };
 
 const HomeNoLoading = () => {
-  const navigate = useNavigate();
   const [fadeIn, setFadeIn] = React.useState(false);
   const [splineReady, setSplineReady] = useState(false);
   const [splineScriptLoaded, setSplineScriptLoaded] = useState(false);
@@ -647,45 +646,6 @@ const HomeNoLoading = () => {
               filter: 'brightness(1.8) contrast(1.15)' // Brighten the robot's face
             }}
           />
-        )}
-        {/* Overlay button to redirect to About page */}
-        {splineReady && !splineError && containerValid && splineScriptLoaded && (
-          <a
-            href="/about"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate('/about');
-            }}
-            style={{
-              position: 'absolute',
-              bottom: '20%',
-              right: '15%',
-              transform: 'none',
-              background: 'rgba(162, 89, 247, 0.9)',
-              color: '#fff',
-              padding: '12px 24px',
-              borderRadius: '25px',
-              textDecoration: 'none',
-              fontWeight: '600',
-              fontSize: '14px',
-              zIndex: 5,
-              border: '2px solid rgba(162, 89, 247, 1)',
-              boxShadow: '0 4px 12px rgba(162, 89, 247, 0.4)',
-              transition: 'all 0.3s ease',
-              opacity: fadeIn ? 1 : 0,
-              pointerEvents: fadeIn ? 'auto' : 'none'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(162, 89, 247, 1)';
-              e.currentTarget.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(162, 89, 247, 0.9)';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            About Shyara
-          </a>
         )}
         {splineError && (
           <div 
