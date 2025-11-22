@@ -279,9 +279,10 @@ const DRIVE_FOLDER_IDS = {
 };
 
 const HERO_METRICS = [
-  { label: 'Brand lifts delivered', value: '140+', accent: '#a259f7' },
-  { label: 'Avg. engagement jump', value: '+45%', accent: '#66e4a8' },
-  { label: 'Time to first delivery', value: '72 hrs', accent: '#7bd3ff' },
+  { label: 'Brand lifts delivered', value: '140+', accent: '#a259f7', title: 'Projects Delivered' },
+  { label: 'Avg. engagement jump', value: '+45%', accent: '#66e4a8', title: 'Engagement Growth' },
+  { label: 'Time to first delivery', value: '72 hrs', accent: '#7bd3ff', title: 'Delivery Speed' },
+  { label: 'Average client rating', value: '4.9/5', accent: '#ffd93d', title: 'Client Satisfaction' },
 ];
 
 // Helper function to get category from service name
@@ -318,6 +319,7 @@ const getPortfolioBadge = (category) => {
 const PortfolioModal = ({ isOpen, onClose, service }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMockup, setShowMockup] = useState(false);
+  const mockupHistoryAddedRef = useRef(false);
 
   const samples = service?.samples ?? [];
   const sampleCount = samples.length || 1;
@@ -332,8 +334,33 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
     setCurrentImageIndex((prev) => (prev - 1 + sampleCount) % sampleCount);
   };
 
+  // Handle browser back button/swipe back for mockup view
+  useEffect(() => {
+    const handlePopState = () => {
+      // Close mockup view when user swipes back
+      if (showMockup && mockupHistoryAddedRef.current) {
+        mockupHistoryAddedRef.current = false;
+        setShowMockup(false);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [showMockup]);
+
+  // Push history state when mockup opens
+  useEffect(() => {
+    if (showMockup && !mockupHistoryAddedRef.current) {
+      window.history.pushState({ mockup: true }, '');
+      mockupHistoryAddedRef.current = true;
+    }
+  }, [showMockup]);
+
   useEffect(() => {
     setShowMockup(false);
+    mockupHistoryAddedRef.current = false;
   }, [service, currentImageIndex]);
 
   if (!hasContent) return null;
@@ -672,7 +699,19 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
         </div>
       </div>
       {currentSample.mockup && showMockup && (
-        <div style={{
+        <div 
+          onClick={(e) => {
+            // Close if clicking the backdrop
+            if (e.target === e.currentTarget) {
+              if (mockupHistoryAddedRef.current) {
+                mockupHistoryAddedRef.current = false;
+                window.history.back();
+              } else {
+                setShowMockup(false);
+              }
+            }
+          }}
+          style={{
           position: 'fixed',
           top: 0,
           left: 0,
@@ -698,7 +737,15 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
             flexDirection: 'column'
           }}>
             <button
-              onClick={() => setShowMockup(false)}
+              onClick={() => {
+                // If we added a history state, go back to remove it
+                if (mockupHistoryAddedRef.current) {
+                  mockupHistoryAddedRef.current = false;
+                  window.history.back();
+                } else {
+                  setShowMockup(false);
+                }
+              }}
               style={{
                 position: 'absolute',
                 top: 12,
@@ -939,6 +986,9 @@ const Portfolio = () => {
   
   // Category filter state
   const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Track if we added a history state for modals
+  const modalHistoryAdded = useRef(false);
 
   // Prevent Spline from loading on Portfolio page
   useEffect(() => {
@@ -1062,10 +1112,38 @@ const Portfolio = () => {
     };
   }, [showLoader, allSamples]);
 
+  // Handle browser back button/swipe back
+  useEffect(() => {
+    const handlePopState = () => {
+      // If modal is open, close it when user swipes back
+      if (isModalOpen) {
+        setIsModalOpen(false);
+        setSelectedService(null);
+        modalHistoryAdded.current = false;
+      }
+      if (driveModalOpen) {
+        setDriveModalOpen(false);
+        setActiveCategory(null);
+        modalHistoryAdded.current = false;
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isModalOpen, driveModalOpen]);
+
   const handleOpenModal = (service) => {
     if (!service) return;
     
     const category = getCategoryFromService(service.service);
+    
+    // Push state to history BEFORE opening modal for back button handling
+    if (!modalHistoryAdded.current) {
+      window.history.pushState({ modal: true }, '');
+      modalHistoryAdded.current = true;
+    }
     
     // If Website Development, use existing gallery modal
     if (category === PortfolioCategory.WEBSITE_DEV) {
@@ -1090,12 +1168,22 @@ const Portfolio = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedService(null);
+    // If we added a history state, go back to remove it
+    if (modalHistoryAdded.current) {
+      modalHistoryAdded.current = false;
+      window.history.back();
+    }
   };
 
   const handleDriveModalClose = (open) => {
     setDriveModalOpen(open);
     if (!open) {
       setActiveCategory(null);
+      // If we added a history state, go back to remove it
+      if (modalHistoryAdded.current) {
+        modalHistoryAdded.current = false;
+        window.history.back();
+      }
     }
   };
 
@@ -1444,15 +1532,16 @@ const Portfolio = () => {
         
         @media (max-width: 640px) {
           .stats-container {
-            grid-template-columns: 1fr;
-            gap: 0.875rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            padding: 0 0.75rem;
             margin-bottom: 1.5rem;
           }
         }
         
         @media (min-width: 641px) and (max-width: 1024px) {
           .stats-container {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             padding: 0 1.5rem;
             margin-bottom: 1.75rem;
           }
@@ -1460,7 +1549,7 @@ const Portfolio = () => {
         
         @media (min-width: 1025px) {
           .stats-container {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             max-width: 1400px;
             margin: 0 auto 1.75rem;
             padding: 0 2rem;
@@ -1496,13 +1585,14 @@ const Portfolio = () => {
               background: 'rgba(255,255,255,0.02)',
               border: '1px solid rgba(255,255,255,0.06)',
               borderRadius: '10px',
-              padding: '1rem 1.25rem',
+              padding: 'clamp(0.875rem, 2vw, 1.25rem) clamp(0.875rem, 2vw, 1.25rem)',
               display: 'flex',
               flexDirection: 'column',
               gap: '0.25rem',
               transition: 'all 0.3s ease',
               cursor: 'default',
-              animation: `slideIn 0.4s ease-out ${idx * 0.1}s both`
+              animation: `slideIn 0.4s ease-out ${idx * 0.1}s both`,
+              minHeight: 'fit-content'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
@@ -1512,8 +1602,30 @@ const Portfolio = () => {
               e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
               e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
             }}>
-              <span style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: item.accent, lineHeight: 1 }}>{item.value}</span>
-              <span style={{ fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>{item.label}</span>
+              {item.title && (
+                <span style={{ 
+                  fontSize: 'clamp(0.7rem, 2vw, 0.85rem)', 
+                  color: 'rgba(255,255,255,0.6)', 
+                  fontWeight: 600, 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '0.05em', 
+                  marginBottom: '0.25rem',
+                  lineHeight: 1.2
+                }}>{item.title}</span>
+              )}
+              <span style={{ 
+                fontSize: 'clamp(1.25rem, 4vw, 2rem)', 
+                fontWeight: 700, 
+                color: item.accent, 
+                lineHeight: 1,
+                marginBottom: '0.125rem'
+              }}>{item.value}</span>
+              <span style={{ 
+                fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', 
+                color: 'rgba(255,255,255,0.5)', 
+                fontWeight: 500,
+                lineHeight: 1.3
+              }}>{item.label}</span>
             </div>
           ))}
         </div>

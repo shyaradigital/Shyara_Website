@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, ZoomIn, ZoomOut } from 'lucide-react';
 
 /**
@@ -20,9 +20,39 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [imageLoaded, setImageLoaded] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
+  const historyAddedRef = useRef(false);
+  const isClosingRef = useRef(false);
 
   const currentFile = files[currentIndex];
   const isVideo = currentFile?.mimeType?.startsWith('video/');
+
+  // Handle browser back button/swipe back
+  useEffect(() => {
+    const handlePopState = () => {
+      // Close preview modal when user swipes back - go back to gallery modal
+      if (historyAddedRef.current && !isClosingRef.current) {
+        historyAddedRef.current = false;
+        isClosingRef.current = false;
+        // Call onClose to return to gallery modal
+        // The browser has already navigated back in history, so we just need to close the modal
+        onClose();
+      }
+      isClosingRef.current = false;
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [onClose]);
+
+  // Push history state when modal opens
+  useEffect(() => {
+    if (files && files.length > 0 && index !== null && !historyAddedRef.current) {
+      window.history.pushState({ preview: true }, '');
+      historyAddedRef.current = true;
+    }
+  }, [files, index]);
 
   // Lock body scroll when modal opens
   useEffect(() => {
@@ -239,14 +269,24 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
       onMouseLeave={handleMouseUp}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      onClick={(e) => {
-        // Only close if clicking the backdrop itself, not the image or controls
-        if (e.target === e.currentTarget) {
-          e.preventDefault();
-          e.stopPropagation();
-          onClose();
-        }
-      }}
+          onClick={(e) => {
+            // Only close if clicking the backdrop itself, not the image or controls
+            if (e.target === e.currentTarget) {
+              e.preventDefault();
+              e.stopPropagation();
+              // Close preview modal and return to gallery modal
+              if (historyAddedRef.current) {
+                historyAddedRef.current = false;
+                isClosingRef.current = true;
+                // Go back in history to remove the state we added
+                window.history.back();
+                // The popstate handler will call onClose()
+              } else {
+                // No history state, just close directly
+                onClose();
+              }
+            }
+          }}
     >
       <style>
         {`
@@ -354,7 +394,17 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          onClose();
+          // Close preview modal and return to gallery modal
+          if (historyAddedRef.current) {
+            historyAddedRef.current = false;
+            isClosingRef.current = true;
+            // Go back in history to remove the state we added
+            window.history.back();
+            // The popstate handler will call onClose()
+          } else {
+            // No history state, just close directly
+            onClose();
+          }
         }}
         className="preview-close-button"
         style={{
@@ -394,29 +444,6 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         <X size={22} />
       </button>
       
-      {/* Navigation Hint - Subtle */}
-      {files.length > 1 && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 'calc(6rem + env(safe-area-inset-bottom, 0px))',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'rgba(0, 0, 0, 0.6)',
-            padding: '0.5rem 1rem',
-            borderRadius: '6px',
-            color: 'rgba(255, 255, 255, 0.6)',
-            fontSize: '0.75rem',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            zIndex: 45,
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            pointerEvents: 'none'
-          }}
-        >
-          Swipe or use arrow keys to navigate
-        </div>
-      )}
 
       {/* Navigation removed for cleaner experience - swipe or keyboard only */}
 
