@@ -388,7 +388,8 @@ const HomeNoLoading = () => {
               height: '100%',
               minWidth: '1px',
               minHeight: '1px',
-              filter: 'brightness(1.8) contrast(1.15)' // Brighten the robot's face
+              filter: 'brightness(1.8) contrast(1.15)', // Brighten the robot's face
+              pointerEvents: 'none' // Disable all interactions including the button at the bottom
             }}
           />
         )}
