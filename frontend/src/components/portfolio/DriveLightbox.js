@@ -427,7 +427,7 @@ const DriveLightbox = ({ files, index, onClose }) => {
           wordBreak: 'break-word'
         }}
       >
-        {currentFile.name}
+        {sanitizeText(currentFile.name)}
       </div>
 
       {/* Media container */}
@@ -461,7 +461,7 @@ const DriveLightbox = ({ files, index, onClose }) => {
           <img
             ref={imageRef}
             src={currentFile.fullUrl}
-            alt={currentFile.name}
+            alt={sanitizeAttribute(currentFile.name)}
             style={{
               maxWidth: '100%',
               maxHeight: '90vh',

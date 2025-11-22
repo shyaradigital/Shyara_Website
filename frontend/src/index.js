@@ -4,45 +4,38 @@ import './index.css';
 import App from './App';
 import './style.css';
 
-// Enhanced console filtering - catch everything
-(function() {
-  const _e = console.error.bind(console);
-  const _w = console.warn.bind(console);
-  const _l = console.log.bind(console);
-  const _i = console.info.bind(console);
+// Import console suppression utility (runs immediately on import)
+import './utils/consoleSuppression';
 
-  const filterPatterns = [
-    'WebGL', 'GL_INVALID', 'Framebuffer', 'glTexStorage', 'glClear', 
-    'glDraw', 'Attachment has zero size', 'too many errors',
-    'Tracking Prevention', 'emailjs', 'cdn.jsdelivr.net', 
-    'blocked access', 'updating from', 'spline', 'React DevTools'
-  ];
+// Hydration safety: Wait for DOM and fonts before rendering
+import { waitForHydration } from './utils/hydration';
 
-  const shouldFilter = (...args) => {
-    const str = args.map(a => String(a || '')).join(' ');
-    return filterPatterns.some(p => str.includes(p));
-  };
+const rootElement = document.getElementById('root');
 
-  console.error = (...args) => { if (!shouldFilter(...args)) _e(...args); };
-  console.warn = (...args) => { if (!shouldFilter(...args)) _w(...args); };
-  console.log = (...args) => { if (!shouldFilter(...args)) _l(...args); };
-  console.info = (...args) => { if (!shouldFilter(...args)) _i(...args); };
-  
-  // Show clean startup message
-  if (process.env.NODE_ENV === 'development') {
-    setTimeout(() => {
-      _l('%c🎨 Shyara Portfolio', 'color: #a259f7; font-weight: bold; font-size: 16px; padding: 4px 0;');
-      _l('%c✓ Console filters active', 'color: #4ade80; font-size: 12px;');
-    }, 200);
-  }
-})();
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// Wait for hydration before rendering
+waitForHydration().then(() => {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}).catch((error) => {
+  console.error('Hydration failed:', error);
+  // Fallback: render anyway after a delay
+  setTimeout(() => {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+  }, 500);
+});
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

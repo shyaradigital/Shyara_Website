@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DrivePreviewModal from './DrivePreviewModal';
+import { sanitizeText, sanitizeAttribute } from '../../utils/sanitize';
+import { waitForDOM } from '../../utils/hydration';
 
 // Helper function to get image URL - uses thumbnailLink or fallback
 const getImageUrl = (file) => {
@@ -110,7 +112,7 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
           <>
             <img
               src={currentSrc}
-              alt={file.name}
+              alt={sanitizeAttribute(file.name)}
               crossOrigin="anonymous"
               referrerPolicy="no-referrer"
               style={{
@@ -165,7 +167,7 @@ const ThumbnailTile = ({ file, isVideo, index, onClick }) => {
         ) : (
           <img
             src={currentSrc}
-            alt={file.name}
+            alt={sanitizeAttribute(file.name)}
             crossOrigin="anonymous"
             referrerPolicy="no-referrer"
             style={{
@@ -246,6 +248,8 @@ const DriveMockup = ({ title, description, folderId }) => {
     }
 
     const fetchFiles = async () => {
+      // Wait for DOM to be ready before fetching
+      await waitForDOM();
       try {
         setLoading(true);
         setError(null);
@@ -321,14 +325,18 @@ const DriveMockup = ({ title, description, folderId }) => {
             }
             
             // Extract user-friendly error message from errorData
-            if (errorData.details) {
+            // Handle new secure response format: { success: false, error: "..." }
+            if (errorData && errorData.success === false && errorData.error) {
+              errorMessage = errorData.error;
+            } else if (errorData && typeof errorData.error === 'string') {
+              // Handle direct error field
+              errorMessage = errorData.error;
+            } else if (errorData && errorData.details) {
               if (errorData.details.error) {
                 errorMessage = errorData.details.error.message || errorMessage;
               } else if (errorData.details.raw) {
                 errorMessage = `API Error: ${errorData.details.raw.substring(0, 100)}`;
               }
-            } else if (errorData.error) {
-              errorMessage = errorData.error;
             }
           }
           
@@ -340,19 +348,44 @@ const DriveMockup = ({ title, description, folderId }) => {
 
         const data = await response.json();
         
-        // Validate response structure
-        if (!data || !Array.isArray(data.files)) {
-          if (process.env.NODE_ENV === 'development') {
-            console.warn('Unexpected API response format:', data);
+        // Handle new secure response format: { success: true, data: { files: [...] } }
+        if (data && data.success === true && data.data && Array.isArray(data.data.files)) {
+          const fetchedFiles = data.data.files || [];
+          // Sanitize all file data before setting state
+          const sanitizedFiles = fetchedFiles.map(file => ({
+            ...file,
+            name: file.name ? sanitizeAttribute(file.name) : '',
+            description: file.description ? sanitizeText(file.description) : '',
+            // Sanitize any other string fields
+            mimeType: file.mimeType || '',
+            id: file.id || ''
+          }));
+          setFiles(sanitizedFiles);
+        } else if (data && Array.isArray(data.files)) {
+          // Fallback: Handle old response format for backward compatibility
+          const fetchedFiles = data.files || [];
+          // Sanitize all file data before setting state
+          const sanitizedFiles = fetchedFiles.map(file => ({
+            ...file,
+            name: file.name ? sanitizeAttribute(file.name) : '',
+            description: file.description ? sanitizeText(file.description) : '',
+            mimeType: file.mimeType || '',
+            id: file.id || ''
+          }));
+          setFiles(sanitizedFiles);
+        } else {
+          // Handle error response format: { success: false, error: "..." }
+          if (data && data.success === false && data.error) {
+            setError(data.error);
+          } else {
+            if (process.env.NODE_ENV === 'development') {
+              console.warn('Unexpected API response format:', data);
+            }
+            setError('Invalid response format from server');
           }
           setFiles([]);
-          setError('Invalid response format from server');
           return;
         }
-        
-        const fetchedFiles = data.files || [];
-        
-        setFiles(fetchedFiles);
       } catch (err) {
         if (process.env.NODE_ENV === 'development') {
           console.error('Error fetching Drive files:', err);

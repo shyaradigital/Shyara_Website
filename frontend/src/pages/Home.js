@@ -3,6 +3,7 @@ import LoadingScreen from '../components/LoadingScreen';
 import { Link, useLocation } from 'react-router-dom';
 import { Sparkles, Target, Users, Award, Zap, TrendingUp } from 'lucide-react';
 import FancyText from '../components/FancyText';
+import { waitForHydration, hasValidDimensions } from '../utils/hydration';
 
 let splineScriptPromise = null;
 
@@ -37,7 +38,9 @@ const Home = () => {
   const [robotFadeIn, setRobotFadeIn] = useState(false);
   const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
   const [splineScriptLoaded, setSplineScriptLoaded] = useState(false);
+  const [containerValid, setContainerValid] = useState(false);
   const heroSectionRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Custom hook for IntersectionObserver-based animations
   const useScrollAnimation = (options = {}) => {
@@ -105,16 +108,35 @@ const Home = () => {
       return undefined;
     }
 
-    // Wait a tick to ensure refs are set
+    // Wait for hydration before setting up observer
     let retryTimeout;
     let observer;
     let interactionTimeout;
     let handleInteraction;
+    let hydrationReady = false;
 
-    const setupObserver = () => {
+    const setupObserver = async () => {
+      // Wait for hydration (DOM + fonts) before proceeding
+      if (!hydrationReady) {
+        try {
+          await waitForHydration();
+          hydrationReady = true;
+        } catch (error) {
+          // Fallback: continue after delay if hydration check fails
+          await new Promise(resolve => setTimeout(resolve, 200));
+          hydrationReady = true;
+        }
+      }
+
       const heroSection = heroSectionRef.current || mainContentRef.current;
       if (!heroSection) {
         // Retry after a short delay if ref not available
+        retryTimeout = setTimeout(setupObserver, 50);
+        return;
+      }
+
+      // Ensure container has valid dimensions before proceeding
+      if (!hasValidDimensions(heroSection)) {
         retryTimeout = setTimeout(setupObserver, 50);
         return;
       }
@@ -218,15 +240,92 @@ const Home = () => {
     setShowLoading(false);
   }, []);
 
-  // Initialize robot fade-in when loading is done AND Spline script is loaded
+  // Check container dimensions and visibility before initializing WebGL
   useEffect(() => {
-    if (loadingDone && !isMobile && splineScriptLoaded) {
+    if (isMobile || !splineScriptLoaded || !loadingDone) {
+      setContainerValid(false);
+      return;
+    }
+
+    let hydrationReady = false;
+
+    const checkContainerSize = async () => {
+      // Wait for hydration before checking dimensions
+      if (!hydrationReady) {
+        try {
+          await waitForHydration();
+          hydrationReady = true;
+        } catch (error) {
+          // Fallback: continue after delay if hydration check fails
+          await new Promise(resolve => setTimeout(resolve, 200));
+          hydrationReady = true;
+        }
+      }
+
+      const container = containerRef.current || heroSectionRef.current || mainContentRef.current;
+      if (!container) {
+        setContainerValid(false);
+        return;
+      }
+
+      // Use hydration utility to check dimensions
+      if (!hasValidDimensions(container)) {
+        setContainerValid(false);
+        return;
+      }
+
+      const rect = container.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+      
+      // Check if container is visible and has valid dimensions
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      const hasValidSize = width > 0 && height > 0;
+      const isNotHidden = container.offsetParent !== null;
+      
+      const isValid = isVisible && hasValidSize && isNotHidden;
+      setContainerValid(isValid);
+    };
+
+    // Initial check (async)
+    checkContainerSize();
+
+    // Set up ResizeObserver to monitor container size changes
+    const container = containerRef.current || heroSectionRef.current || mainContentRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      checkContainerSize();
+    });
+
+    resizeObserver.observe(container);
+
+    // Also check on scroll and window resize
+    const handleResize = () => {
+      checkContainerSize();
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize, { passive: true });
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize);
+    };
+  }, [isMobile, splineScriptLoaded, loadingDone]);
+
+  // Initialize robot fade-in when loading is done AND Spline script is loaded AND container is valid
+  useEffect(() => {
+    if (loadingDone && !isMobile && splineScriptLoaded && containerValid) {
       // Start robot fade-in animation after Spline is ready
       setTimeout(() => {
         setRobotFadeIn(true);
       }, 100); // Small delay to ensure smooth transition
+    } else {
+      setRobotFadeIn(false);
     }
-  }, [loadingDone, isMobile, splineScriptLoaded]);
+  }, [loadingDone, isMobile, splineScriptLoaded, containerValid]);
 
 
   // Handle scroll arrow visibility
@@ -269,6 +368,7 @@ const Home = () => {
         ref={(node) => {
           mainContentRef.current = node;
           heroSectionRef.current = node;
+          containerRef.current = node;
         }}
         style={{
           opacity: fadeIn ? 1 : 0,
@@ -370,8 +470,8 @@ const Home = () => {
              </p>
            </div>
            
-                      {/* Desktop 3D Robot - Loads only when hero section is visible */}
-           {!isMobile && splineScriptLoaded && (
+                      {/* Desktop 3D Robot - Loads only when hero section is visible and container has valid size */}
+           {!isMobile && splineScriptLoaded && containerValid && (
              <spline-viewer 
                ref={splineRef}
                className="cbot robot-quick-fade" 
@@ -386,7 +486,7 @@ const Home = () => {
                  opacity: (loadingDone && robotFadeIn) ? 1 : 0,
                  transform: (loadingDone && robotFadeIn) ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.98)',
                  transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                 visibility: loadingDone ? 'visible' : 'hidden' // Hide completely during loading
+                 visibility: (loadingDone && containerValid) ? 'visible' : 'hidden' // Hide completely during loading or if container invalid
                }}
              />
            )}

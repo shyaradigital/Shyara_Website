@@ -4,7 +4,15 @@ import { CartContext } from '../context/CartContext';
 import FancyText from '../components/FancyText';
 import AnimatedHeading from '../components/AnimatedHeading';
 import { Mail, Phone } from 'lucide-react';
-import emailService from '../services/emailService';
+import { sanitizeText } from '../utils/sanitize';
+import { waitForDOM } from '../utils/hydration';
+import { 
+  sanitizeName, 
+  sanitizeEmail, 
+  sanitizeMessage, 
+  sanitizeFormData,
+  validateFormData 
+} from '../utils/formValidation';
 
 const ContactPage = () => {
   // --- Begin new implementation based on attached file, but keep inline styles ---
@@ -17,7 +25,28 @@ const ContactPage = () => {
   const navigate = useNavigate();
 
   const handleChange = e => {
-    setForm(f => ({ ...f, [e.target.id]: e.target.value }));
+    const fieldId = e.target.id;
+    let value = e.target.value;
+    
+    // Sanitize input in real-time as user types
+    switch (fieldId) {
+      case 'name':
+        value = sanitizeName(value);
+        break;
+      case 'email':
+        value = sanitizeEmail(value);
+        break;
+      case 'message':
+        value = sanitizeMessage(value);
+        break;
+      case 'phone':
+        // Phone is handled separately (keep existing validation)
+        break;
+      default:
+        break;
+    }
+    
+    setForm(f => ({ ...f, [fieldId]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -25,16 +54,21 @@ const ContactPage = () => {
     setError('');
     setSuccess(false);
     
+    // Sanitize all form data before validation
+    const sanitizedForm = sanitizeFormData(form);
+    
     // Validate required fields
-    if (!form.name.trim() || !form.email.trim() || !form.phone.trim() || !form.message.trim()) {
+    if (!sanitizedForm.name.trim() || !sanitizedForm.email.trim() || !form.phone.trim() || !sanitizedForm.message.trim()) {
       setError('Please fill in all required fields.');
       return;
     }
     
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      setError('Please enter a valid email address.');
+    // Validate using validation utilities
+    const validation = validateFormData(sanitizedForm);
+    if (!validation.valid) {
+      // Show first error found
+      const firstError = Object.values(validation.errors)[0];
+      setError(firstError);
       return;
     }
     
@@ -45,11 +79,8 @@ const ContactPage = () => {
       return;
     }
     
-    // Check for empty message content
-    if (form.message.trim().length < 10) {
-      setError('Please write a meaningful message (at least 10 characters).');
-      return;
-    }
+    // Update form with sanitized values
+    setForm(sanitizedForm);
     
     if (cart && cart.length > 0) {
       setShowCartAlert(true);
@@ -58,19 +89,41 @@ const ContactPage = () => {
     await actuallySubmit();
   };
 
-  const actuallySubmit = async () => {
-    setSubmitting(true);
-    
-    try {
-      // Send email using EmailJS
-      const result = await emailService.sendContactForm(form);
+    const actuallySubmit = async () => {
+      setSubmitting(true);
       
-      if (result.success) {
+      try {
+        // Wait for DOM to be ready before submitting
+        await waitForDOM();
+        
+        // Get backend URL from environment or use relative path
+        const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+        const apiUrl = `${backendUrl}/api/send-email`;
+      
+      // Send email using backend API
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: sanitizeName(form.name),
+          email: sanitizeEmail(form.email),
+          message: sanitizeMessage(form.message)
+        })
+      });
+      
+      const data = await response.json();
+      
+      // Handle secureResponse format: { success: true, data: { message: ... } }
+      if (response.ok && data.success) {
         setSuccess(true);
         setError('');
         setForm({ name: '', email: '', phone: '', message: '' });
       } else {
-        setError(result.message);
+        // Handle error response: { success: false, error: ... }
+        const errorMessage = data.error || 'Failed to send message. Please try again.';
+        setError(errorMessage);
         setSuccess(false);
       }
     } catch (error) {
@@ -252,11 +305,11 @@ const ContactPage = () => {
             <form style={{ display: 'flex', flexDirection: 'column', gap: 28, height: '100%' }} onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="name" className="contact-label" style={{ display: 'block', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Full Name *</label>
-                <input type="text" id="name" value={form.name} onChange={handleChange} required placeholder="Enter your full name" className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
+                <input type="text" id="name" value={form.name} onChange={handleChange} required placeholder="Enter your full name" maxLength={100} className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
               </div>
               <div>
                 <label htmlFor="email" className="contact-label" style={{ display: 'block', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Email Address *</label>
-                <input type="email" id="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
+                <input type="email" id="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" maxLength={254} className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', marginBottom: 0, outline: 'none', fontWeight: 400 }} />
               </div>
               <div>
                 <label htmlFor="phone" className="contact-label" style={{ display: 'block', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Mobile Number *</label>
@@ -264,9 +317,9 @@ const ContactPage = () => {
               </div>
               <div>
                 <label htmlFor="message" className="contact-label" style={{ display: 'block', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }}>Message *</label>
-                <textarea id="message" rows={5} value={form.message} onChange={handleChange} required placeholder="Hi, I am interested in your services. Please contact me to discuss my requirements." className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', outline: 'none', fontWeight: 400, resize: 'none' }}></textarea>
+                <textarea id="message" rows={5} value={form.message} onChange={handleChange} required placeholder="Hi, I am interested in your services. Please contact me to discuss my requirements." maxLength={2000} className="contact-input" style={{ width: '100%', background: '#181818', color: '#e0d7f7', padding: 'clamp(14px, 1.5vw, 16px) clamp(18px, 2vw, 20px)', border: '1.5px solid #7f42a7', borderRadius: 10, fontSize: 'clamp(1rem, 1.2vw, 1.05rem)', outline: 'none', fontWeight: 400, resize: 'none' }}></textarea>
               </div>
-              {error && <div style={{ color: '#ff4d4f', fontSize: 16 }}>{error}</div>}
+              {error && <div style={{ color: '#ff4d4f', fontSize: 16 }}>{sanitizeText(error)}</div>}
               {success && <div style={{ color: '#4caf50', fontSize: 16 }}>Message sent successfully!</div>}
               <div style={{ marginTop: 'auto', textAlign: 'center' }}>
                 <button type="submit" className="contact-button" style={{ background: '#a259f7', color: '#fff', fontWeight: 700, fontSize: 'clamp(16px, 1.2vw, 17px)', padding: 'clamp(10px, 1.2vw, 12px) clamp(1.8rem, 3vw, 2.2rem)', border: 'none', borderRadius: 999, cursor: 'pointer', boxShadow: '0 2px 8px #a259f7aa', transition: 'background 0.2s', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} disabled={submitting}>

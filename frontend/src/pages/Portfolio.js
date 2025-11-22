@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { X, ArrowLeft, ArrowRight } from 'lucide-react';
 import FancyText from '../components/FancyText';
 import DriveMockupModal from '../components/portfolio/DriveMockupModal';
+import { validateIframeUrl, validateWindowOpenUrl } from '../utils/urlValidation';
+import { sanitizeText } from '../utils/sanitize';
 
 const IMAGE_EXTENSION_REGEX = /\.(png|jpe?g)$/i;
 const PICS_PREFIX = '/pics/';
@@ -593,7 +595,14 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
                 Interactive Preview
               </button>
               <button
-                onClick={() => window.open(currentSample.mockup, '_blank', 'noopener,noreferrer')}
+                onClick={() => {
+                  const safeUrl = validateWindowOpenUrl(currentSample.mockup);
+                  if (safeUrl) {
+                    window.open(safeUrl, '_blank', 'noopener,noreferrer');
+                  } else {
+                    console.error('Invalid or unsafe URL for window.open:', currentSample.mockup);
+                  }
+                }}
                 style={{
                   background: 'rgba(255,255,255,0.08)',
                   color: '#e7e7e7',
@@ -698,7 +707,7 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
           })}
         </div>
       </div>
-      {currentSample.mockup && showMockup && (
+      {currentSample.mockup && showMockup && validateIframeUrl(currentSample.mockup) && (
         <div 
           onClick={(e) => {
             // Close if clicking the backdrop
@@ -763,8 +772,10 @@ const PortfolioModal = ({ isOpen, onClose, service }) => {
               Close
             </button>
             <iframe
-              title={currentSample.title}
-              src={currentSample.mockup}
+              title={sanitizeText(currentSample.title)}
+              src={validateIframeUrl(currentSample.mockup) || ''}
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              referrerPolicy="no-referrer"
               style={{
                 flex: 1,
                 border: 'none',

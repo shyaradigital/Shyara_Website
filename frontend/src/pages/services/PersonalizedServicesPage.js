@@ -694,7 +694,7 @@ const PersonalizedServicesPage = () => {
                 icon: <Share2 size={24} />,
                 title: 'Social Media Management',
                 desc: 'Consistent, creative, and keyword-rich content for all major platforms. We handle everything from posts and reels to community engagement.',
-                price: 'Starting at ₹10,500/month',
+                price: '',
                 route: '/services/social-media-management',
                 basePrice: 10500,
                 hasSlider: true,

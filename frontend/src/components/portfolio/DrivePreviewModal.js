@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ZoomIn, ZoomOut } from 'lucide-react';
+import { sanitizeText, sanitizeAttribute } from '../../utils/sanitize';
 
 /**
  * DrivePreviewModal Component
@@ -604,7 +605,7 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         {isVideo ? (
           <img
             src={currentSrc}
-            alt={currentFile.name}
+            alt={sanitizeAttribute(currentFile.name)}
             crossOrigin="anonymous"
             referrerPolicy="no-referrer"
             className="preview-image"
@@ -634,7 +635,7 @@ const DrivePreviewModal = ({ files, index, onClose }) => {
         ) : (
           <img
             src={currentSrc}
-            alt={currentFile.name}
+            alt={sanitizeAttribute(currentFile.name)}
             crossOrigin="anonymous"
             referrerPolicy="no-referrer"
             className="preview-image"

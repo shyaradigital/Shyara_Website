@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { X, ArrowLeft } from 'lucide-react';
 import DriveMockup from './DriveMockup';
+import { sanitizeText } from '../../utils/sanitize';
 
 /**
  * DriveMockupModal Component
@@ -195,7 +196,7 @@ const DriveMockupModal = ({
             
             .drive-modal-content {
               border-radius: 16px !important;
-              margin-top: 0 !important;
+              margin-top: 5rem !important;
               width: 95% !important;
             }
           }
@@ -278,7 +279,7 @@ const DriveMockupModal = ({
                 margin: '0 0 0.375rem 0'
               }}
             >
-              {title}
+              {sanitizeText(title)}
             </h2>
             {subtitle && (
               <p
@@ -288,7 +289,7 @@ const DriveMockupModal = ({
                   margin: 0
                 }}
               >
-                {subtitle}
+                {sanitizeText(subtitle)}
               </p>
             )}
             
@@ -317,7 +318,7 @@ const DriveMockupModal = ({
                       lineHeight: 1.3
                     }}
                   >
-                    {part}
+                    {sanitizeText(part)}
                   </span>
                 ))}
               </div>

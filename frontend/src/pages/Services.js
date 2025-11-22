@@ -235,9 +235,9 @@ const ServicesPage = () => {
             <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', background: '#181818', borderRadius: '50%', padding: 10, boxShadow: '0 2px 12px #0006', border: '2px solid #a259f7' }}>
               <svg width="48" height="48" fill="none" viewBox="0 0 24 24"><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07-7.07l-1.41 1.41M6.34 17.66l-1.41 1.41m12.02 0l-1.41-1.41M6.34 6.34L4.93 4.93" stroke="#a259f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
-            <h2 className="services-cta-title" style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', fontWeight: 700, color: '#a259f7', marginBottom: 10, marginTop: 24, letterSpacing: '-0.01em', textAlign: 'center' }}>Want something truly unique?</h2>
+            <h2 className="services-cta-title" style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', fontWeight: 700, color: '#a259f7', marginBottom: 10, marginTop: 24, letterSpacing: '-0.01em', textAlign: 'center' }}>Make your own Plan</h2>
             <p className="services-cta-text" style={{ fontSize: 'clamp(0.9rem, 1.2vw, 0.97rem)', fontWeight: 400, color: 'var(--color-text-primary)' }}>
-              Check out our <span style={{ fontWeight: 600, color: 'var(--color-primary)' }}>Personalized Services</span> for custom solutions, one-on-one consulting, and more. Let us bring your vision to life!
+              Check out our <span style={{ fontWeight: 600, color: 'var(--color-primary)' }}>Personalized Services</span> for custom solutions. Let us bring your vision to life!
             </p>
             <button
               onClick={() => navigate('/services/personalized')}

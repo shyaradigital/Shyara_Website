@@ -3,14 +3,17 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { LogIn, Users, Zap, TrendingUp } from 'lucide-react';
+import { waitForHydration, hasValidDimensions } from '../utils/hydration';
 
 const HomeNoLoading = () => {
   const [fadeIn, setFadeIn] = React.useState(false);
   const [splineReady, setSplineReady] = useState(false);
   const [splineError, setSplineError] = useState(false);
   const [showScrollArrow, setShowScrollArrow] = useState(true);
+  const [containerValid, setContainerValid] = useState(false);
   const mainContentRef = useRef(null);
   const splineRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Fade in main content after mount
   useEffect(() => {
@@ -19,16 +22,95 @@ const HomeNoLoading = () => {
     }, 10);
   }, []);
 
-  // Initialize Spline viewer when container is ready
+  // Check container dimensions and visibility before initializing WebGL
   useEffect(() => {
-    if (fadeIn && mainContentRef.current) {
-      // Wait for the container to have proper dimensions
-      const timer = setTimeout(() => {
-        setSplineReady(true);
-      }, 500);
-      
-      return () => clearTimeout(timer);
+    if (!fadeIn) {
+      setContainerValid(false);
+      setSplineReady(false);
+      return;
     }
+
+    let hydrationReady = false;
+
+    const checkContainerSize = async () => {
+      // Wait for hydration before checking dimensions
+      if (!hydrationReady) {
+        try {
+          await waitForHydration();
+          hydrationReady = true;
+        } catch (error) {
+          // Fallback: continue after delay if hydration check fails
+          await new Promise(resolve => setTimeout(resolve, 200));
+          hydrationReady = true;
+        }
+      }
+
+      const container = containerRef.current || mainContentRef.current;
+      if (!container) {
+        setContainerValid(false);
+        setSplineReady(false);
+        return;
+      }
+
+      // Use hydration utility to check dimensions
+      if (!hasValidDimensions(container)) {
+        setContainerValid(false);
+        setSplineReady(false);
+        return;
+      }
+
+      const rect = container.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+      
+      // Check if container is visible and has valid dimensions
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      const hasValidSize = width > 0 && height > 0;
+      const isNotHidden = container.offsetParent !== null;
+      
+      const isValid = isVisible && hasValidSize && isNotHidden;
+      setContainerValid(isValid);
+      
+      // Only set splineReady if container is valid
+      if (isValid) {
+        setSplineReady(true);
+      } else {
+        setSplineReady(false);
+      }
+    };
+
+    // Initial check with delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      checkContainerSize();
+    }, 100);
+
+    // Set up ResizeObserver to monitor container size changes
+    const container = containerRef.current || mainContentRef.current;
+    if (!container) {
+      clearTimeout(timer);
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      checkContainerSize();
+    });
+
+    resizeObserver.observe(container);
+
+    // Also check on scroll and window resize
+    const handleResize = () => {
+      checkContainerSize();
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize, { passive: true });
+
+    return () => {
+      clearTimeout(timer);
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize);
+    };
   }, [fadeIn]);
 
   // Handle Spline viewer errors
@@ -148,7 +230,10 @@ const HomeNoLoading = () => {
       <div
         id="main-content"
         className={`main-content${fadeIn ? ' fade-in' : ''}`}
-        ref={mainContentRef}
+        ref={(node) => {
+          mainContentRef.current = node;
+          containerRef.current = node;
+        }}
         style={{
           opacity: fadeIn ? 1 : 0,
           transition: 'opacity 0.7s cubic-bezier(0.4,0,0.2,1)'
@@ -255,7 +340,7 @@ const HomeNoLoading = () => {
           </p>
         </div>
         
-        {splineReady && !splineError && (
+        {splineReady && !splineError && containerValid && (
           <spline-viewer 
             ref={splineRef}
             className="cbot" 

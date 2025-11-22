@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
 import { useNavigate } from 'react-router-dom';
 import { User, Eye, EyeOff, Loader2, LogIn } from 'lucide-react';
+import { sanitizeText } from '../utils/sanitize';
+import { waitForDOM } from '../utils/hydration';
 
 const ClientLoginPage = () => {
   const navigate = useNavigate();
@@ -22,19 +24,31 @@ const ClientLoginPage = () => {
     }
     setLoading(true);
     try {
+      // Wait for DOM to be ready before submitting
+      await waitForDOM();
+      
       const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/client-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });      
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Login failed');
-      localStorage.setItem('client_jwt', data.token);
+      if (!res.ok) {
+        // Sanitize error message before displaying
+        const errorMessage = data.message || 'Login failed';
+        throw new Error(sanitizeText(errorMessage));
+      }
+      // Sanitize token before storing (though tokens are usually safe, this is defensive)
+      const token = data.token ? String(data.token).trim() : '';
+      if (token) {
+        localStorage.setItem('client_jwt', token);
+      }
       setLoading(false);
       navigate('/client-dashboard');
     } catch (err) {
       setLoading(false);
-      setError(err.message || 'Login failed');
+      // Sanitize error message before displaying
+      setError(sanitizeText(err.message || 'Login failed'));
     }
   };
 
