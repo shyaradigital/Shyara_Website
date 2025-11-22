@@ -222,6 +222,183 @@ const Home = () => {
       });
   }, [shouldLoadSpline, isMobile, splineScriptLoaded]);
 
+  // Hide Spline UI elements (buttons, text) after viewer loads
+  useEffect(() => {
+    if (!splineScriptLoaded || !splineRef.current || isMobile) {
+      return;
+    }
+
+    const hideSplineUI = () => {
+      const viewer = splineRef.current;
+      if (!viewer) return;
+
+      // Wait for Spline to fully initialize
+      const checkAndHide = () => {
+        // Access the shadow DOM or internal canvas
+        const shadowRoot = viewer.shadowRoot;
+        if (shadowRoot) {
+          // Hide any UI elements in shadow DOM
+          let style = shadowRoot.querySelector('style[data-spline-ui-hide]');
+          if (!style) {
+            style = document.createElement('style');
+            style.setAttribute('data-spline-ui-hide', 'true');
+            style.textContent = `
+              /* Hide all buttons and UI text in Spline viewer */
+              button, 
+              [class*="button"], 
+              [class*="Button"],
+              [class*="ui"],
+              [class*="UI"],
+              [id*="button"],
+              [id*="Button"],
+              [id*="ui"],
+              [id*="UI"],
+              canvas + *,
+              div[style*="position: absolute"],
+              *[class*="connect"],
+              *[class*="Connect"],
+              *[id*="connect"],
+              *[id*="Connect"] {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+              }
+            `;
+            shadowRoot.appendChild(style);
+          }
+        }
+
+        // Also try to hide elements in the main DOM
+        const viewerContainer = viewer.parentElement;
+        if (viewerContainer) {
+          // Find and hide any buttons or UI elements near the viewer
+          const buttons = viewerContainer.querySelectorAll('button, [class*="button"], [class*="Button"], [class*="connect"], [class*="Connect"]');
+          buttons.forEach(btn => {
+            const text = btn.textContent || btn.innerText || '';
+            if (text.includes('connect') || text.includes('Connect') || text.includes('Wanna') || text.includes('wanna')) {
+              btn.style.display = 'none';
+              btn.style.visibility = 'hidden';
+              btn.style.opacity = '0';
+              btn.style.pointerEvents = 'none';
+            }
+          });
+        }
+
+        // Try multiple ways to access Spline's internal scene and hide UI elements
+        try {
+          // Method 1: Direct application access
+          if (viewer.application) {
+            const scene = viewer.application.scene;
+            if (scene) {
+              scene.traverse((object) => {
+                const name = (object.name || '').toLowerCase();
+                if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna') || name.includes('link')) {
+                  object.visible = false;
+                  object.traverse((child) => {
+                    child.visible = false;
+                  });
+                }
+                // Also check userData
+                if (object.userData) {
+                  if (object.userData.isButton || object.userData.isUI || object.userData.type === 'button' || object.userData.type === 'ui') {
+                    object.visible = false;
+                  }
+                }
+              });
+            }
+          }
+
+          // Method 2: Try accessing via __spline
+          if (window.__spline && window.__spline[viewer.id || 'default']) {
+            const splineApp = window.__spline[viewer.id || 'default'];
+            if (splineApp && splineApp.scene) {
+              splineApp.scene.traverse((object) => {
+                const name = (object.name || '').toLowerCase();
+                if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna')) {
+                  object.visible = false;
+                }
+              });
+            }
+          }
+
+          // Method 3: Try accessing via viewer's internal properties
+          if (viewer._application || viewer.__application) {
+            const app = viewer._application || viewer.__application;
+            if (app && app.scene) {
+              app.scene.traverse((object) => {
+                const name = (object.name || '').toLowerCase();
+                if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna')) {
+                  object.visible = false;
+                }
+              });
+            }
+          }
+        } catch (e) {
+          // Silently fail if we can't access internal API
+        }
+      };
+
+      // Wait for viewer to be ready, then try multiple times
+      const tryHide = () => {
+        checkAndHide();
+      };
+
+      // Listen for Spline load event
+      viewer.addEventListener('load', tryHide);
+      viewer.addEventListener('loaded', tryHide);
+
+      // Try immediately and also after delays
+      tryHide();
+      const timeouts = [
+        setTimeout(tryHide, 500),
+        setTimeout(tryHide, 1000),
+        setTimeout(tryHide, 2000),
+        setTimeout(tryHide, 3000),
+        setTimeout(tryHide, 5000)
+      ];
+
+      // Use MutationObserver to catch dynamically added elements
+      const observer = new MutationObserver(() => {
+        tryHide();
+      });
+
+      if (viewer.shadowRoot) {
+        observer.observe(viewer.shadowRoot, {
+          childList: true,
+          subtree: true,
+          attributes: true
+        });
+      }
+
+      observer.observe(viewer, {
+        childList: true,
+        subtree: true,
+        attributes: true
+      });
+
+      // Also observe the document for any Spline-related elements
+      const docObserver = new MutationObserver(() => {
+        tryHide();
+      });
+      docObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+
+      return () => {
+        viewer.removeEventListener('load', tryHide);
+        viewer.removeEventListener('loaded', tryHide);
+        timeouts.forEach(clearTimeout);
+        observer.disconnect();
+        docObserver.disconnect();
+      };
+    };
+
+    const timeout = setTimeout(hideSplineUI, 500);
+    return () => clearTimeout(timeout);
+  }, [splineScriptLoaded, splineRef, isMobile, loadingDone, robotFadeIn]);
+
   // Original loading screen behavior - always show for 3 seconds
   useEffect(() => {
     // Always show loader on mount
@@ -360,6 +537,29 @@ const Home = () => {
               transform: translateX(-50%) translateY(-5px);
             }
           }
+          
+          /* Hide all Spline UI elements - buttons, text, interactive elements */
+          spline-viewer::part(button),
+          spline-viewer::part(ui),
+          spline-viewer button,
+          spline-viewer [class*="button"],
+          spline-viewer [class*="Button"],
+          spline-viewer [class*="ui"],
+          spline-viewer [class*="UI"],
+          spline-viewer [id*="button"],
+          spline-viewer [id*="Button"],
+          .cbot button,
+          .cbot [class*="button"],
+          .cbot [class*="Button"],
+          .cbot [class*="ui"],
+          .cbot [class*="UI"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            position: absolute !important;
+            left: -9999px !important;
+          }
         `}
       </style>
       {showLoading && !loadingDone && <LoadingScreen onFinish={handleLoadingFinish} />}
@@ -478,6 +678,22 @@ const Home = () => {
                 ref={splineRef}
                 className="cbot robot-quick-fade" 
                 url="https://prod.spline.design/7Xyc-4Wtw5VI1PDk/scene.splinecode"
+                onLoad={(e) => {
+                  // Hide UI elements when scene loads
+                  const viewer = e.target;
+                  if (viewer && viewer.application && viewer.application.scene) {
+                    const scene = viewer.application.scene;
+                    scene.traverse((object) => {
+                      const name = (object.name || '').toLowerCase();
+                      if (name.includes('button') || name.includes('ui') || name.includes('connect') || name.includes('wanna') || name.includes('link') || name.includes('text')) {
+                        object.visible = false;
+                        object.traverse((child) => {
+                          child.visible = false;
+                        });
+                      }
+                    });
+                  }
+                }}
                 style={{
                   width: '100%',
                   height: '100%',

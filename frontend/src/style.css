@@ -481,6 +481,35 @@ main {
     z-index: 0; /* Position behind main content */
 }
 
+/* Hide all Spline UI elements - buttons, text, interactive elements */
+spline-viewer button,
+spline-viewer [class*="button"],
+spline-viewer [class*="Button"],
+spline-viewer [class*="ui"],
+spline-viewer [class*="UI"],
+spline-viewer [class*="connect"],
+spline-viewer [class*="Connect"],
+spline-viewer [id*="button"],
+spline-viewer [id*="Button"],
+spline-viewer [id*="ui"],
+spline-viewer [id*="UI"],
+.cbot button,
+.cbot [class*="button"],
+.cbot [class*="Button"],
+.cbot [class*="ui"],
+.cbot [class*="UI"],
+.cbot [class*="connect"],
+.cbot [class*="Connect"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
 .site-footer {
     margin-top: auto;
     position: static;
